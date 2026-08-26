@@ -43,3 +43,31 @@ class Producto(
         return precioBase * cantidad
     }
 }
+
+// --- FUNCIONES DE LÓGICA DEL CARRITO ---
+
+fun calcularSubtotal(productos: List<Producto>): Double {
+    var subtotal = 0.0
+    for (p in productos) {
+        subtotal += p.calcularPrecioFinal() // Uso de Polimorfismo
+    }
+    return subtotal
+}
+
+fun calcularIGV(subtotal: Double): Double {
+    return subtotal * 0.18
+}
+
+fun calcularTotal(subtotal: Double, igv: Double): Double {
+    return subtotal + igv
+}
+
+fun buscarProducto(productos: List<Producto>, nombre: String): Producto? {
+    return productos.find { it.nombre.equals(nombre, ignoreCase = true) }
+}
+
+fun eliminarProducto(productos: MutableList<Producto>, nombre: String): Boolean {
+    return productos.removeIf { it.nombre.equals(nombre, ignoreCase = true) }
+}
+
+
