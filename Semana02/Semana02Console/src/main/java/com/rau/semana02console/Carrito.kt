@@ -70,4 +70,54 @@ fun eliminarProducto(productos: MutableList<Producto>, nombre: String): Boolean 
     return productos.removeIf { it.nombre.equals(nombre, ignoreCase = true) }
 }
 
+// --- PUNTO DE ENTRADA MAIN ---
 
+fun main() {
+    println("==========================================")
+    println(" CARRITO DE COMPRAS - TIENDA TECSUP ")
+    println("==========================================")
+
+    val nombreCliente = "Ian Rau"
+    val carrito = mutableListOf<Producto>()
+    println("Cliente: $nombreCliente\n")
+
+    // Agregar productos iniciales
+    carrito.add(Producto("Laptop HP", 3500.0, 1))
+    carrito.add(Producto("Mouse Logitech", 50.5, 2))
+    carrito.add(Producto("Teclado Redragon", 150.0, 1))
+    carrito.add(Producto("Monitor Gamer 24", 650.0, 1))
+
+    // Reto Adicional: Búsqueda y Eliminación
+    println("--- RETO ADICIONAL ---")
+    val buscado = buscarProducto(carrito, "Monitor Gamer 24")
+    if (buscado != null) {
+        println("Buscado: ${buscado.nombre} - S/ ${buscado.precioBase}")
+    } else {
+        println("Producto no encontrado.")
+    }
+
+    eliminarProducto(carrito, "Teclado Redragon")
+    println("Producto eliminado. Carrito actual:")
+
+    // Visualización del detalle
+    println("---------------- DETALLE DEL CARRITO ----------------")
+    for ((index, prod) in carrito.withIndex()) {
+        val totalProd = prod.calcularPrecioFinal()
+        val linea = "${index + 1}. ${prod.nombre}".padEnd(25) +
+                "x${prod.cantidad}".padEnd(6) +
+                "S/ " + String.format("%.2f", totalProd).padStart(8)
+        println(linea)
+    }
+    println("-----------------------------------------------------")
+
+    // Cálculos de montos
+    val subtotal = calcularSubtotal(carrito)
+    val igv = calcularIGV(subtotal)
+    val total = calcularTotal(subtotal, igv)
+
+    println("Subtotal : S/ ${String.format("%.2f", subtotal)}")
+    println("IGV (18%): S/ ${String.format("%.2f", igv)}")
+    println("Total    : S/ ${String.format("%.2f", total)}")
+    println("==========================================")
+    println("Gracias por su compra, $nombreCliente!")
+}
