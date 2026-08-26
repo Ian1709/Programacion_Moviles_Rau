@@ -31,7 +31,7 @@ fun main() {
     val carrito = mutableListOf<Producto>() // lista vacía de productos
     println("Cliente: $nombreCliente\n")
 
-    carrito.add(Producto("Laptop HP", 2500.0, 1))
+    carrito.add(Producto("Laptop HP", 3500.0, 1))
     carrito.add(Producto("Mouse Logitech", 50.5, 2))
     carrito.add(Producto("Monitor Gamer 24", 650.0, 1))
     carrito.add(Producto("Camara Web Full HD", 145.0, 3))
@@ -52,6 +52,23 @@ fun main() {
     println(String.format("%-25s : S/ %8.2f", "IGV (18%%)", igv))
     println(String.format("%-25s : S/ %8.2f", "TOTAL A PAGAR", total))
 
+    println()
+
+    val masCaro = carrito.maxByOrNull { it.precio }
+    if (masCaro != null) {
+        println(String.format("Producto mas caro: %s (S/%.2f)", masCaro.nombre, masCaro.precio))
+    }
+
+    val descuento = calcularDescuento(total)
+    if (descuento > 0.0) {
+        val pct = if (total > 5000) "10%" else "5%"
+        println("Descuento aplicado: $pct por compra mayor a S/ 3000")
+        println(String.format("%-25s : S/ %8.2f", "TOTAL CON DESCUENTO", total - descuento))
+    } else {
+        println("Descuento aplicado: No aplica")
+    }
+
+    println("\nGracias por su compra, $nombreCliente!")
 }
 fun mostrarDetalle(productos: List<Producto>) {
     println("---------------- DETALLE DEL CARRITO ----------------")
@@ -62,4 +79,11 @@ fun mostrarDetalle(productos: List<Producto>) {
         i++
     }
     println("-----------------------------------------------------")
+}
+fun calcularDescuento(total: Double): Double {
+    return when {
+        total > 5000 -> total * 0.10
+        total > 3000 -> total * 0.05
+        else -> 0.0
+    }
 }
