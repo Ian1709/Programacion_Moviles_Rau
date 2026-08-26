@@ -69,8 +69,18 @@ fun main() {
     }
 
     println("\nGracias por su compra, $nombreCliente!")
+
+    println("\n--- RETO ADICIONAL ---")
+
+    val buscado = buscarProducto(carrito, "Monitor Gamer 24")
+    println("Buscado: ${buscado?.nombre} - S/ ${buscado?.precio}")
+
+    eliminarProducto(carrito, "Camara Web Full HD")
+    println("Producto eliminado. Carrito actual:")
+    mostrarDetalle(carrito)
 }
 fun mostrarDetalle(productos: List<Producto>) {
+
     println("---------------- DETALLE DEL CARRITO ----------------")
     var i = 1
     for (p in productos) {
@@ -86,4 +96,11 @@ fun calcularDescuento(total: Double): Double {
         total > 3000 -> total * 0.05
         else -> 0.0
     }
+}
+fun buscarProducto(productos: List<Producto>, nombre: String): Producto? {
+    return productos.find { it.nombre == nombre }
+}
+
+fun eliminarProducto(productos: MutableList<Producto>, nombre: String) {
+    productos.removeIf { it.nombre == nombre }
 }
