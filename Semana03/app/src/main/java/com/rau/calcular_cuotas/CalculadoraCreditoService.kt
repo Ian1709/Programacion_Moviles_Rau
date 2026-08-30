@@ -19,4 +19,16 @@ class CalculadoraCreditoService {
         val interes = obtenerPorcentajeInteres(cuotas)
         return Financiamiento(producto, cuotas, interes)
     }
+
+    fun imprimirCronograma(financiamiento: Financiamiento) {
+        println("\n=============================================")
+        println("             CRONOGRAMA DE PAGOS             ")
+        println("=============================================")
+        println("Cuota N° |    Monto a Pagar    | Estado")
+        println("---------|---------------------|-------------")
+        for (i in 1..financiamiento.numCuotas) {
+            println("Mes %02d   | S/. %12.2f     | Pendiente".format(i, financiamiento.cuotaMensual))
+        }
+        println("=============================================\n")
+    }
 }
