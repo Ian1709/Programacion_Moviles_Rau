@@ -52,3 +52,17 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
+
+tasks.register<JavaExec>("ejecutarConsola") {
+    val compileTask = tasks.named("compileDebugKotlin")
+    dependsOn(compileTask)
+
+    mainClass.set("com.rau.calcular_cuotas.MainKt")
+
+    classpath = files(
+        compileTask.get().outputs.files,
+        configurations.named("debugRuntimeClasspath").get()
+    )
+
+    standardInput = System.`in`
+}

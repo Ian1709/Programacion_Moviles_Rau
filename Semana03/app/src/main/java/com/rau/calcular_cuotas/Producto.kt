@@ -8,18 +8,3 @@ data class Producto(
     val montoInicial: Double
         get() = precioUnitario * cantidad
 }
-
-data class Financiamiento(
-    val producto: Producto,
-    val numCuotas: Int,
-    val porcentajeInteres: Double
-) {
-    val montoInteres: Double
-        get() = producto.montoInicial * porcentajeInteres
-
-    val montoTotal: Double
-        get() = producto.montoInicial + montoInteres
-
-    val cuotaMensual: Double
-        get() = montoTotal / numCuotas
-}
