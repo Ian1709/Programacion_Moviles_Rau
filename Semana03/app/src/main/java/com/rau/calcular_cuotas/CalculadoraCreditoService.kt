@@ -9,6 +9,7 @@ data class ResultadoFinanciamiento(
 )
 
 class CalculadoraCreditoService {
+
     fun esCuotaValida(cuotas: Int): Boolean {
         return cuotas == 6 || cuotas == 12 || cuotas == 24
     }
@@ -39,10 +40,16 @@ class CalculadoraCreditoService {
     }
 
     fun imprimirCronograma(financiamiento: ResultadoFinanciamiento) {
-        println("\n--- CRONOGRAMA DE PAGOS ---")
+        val cuotaFormateada = String.format("%.2f", financiamiento.cuotaMensual)
+
+        println("\n+--------------------------------------------------+")
+        println("|               CRONOGRAMA DE PAGOS                |")
+        println("+--------------------------------------------------+")
         for (i in 1..financiamiento.numCuotas) {
-            println("Cuota $i / ${financiamiento.numCuotas}: S/ ${"%.2f".format(financiamiento.cuotaMensual)}")
+            val iStr = if (i < 10) "0$i" else "$i"
+            val numStr = if (financiamiento.numCuotas < 10) "0${financiamiento.numCuotas}" else "${financiamiento.numCuotas}"
+            println("|  Cuota $iStr / $numStr           -->     S/ $cuotaFormateada  |")
         }
-        println("---------------------------")
+        println("+--------------------------------------------------+")
     }
 }
