@@ -1,21 +1,43 @@
 package com.rau.calcular_cuotas
 
+import java.util.Scanner
+
 fun main() {
+    val scanner = Scanner(System.`in`)
+
     println("+--------------------------------------------------+")
     println("|      SISTEMA DE CALCULO DE PAGOS A CREDITO       |")
     println("+--------------------------------------------------+")
 
     print("  >> Ingrese el nombre del producto   : ")
-    val nombre = readln()
+    val nombre = scanner.nextLine()
 
-    print("  >> Ingrese el precio unitario (S/)  : ")
-    val precio = readln().toDoubleOrNull() ?: 0.0
+    var precio = 0.0
+    while (precio <= 0) {
+        print("  >> Ingrese el precio unitario (S/)  : ")
+        if (scanner.hasNextDouble()) {
+            precio = scanner.nextDouble()
+            if (precio <= 0) println("     [!] El precio debe ser mayor a 0.")
+        } else {
+            println("     [!] Entradas inválidas. Ingrese un número.")
+            scanner.next()
+        }
+    }
 
-    print("  >> Ingrese la cantidad             : ")
-    val cantidad = readln().toIntOrNull() ?: 0
+    var cantidad = 0
+    while (cantidad <= 0) {
+        print("  >> Ingrese la cantidad             : ")
+        if (scanner.hasNextInt()) {
+            cantidad = scanner.nextInt()
+            if (cantidad <= 0) println("     [!] La cantidad debe ser mayor a 0.")
+        } else {
+            println("     [!] Entradas inválidas. Ingrese un número entero.")
+            scanner.next()
+        }
+    }
 
     print("  >> Ingrese el nro. cuotas (6/12/24): ")
-    val cuotasElegidas = readln().toIntOrNull() ?: 0
+    val cuotasElegidas = if (scanner.hasNextInt()) scanner.nextInt() else 0
 
     val calculadora = CalculadoraCreditoService()
 
