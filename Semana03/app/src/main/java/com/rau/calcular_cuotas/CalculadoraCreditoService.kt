@@ -1,5 +1,10 @@
 package com.rau.calcular_cuotas
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 data class ResultadoFinanciamiento(
     val numCuotas: Int,
     val porcentajeInteres: Double,
@@ -39,17 +44,23 @@ class CalculadoraCreditoService {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun imprimirCronograma(financiamiento: ResultadoFinanciamiento) {
         val cuotaFormateada = String.format("%.2f", financiamiento.cuotaMensual)
+        var fechaPago = LocalDate.now().plusMonths(1)
+        val formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
-        println("\n+--------------------------------------------------+")
-        println("|               CRONOGRAMA DE PAGOS                |")
-        println("+--------------------------------------------------+")
+        println("\n+-------------------------------------------------------------+")
+        println("|               CRONOGRAMA DE PAGOS Y VENCIMIENTOS            |")
+        println("+-------------------------------------------------------------+")
         for (i in 1..financiamiento.numCuotas) {
             val iStr = if (i < 10) "0$i" else "$i"
             val numStr = if (financiamiento.numCuotas < 10) "0${financiamiento.numCuotas}" else "${financiamiento.numCuotas}"
-            println("|  Cuota $iStr / $numStr           -->     S/ $cuotaFormateada  |")
+            val fechaStr = fechaPago.format(formatoFecha)
+
+            println("|  Cuota $iStr/$numStr | Vence: $fechaStr | Monto: S/ $cuotaFormateada  |")
+            fechaPago = fechaPago.plusMonths(1)
         }
-        println("+--------------------------------------------------+")
+        println("+-------------------------------------------------------------+")
     }
 }

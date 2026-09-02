@@ -1,7 +1,10 @@
 package com.rau.calcular_cuotas
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.util.Scanner
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun main() {
     val scanner = Scanner(System.`in`)
 
@@ -75,4 +78,6 @@ fun main() {
     println("  Cuota Mensual            : S/ $cuotaMensualStr")
 
     calculadora.imprimirCronograma(financiamiento)
+    println("\n Gracias por utilizar nuestro sistema de financiamiento.")
+    scanner.close()
 }
