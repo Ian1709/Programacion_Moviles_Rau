@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rau.lab03registroproducto.ui.theme.Lab03RegistroProductoTheme
@@ -126,7 +127,6 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             )
         }
 
-        // Botón que activa la visualización del resumen
         Button(
             onClick = { mostrarResumen = true },
             modifier = Modifier.fillMaxWidth()
@@ -134,7 +134,6 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             Text("AGREGAR PRODUCTO")
         }
 
-        // Si aún no se presiona el botón, se muestra el texto guía
         if (!mostrarResumen) {
             Text(
                 text = "Aún no has registrado ningún producto",
@@ -142,7 +141,6 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         } else {
-            // Conversión segura con Elvis ?: heredada del Lab 02
             val precioNum = precio.toDoubleOrNull() ?: 0.0
             val cantidadNum = cantidad.toIntOrNull() ?: 0
             val importeTotal = precioNum * cantidadNum
@@ -177,6 +175,13 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                     )
                 }
             }
+
+            Text(
+                text = "✓ Producto registrado correctamente",
+                color = Color(0xFF2E7D32),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
