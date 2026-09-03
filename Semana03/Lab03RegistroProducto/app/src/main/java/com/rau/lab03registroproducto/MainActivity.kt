@@ -4,28 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -68,14 +51,19 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
     var nombre by remember { mutableStateOf("") }
     var precio by remember { mutableStateOf("") }
     var cantidad by remember { mutableStateOf("") }
+
+    // Estados de control para la validación y visibilidad
     var mostrarResumen by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // Encabezado
         Column {
             Text(
                 text = "Nuevo producto",
@@ -89,17 +77,21 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             )
         }
 
+        // Campo: Nombre
         OutlinedTextField(
             value = nombre,
             onValueChange = {
                 nombre = it
+                mensajeError = ""
                 mostrarResumen = false
             },
             label = { Text("Nombre del producto") },
             singleLine = true,
+            isError = mensajeError.isNotEmpty() && nombre.isBlank(),
             modifier = Modifier.fillMaxWidth()
         )
 
+        // Fila: Precio y Cantidad
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -108,10 +100,12 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                 value = precio,
                 onValueChange = {
                     precio = it
+                    mensajeError = ""
                     mostrarResumen = false
                 },
                 label = { Text("Precio (S/)") },
                 singleLine = true,
+                isError = mensajeError.isNotEmpty() && (precio.toDoubleOrNull() == null || precio.toDoubleOrNull()!! <= 0.0),
                 modifier = Modifier.weight(1f)
             )
 
@@ -119,28 +113,86 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                 value = cantidad,
                 onValueChange = {
                     cantidad = it
+                    mensajeError = ""
                     mostrarResumen = false
                 },
                 label = { Text("Cantidad") },
                 singleLine = true,
+                isError = mensajeError.isNotEmpty() && (cantidad.toIntOrNull() == null || cantidad.toIntOrNull()!! <= 0),
                 modifier = Modifier.weight(1f)
             )
         }
 
-        Button(
-            onClick = { mostrarResumen = true },
-            modifier = Modifier.fillMaxWidth()
+        // Fila de Botones: AGREGAR PRODUCTO y LIMPIAR
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("AGREGAR PRODUCTO")
+            Button(
+                onClick = {
+                    val p = precio.toDoubleOrNull()
+                    val c = cantidad.toIntOrNull()
+
+                    when {
+                        nombre.isBlank() -> {
+                            mensajeError = "Debes ingresar el nombre del producto."
+                            mostrarResumen = false
+                        }
+                        p == null || p <= 0.0 -> {
+                            mensajeError = "Ingresa un precio válido mayor a 0."
+                            mostrarResumen = false
+                        }
+                        c == null || c <= 0 -> {
+                            mensajeError = "Ingresa una cantidad entera mayor a 0."
+                            mostrarResumen = false
+                        }
+                        else -> {
+                            mensajeError = ""
+                            mostrarResumen = true
+                        }
+                    }
+                },
+                modifier = Modifier.weight(1.5f)
+            ) {
+                Text("AGREGAR PRODUCTO")
+            }
+
+            // Botón Limpiar para resetear el formulario
+            OutlinedButton(
+                onClick = {
+                    nombre = ""
+                    precio = ""
+                    cantidad = ""
+                    mensajeError = ""
+                    mostrarResumen = false
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("LIMPIAR")
+            }
         }
 
-        if (!mostrarResumen) {
+        // Mensaje de Error en Rojo
+        if (mensajeError.isNotEmpty()) {
+            Text(
+                text = "⚠ $mensajeError",
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+        }
+
+        // Estado inicial
+        if (!mostrarResumen && mensajeError.isEmpty()) {
             Text(
                 text = "Aún no has registrado ningún producto",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        } else {
+        }
+
+        // Card de Resumen y Confirmación
+        if (mostrarResumen) {
             val precioNum = precio.toDoubleOrNull() ?: 0.0
             val cantidadNum = cantidad.toIntOrNull() ?: 0
             val importeTotal = precioNum * cantidadNum
@@ -153,7 +205,7 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = if (nombre.isBlank()) "Sin nombre" else nombre,
+                        text = nombre,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
