@@ -166,9 +166,12 @@ fun PantallaRegistro(modifier: Modifier = Modifier) {
                     mensajeError = ""
                     mostrarResumen = false
                 },
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(0.9f),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.secondary
+                )
             ) {
-                Text("LIMPIAR")
+                Text("Limpiar")
             }
         }
 
