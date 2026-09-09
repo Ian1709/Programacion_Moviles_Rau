@@ -18,6 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rau.registro_notas.FilaCursoSlider
 import com.rau.registro_notas.ui.theme.Registro_NotasTheme
+import java.util.Locale
+import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +62,10 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
     var notaBD by remember { mutableFloatStateOf(0f) }
     var redondear by remember { mutableStateOf(false) }
     var confirmado by remember { mutableStateOf(false) }
+    var mostrarResultado by remember { mutableStateOf(false) }
+    var promPonderado by remember { mutableDoubleStateOf(0.0) }
+    var promFinal by remember { mutableDoubleStateOf(0.0) }
+    var fueRedondeado by remember { mutableStateOf(false) }
     val fondoGradiente = Brush.verticalGradient(
         colors = listOf(Color(0xFFEBF8FF), Color(0xFFF7FAFC), Color.White)
     )
@@ -128,7 +134,16 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = {},
+            onClick = {
+                val ponderado = (notaFundamentos * 0.20) +
+                        (notaPOO * 0.25) +
+                        (notaMoviles * 0.30) +
+                        (notaBD * 0.25)
+                promPonderado = ponderado
+                fueRedondeado = redondear
+                promFinal = if (redondear) ponderado.roundToInt().toDouble() else ponderado
+                mostrarResultado = true
+            },
             enabled = confirmado,
             modifier = Modifier
                 .fillMaxWidth()
@@ -144,15 +159,97 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(
-            text = "Asigna las notas y confirma para calcular",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        if (!mostrarResultado) {
+            Text(
+                text = "Asigna las notas y confirma para calcular",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        } else {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Promedio ponderado:   ${String.format(Locale.US, "%.2f", promPonderado)}",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                        color = Color(0xFF2D3748)
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Row(verticalAlignment = Alignment.Bottom) {
+                        Text(
+                            text = "Promedio final:  ",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = Color(0xFF1A365D)
+                        )
+                        Text(
+                            text = if (fueRedondeado) "${promFinal.toInt()}" else String.format(Locale.US, "%.2f", promFinal),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                            color = Color(0xFF1A365D)
+                        )
+                    }
+                    if (fueRedondeado) {
+                        Text(
+                            text = "(redondeado)",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    val (observacion, colorFondoChip, colorTextoChip) = when {
+                        promFinal >= 17.0 -> Triple("EXCELENTE", Color(0xFFC8E6C9), Color(0xFF1B5E20))
+                        promFinal >= 13.0 -> Triple("APROBADO", Color(0xFFDCEDC8), Color(0xFF33691E))
+                        promFinal >= 10.0 -> Triple("EN RECUPERACIÓN", Color(0xFFFFECB3), Color(0xFFE65100))
+                        else -> Triple("DESAPROBADO", Color(0xFFFFCDD2), Color(0xFFB71C1C))
+                    }
+
+                    Surface(
+                        color = colorFondoChip,
+                        shape = MaterialTheme.shapes.small
+                    ) {
+                        Text(
+                            text = observacion,
+                            color = colorTextoChip,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        )
+                    }
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp))
+                    Text(
+                        text = "Aporte por curso:",
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                        color = Color.DarkGray
+                    )
+                    Text(
+                        text = "• Fundamentos: ${notaFundamentos.toInt()} × 20% = ${String.format(Locale.US, "%.2f", notaFundamentos * 0.20)}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "• POO: ${notaPOO.toInt()} × 25% = ${String.format(Locale.US, "%.2f", notaPOO * 0.25)}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "• Móviles: ${notaMoviles.toInt()} × 30% = ${String.format(Locale.US, "%.2f", notaMoviles * 0.30)}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        text = "• Base de Datos: ${notaBD.toInt()} × 25% = ${String.format(Locale.US, "%.2f", notaBD * 0.25)}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        }
     }
 }
-
 @Composable
 fun FilaCursoSlider(
     nombreCurso: String,
