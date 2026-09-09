@@ -103,7 +103,8 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
         ) {
             Text(
                 text = "Redondear promedio final",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF1A365D)
             )
             Switch(
                 checked = redondear,
@@ -127,7 +128,9 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = "Confirmo que las notas son correctas",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF1A365D)
+
             )
         }
 
@@ -231,19 +234,23 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
                     )
                     Text(
                         text = "• Fundamentos: ${notaFundamentos.toInt()} × 20% = ${String.format(Locale.US, "%.2f", notaFundamentos * 0.20)}",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF1A365D)
                     )
                     Text(
                         text = "• POO: ${notaPOO.toInt()} × 25% = ${String.format(Locale.US, "%.2f", notaPOO * 0.25)}",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF1A365D)
                     )
                     Text(
                         text = "• Móviles: ${notaMoviles.toInt()} × 30% = ${String.format(Locale.US, "%.2f", notaMoviles * 0.30)}",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF1A365D)
                     )
                     Text(
                         text = "• Base de Datos: ${notaBD.toInt()} × 25% = ${String.format(Locale.US, "%.2f", notaBD * 0.25)}",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF1A365D)
                     )
                 }
             }
