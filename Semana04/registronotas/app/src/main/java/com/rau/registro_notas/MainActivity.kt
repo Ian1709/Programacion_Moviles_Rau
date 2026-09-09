@@ -58,6 +58,8 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
     var notaPOO by remember { mutableFloatStateOf(0f) }
     var notaMoviles by remember { mutableFloatStateOf(0f) }
     var notaBD by remember { mutableFloatStateOf(0f) }
+    var redondear by remember { mutableStateOf(false) }
+    var confirmado by remember { mutableStateOf(false) }
     val fondoGradiente = Brush.verticalGradient(
         colors = listOf(Color(0xFFEBF8FF), Color(0xFFF7FAFC), Color.White)
     )
@@ -86,6 +88,68 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
         FilaCursoSlider("Programación Orientada a Objetos", 25, notaPOO) { notaPOO = it }
         FilaCursoSlider("Programación en Móviles", 30, notaMoviles) { notaMoviles = it }
         FilaCursoSlider("Base de Datos", 25, notaBD) { notaBD = it }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Redondear promedio final",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Switch(
+                checked = redondear,
+                onCheckedChange = { redondear = it },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color(0xFF2B6CB0)
+                )
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = confirmado,
+                onCheckedChange = { confirmado = it },
+                colors = CheckboxDefaults.colors(checkedColor = Color(0xFF2B6CB0))
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = "Confirmo que las notas son correctas",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {},
+            enabled = confirmado,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF2B6CB0),
+                disabledContainerColor = Color(0xFFCBD5E0),
+                disabledContentColor = Color.White
+            )
+        ) {
+            Text("CALCULAR PROMEDIO", fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Asigna las notas y confirma para calcular",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.Gray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 
