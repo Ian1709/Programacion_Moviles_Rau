@@ -247,7 +247,49 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Promedio calculado correctamente",
+                    color = Color(0xFF2E7D32),
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedButton(
+                onClick = {
+                    notaFundamentos = 0f
+                    notaPOO = 0f
+                    notaMoviles = 0f
+                    notaBD = 0f
+                    redondear = false
+                    confirmado = false
+                    mostrarResultado = false
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = Color(0xFF2B6CB0)
+                )
+            ) {
+                Text("LIMPIAR")
+            }
         }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Text(
+            text = "Desarrollado por: Ian Alexander Rau Reyes",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.Gray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
     }
 }
 @Composable
