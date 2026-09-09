@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.rau.registro_notas.FilaCursoSlider
 import com.rau.registro_notas.ui.theme.Registro_NotasTheme
 
 class MainActivity : ComponentActivity() {
@@ -53,7 +54,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PantallaNotas(modifier: Modifier = Modifier) {
-
+    var notaFundamentos by remember { mutableFloatStateOf(0f) }
+    var notaPOO by remember { mutableFloatStateOf(0f) }
+    var notaMoviles by remember { mutableFloatStateOf(0f) }
+    var notaBD by remember { mutableFloatStateOf(0f) }
     val fondoGradiente = Brush.verticalGradient(
         colors = listOf(Color(0xFFEBF8FF), Color(0xFFF7FAFC), Color.White)
     )
@@ -66,6 +70,85 @@ fun PantallaNotas(modifier: Modifier = Modifier) {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start
     ) {
+        Text(
+            text = "Notas del ciclo",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            color = Color(0xFF1A365D)
+        )
+        Text(
+            text = "Desliza para asignar cada nota (0 a 20)",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(12.dp))
 
+        FilaCursoSlider("Fundamentos de Programación", 20, notaFundamentos) { notaFundamentos = it }
+        FilaCursoSlider("Programación Orientada a Objetos", 25, notaPOO) { notaPOO = it }
+        FilaCursoSlider("Programación en Móviles", 30, notaMoviles) { notaMoviles = it }
+        FilaCursoSlider("Base de Datos", 25, notaBD) { notaBD = it }
+    }
+}
+
+@Composable
+fun FilaCursoSlider(
+    nombreCurso: String,
+    peso: Int,
+    nota: Float,
+    onNotaChange: (Float) -> Unit
+) {
+    val colorBadge = if (nota < 13f) Color(0xFFFFCDD2) else Color(0xFFBEE3F8)
+    val colorTextoBadge = if (nota < 13f) Color(0xFFB71C1C) else Color(0xFF1A365D)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = nombreCurso,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                    color = Color(0xFF2D3748)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "($peso%)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF2B6CB0)
+                )
+            }
+            Surface(
+                color = colorBadge,
+                shape = MaterialTheme.shapes.extraSmall,
+                modifier = Modifier
+                    .width(36.dp)
+                    .height(24.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Text(
+                        text = "${nota.toInt()}",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                        color = colorTextoBadge
+                    )
+                }
+            }
+        }
+
+        Slider(
+            value = nota,
+            onValueChange = onNotaChange,
+            valueRange = 0f..20f,
+            steps = 19,
+            colors = SliderDefaults.colors(
+                thumbColor = Color(0xFF2B6CB0),
+                activeTrackColor = Color(0xFF2B6CB0),
+                inactiveTrackColor = Color(0xFFCBD5E0)
+            )
+        )
     }
 }
