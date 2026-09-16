@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import com.rau.tarea01.ui.theme.Tarea01Theme
 
 class MainActivity : ComponentActivity() {
@@ -97,6 +98,9 @@ fun TemperatureDisplay() {
             }
             Button(onClick = { temperatura-- }) {
                 Text("Bajar")
+            }
+            OutlinedButton(onClick = { temperatura = 20 }) {
+                Text("Resetear")
             }
         }
     }
