@@ -85,3 +85,48 @@ fun PantallaCarrito() {
         }
     }
 }
+
+@Composable
+fun TarjetaProducto(producto: Producto, onEliminar: () -> Unit) {
+    val importe = producto.precio * producto.cantidad
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = producto.nombre,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
+                Text(
+                    text = "S/ %.2f  x %d".format(producto.precio, producto.cantidad),
+                    color = androidx.compose.ui.graphics.Color.Gray,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Text(
+                text = "S/ %.2f".format(importe),
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(end = 8.dp)
+            )
+
+            IconButton(onClick = onEliminar) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Eliminar",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
