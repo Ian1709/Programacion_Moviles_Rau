@@ -12,6 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Checkbox
+import androidx.compose.ui.text.style.TextDecoration
 import com.rau.listatareas.ui.theme.ListaTareasTheme
 
 data class Tarea(
@@ -111,6 +115,45 @@ fun ListaTareasApp() {
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
                     )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(tareas, key = { it.id }) { tarea ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = tarea.isCompleted,
+                                onCheckedChange = { estaMarcada ->
+                                    val index = tareas.indexOf(tarea)
+                                    if (index != -1) {
+                                        tareas[index] = tarea.copy(isCompleted = estaMarcada)
+                                    }
+                                }
+                            )
+
+                            Text(
+                                text = tarea.title,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 4.dp, end = 8.dp),
+                                textDecoration = if (tarea.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
+                                color = if (tarea.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                 }
             }
         }
