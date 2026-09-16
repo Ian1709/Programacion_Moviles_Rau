@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.sp
 import com.rau.listatareas.ui.theme.ListaTareasTheme
 
 data class Tarea(
@@ -85,72 +86,81 @@ fun ListaTareasApp() {
             ) {
                 Text("Agregar")
             }
-            Spacer(modifier = Modifier.height(16.dp))
+        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-            val total = tareas.size
-            val pendientes = tareas.count { !it.isCompleted }
+        val total = tareas.size
+        val pendientes = tareas.count { !it.isCompleted }
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                shape = RoundedCornerShape(12.dp)
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Total: $total",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = "Pendientes: $pendientes",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
+                Text(
+                    text = "Total: $total",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = "Pendientes: $pendientes",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(tareas, key = { it.id }) { tarea ->
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(tareas, key = { it.id }) { tarea ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = tarea.isCompleted,
-                                onCheckedChange = { estaMarcada ->
-                                    val index = tareas.indexOf(tarea)
-                                    if (index != -1) {
+                        Checkbox(
+                            checked = tarea.isCompleted,
+                            onCheckedChange = { estaMarcada ->
+                                val index = tareas.indexOf(tarea)
+                                if (index != -1) {
                                         tareas[index] = tarea.copy(isCompleted = estaMarcada)
-                                    }
                                 }
-                            )
+                            }
+                        )
 
+                        Text(
+                            text = tarea.title,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 4.dp, end = 8.dp),
+                            textDecoration = if (tarea.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
+                            color = if (tarea.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+                        )
+
+                        IconButton(onClick = { tareas.remove(tarea) }) {
                             Text(
-                                text = tarea.title,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(start = 4.dp, end = 8.dp),
-                                textDecoration = if (tarea.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
-                                color = if (tarea.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
+                                text = "x",
+                                color = MaterialTheme.colorScheme.error,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
