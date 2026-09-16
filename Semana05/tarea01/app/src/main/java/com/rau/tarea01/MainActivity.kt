@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
 import com.rau.tarea01.ui.theme.Tarea01Theme
 
 class MainActivity : ComponentActivity() {
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        ContadorRoto()
+                        ContadorConRemember()
                         Spacer(modifier = Modifier.height(32.dp))
                         TemperatureDisplay()
                     }
@@ -85,10 +86,17 @@ fun ContadorConRemember() {
 fun TemperatureDisplay() {
     var temperatura by remember { mutableStateOf(20) }
 
+    val colorTexto = when {
+        temperatura > 30 -> Color.Red
+        temperatura < 10 -> Color.Blue
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = "Temperatura: $temperatura°C",
-            style = MaterialTheme.typography.headlineMedium
+            style = MaterialTheme.typography.headlineMedium,
+            color = colorTexto
         )
         Spacer(modifier = Modifier.height(12.dp))
 
