@@ -7,6 +7,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -25,6 +28,7 @@ import com.rau.navlab.navigation.Screen
 fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
@@ -47,7 +51,7 @@ fun LoginScreen(navController: NavController) {
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.elevatedCardColors(
-                containerColor = Color.White // Forzado a blanco para evitar modo oscuro
+                containerColor = Color.White
             )
         ) {
             Column(
@@ -57,7 +61,6 @@ fun LoginScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                // Título institucional
                 Text(
                     text = "PORTAL ACADÉMICO",
                     style = MaterialTheme.typography.titleLarge.copy(
@@ -70,11 +73,10 @@ fun LoginScreen(navController: NavController) {
                 Text(
                     text = "Inicia sesión con tu cuenta institucional",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF616161) // Gris oscuro para alto contraste
+                    color = Color(0xFF616161)
                 )
                 Spacer(modifier = Modifier.height(28.dp))
 
-                // Campo de Correo Institucional / Usuario
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
@@ -99,7 +101,6 @@ fun LoginScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Campo de Contraseña
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -112,7 +113,14 @@ fun LoginScreen(navController: NavController) {
                             tint = Color(0xFF512DA8)
                         )
                     },
-                    visualTransformation = PasswordVisualTransformation(),
+                    trailingIcon = {
+                        val image = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                        val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(imageVector = image, contentDescription = description, tint = Color(0xFF512DA8))
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     shape = RoundedCornerShape(14.dp),
                     singleLine = true,
@@ -126,7 +134,6 @@ fun LoginScreen(navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Botón Principal INICIAR SESIÓN (Fondo morado sólido, texto blanco en mayúsculas)
                 Button(
                     onClick = {
                         navController.navigate(Screen.Home.route) {
@@ -153,7 +160,6 @@ fun LoginScreen(navController: NavController) {
                 }
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Botón Sutil para recuperación de credenciales
                 TextButton(
                     onClick = { /* Acción de recuperación de contraseña */ }
                 ) {

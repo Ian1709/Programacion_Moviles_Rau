@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,16 +46,17 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Cabecera de bienvenida
+            // Cabecera de bienvenida centrada horizontalmente
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(36.dp))
                 Text(
                     text = "Portal Académico",
                     style = MaterialTheme.typography.labelLarge.copy(letterSpacing = 1.5.sp),
-                    color = Color(0xFFEDE7F6)
+                    color = Color(0xFFEDE7F6),
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -62,13 +64,15 @@ fun HomeScreen(navController: NavController) {
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = Color.White
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "¿Qué acción académica deseas realizar hoy?",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFFE1DFE9)
+                    color = Color(0xFFE1DFE9),
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -77,7 +81,6 @@ fun HomeScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Tarjeta 1: Directorio de Alumnos
                 MenuCard(
                     title = "Directorio de Alumnos",
                     description = "Consulta el directorio de estudiantes y compañeros matriculados.",
@@ -85,7 +88,6 @@ fun HomeScreen(navController: NavController) {
                     onClick = { navController.navigate(Screen.List.route) }
                 )
 
-                // Tarjeta 2: Mi Perfil Académico
                 MenuCard(
                     title = "Mi Perfil Académico",
                     description = "Visualiza tu información personal, historial y estado académico.",
@@ -94,7 +96,7 @@ fun HomeScreen(navController: NavController) {
                 )
             }
 
-            // Parte inferior: Cerrar Sesión Seguro (Botón con fondo morado sólido / contraste fuerte y texto blanco en mayúsculas)
+            // Parte inferior: Cerrar Sesión Seguro
             Button(
                 onClick = {
                     navController.navigate(Screen.Login.route) {
@@ -148,7 +150,7 @@ fun MenuCard(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = Color.White // Forzado a blanco para evitar modo oscuro
+            containerColor = Color.White
         )
     ) {
         Row(
@@ -157,7 +159,6 @@ fun MenuCard(
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Ícono dentro de un contenedor circular con fondo lavanda y tinte morado
             Box(
                 modifier = Modifier
                     .size(56.dp)
@@ -181,13 +182,13 @@ fun MenuCard(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
+                    color = Color(0xFF1A1A1A)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF616161) // Gris oscuro para descripción
+                    color = Color(0xFF616161)
                 )
             }
         }
