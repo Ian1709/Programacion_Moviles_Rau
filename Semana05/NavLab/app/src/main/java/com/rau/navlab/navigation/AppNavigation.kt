@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.rau.navlab.screens.DetailScreen
 import com.rau.navlab.screens.HomeScreen
 import com.rau.navlab.screens.ListScreen
+import com.rau.navlab.screens.LoginScreen
 import com.rau.navlab.screens.ProfileScreen
 
 @Composable
@@ -17,8 +18,11 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Login.route
     ) {
+        composable(Screen.Login.route) {
+            LoginScreen(navController)
+        }
         composable(Screen.Home.route) {
             HomeScreen(navController)
         }

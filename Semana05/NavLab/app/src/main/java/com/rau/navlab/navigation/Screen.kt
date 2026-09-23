@@ -6,13 +6,16 @@ package com.rau.navlab.navigation
 sealed class Screen(val route: String) {
 
     // Desarrollado por: Juan León
-    // Pantalla de inicio - punto de entrada de la app
+    // Pantalla de inicio de sesión / login
+    object Login : Screen(route = "login")
+
+    // Pantalla de inicio / Dashboard principal
     object Home : Screen(route = "home")
 
-    // Pantalla que muestra la lista de elementos
+    // Pantalla que muestra la lista de elementos (Directorio de Alumnos)
     object List : Screen(route = "list")
 
-    // Pantalla del perfil del usuario
+    // Pantalla del perfil del usuario (Mi Perfil Académico)
     object Profile : Screen(route = "profile")
 
     // -----------------------------------------------------------------
