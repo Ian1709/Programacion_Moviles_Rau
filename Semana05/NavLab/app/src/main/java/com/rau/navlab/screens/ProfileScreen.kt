@@ -1,5 +1,6 @@
 package com.rau.navlab.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -86,107 +87,126 @@ fun ProfileScreen(navController: NavController) {
                         containerColor = Color.White
                     )
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        // Avatar circular centrado de tamaño 90.dp
+                        // Banner superior decorativo detrás del avatar
                         Box(
                             modifier = Modifier
-                                .size(90.dp)
-                                .clip(CircleShape)
-                                .background(Color(0xFFEDE7F6)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Foto de Perfil",
-                                tint = Color(0xFF512DA8),
-                                modifier = Modifier.size(46.dp)
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Ian Rau",
-                            style = MaterialTheme.typography.headlineSmall.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = Color(0xFF1A1A1A)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = "Estudiante de Diseño y Desarrollo de Software",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF616161)
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(Color(0xFF512DA8), Color(0xFF7E57C2))
+                                    )
+                                )
                         )
 
-                        Spacer(modifier = Modifier.height(20.dp))
-                        HorizontalDivider(color = Color(0xFFEDE7F6))
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // Sección 1: Información Personal
-                        SectionHeader(title = "Información Personal")
-                        Spacer(modifier = Modifier.height(12.dp))
-                        ProfileDetailRow(icon = Icons.Default.Person, label = "Nombre", value = "Ian Rau")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        ProfileDetailRow(icon = Icons.Default.Email, label = "Correo", value = "ian.rau@tecsup.edu.pe")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        ProfileDetailRow(icon = Icons.Default.Phone, label = "Teléfono", value = "+51 966 904 778")
-
-                        Spacer(modifier = Modifier.height(24.dp))
-                        HorizontalDivider(color = Color(0xFFEDE7F6))
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        // Sección 2: Información Académica
-                        SectionHeader(title = "Información Académica")
-                        Spacer(modifier = Modifier.height(12.dp))
-                        ProfileDetailRow(icon = Icons.Default.School, label = "Carrera", value = "Diseño y Desarrollo de Software")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        ProfileDetailRow(icon = Icons.AutoMirrored.Filled.MenuBook, label = "Ciclo", value = "4to Ciclo")
-                        Spacer(modifier = Modifier.height(10.dp))
-                        ProfileDetailRow(icon = Icons.Default.Badge, label = "Código", value = "120424")
-
-                        Spacer(modifier = Modifier.height(28.dp))
-
-                        // Botón compacto de Cerrar Sesión (height 42.dp, fondo rojizo suave, texto e ícono en rojo intenso)
-                        Button(
-                            onClick = {
-                                navController.navigate(Screen.Login.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                }
-                            },
+                        Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(42.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFFEBEE),
-                                contentColor = Color(0xFFD32F2F)
-                            ),
-                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
+                            Spacer(modifier = Modifier.height(40.dp))
+                            // Avatar circular de 90.dp con borde blanco y sombra
+                            Surface(
+                                modifier = Modifier.size(90.dp),
+                                shape = CircleShape,
+                                color = Color(0xFFEDE7F6),
+                                shadowElevation = 6.dp,
+                                border = BorderStroke(3.dp, Color.White)
                             ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.Logout,
-                                    contentDescription = "Cerrar Sesión",
-                                    tint = Color(0xFFD32F2F),
-                                    modifier = Modifier.size(18.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = "CERRAR SESIÓN",
-                                    style = MaterialTheme.typography.bodyMedium.copy(
-                                        fontWeight = FontWeight.Bold,
-                                        letterSpacing = 0.8.sp
-                                    ),
-                                    color = Color(0xFFD32F2F)
-                                )
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Foto de Perfil",
+                                        tint = Color(0xFF512DA8),
+                                        modifier = Modifier.size(46.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Text(
+                                text = "Ian Rau",
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                color = Color(0xFF1A1A1A)
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "Estudiante de Diseño y Desarrollo de Software",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color(0xFF616161)
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                            HorizontalDivider(color = Color(0xFFEDE7F6))
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            // Sección 1: Información Personal
+                            SectionHeader(title = "Información Personal")
+                            Spacer(modifier = Modifier.height(12.dp))
+                            ProfileDetailRow(icon = Icons.Default.Person, label = "Nombre", value = "Ian Rau")
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ProfileDetailRow(icon = Icons.Default.Email, label = "Correo", value = "ian.rau@tecsup.edu.pe")
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ProfileDetailRow(icon = Icons.Default.Phone, label = "Teléfono", value = "+51 966 904 778")
+
+                            Spacer(modifier = Modifier.height(24.dp))
+                            HorizontalDivider(color = Color(0xFFEDE7F6))
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            // Sección 2: Información Académica
+                            SectionHeader(title = "Información Académica")
+                            Spacer(modifier = Modifier.height(12.dp))
+                            ProfileDetailRow(icon = Icons.Default.School, label = "Carrera", value = "Diseño y Desarrollo de Software")
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ProfileDetailRow(icon = Icons.AutoMirrored.Filled.MenuBook, label = "Ciclo", value = "4to Ciclo")
+                            Spacer(modifier = Modifier.height(10.dp))
+                            ProfileDetailRow(icon = Icons.Default.Badge, label = "Código", value = "120424")
+
+                            Spacer(modifier = Modifier.height(28.dp))
+
+                            // Botón compacto de Cerrar Sesión
+                            Button(
+                                onClick = {
+                                    navController.navigate(Screen.Login.route) {
+                                        popUpTo(Screen.Home.route) { inclusive = true }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(42.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = Color(0xFFFFEBEE),
+                                    contentColor = Color(0xFFD32F2F)
+                                ),
+                                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
+                            ) {
+                                Row(
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Filled.Logout,
+                                        contentDescription = "Cerrar Sesión",
+                                        tint = Color(0xFFD32F2F),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "CERRAR SESIÓN",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            fontWeight = FontWeight.Bold,
+                                            letterSpacing = 0.8.sp
+                                        ),
+                                        color = Color(0xFFD32F2F)
+                                    )
+                                }
                             }
                         }
                     }

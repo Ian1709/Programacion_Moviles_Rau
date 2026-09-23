@@ -1,5 +1,6 @@
 package com.rau.navlab.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -77,76 +78,95 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                     containerColor = Color.White
                 )
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(28.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Box(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    // Avatar circular centrado de 90.dp
+                    // Banner superior decorativo detrás del avatar
                     Box(
                         modifier = Modifier
-                            .size(90.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFEDE7F6)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Alumno",
-                            tint = Color(0xFF512DA8),
-                            modifier = Modifier.size(46.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = student.name,
-                        style = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Bold
-                        ),
-                        color = Color(0xFF1A1A1A)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = student.career,
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            fontWeight = FontWeight.SemiBold
-                        ),
-                        color = Color(0xFF512DA8)
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .background(
+                                Brush.horizontalGradient(
+                                    listOf(Color(0xFF512DA8), Color(0xFF7E57C2))
+                                )
+                            )
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
-                    HorizontalDivider(color = Color(0xFFEDE7F6))
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    DetailInfoRow(icon = Icons.Default.Badge, label = "Código", value = student.code)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    DetailInfoRow(icon = Icons.Default.Email, label = "Correo", value = student.email)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    DetailInfoRow(icon = Icons.Default.School, label = "Biografía Académica", value = student.bio)
-
-                    Spacer(modifier = Modifier.height(28.dp))
-
-                    Button(
-                        onClick = { navController.popBackStack() },
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF512DA8),
-                            contentColor = Color.White
-                        )
+                            .padding(28.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Spacer(modifier = Modifier.height(40.dp))
+                        // Avatar circular de 90.dp con borde blanco y sombra
+                        Surface(
+                            modifier = Modifier.size(90.dp),
+                            shape = CircleShape,
+                            color = Color(0xFFEDE7F6),
+                            shadowElevation = 6.dp,
+                            border = BorderStroke(3.dp, Color.White)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Alumno",
+                                    tint = Color(0xFF512DA8),
+                                    modifier = Modifier.size(46.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         Text(
-                            text = "REGRESAR AL DIRECTORIO",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.8.sp
+                            text = student.name,
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold
                             ),
-                            color = Color.White
+                            color = Color(0xFF1A1A1A)
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = student.career,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = Color(0xFF512DA8)
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                        HorizontalDivider(color = Color(0xFFEDE7F6))
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        DetailInfoRow(icon = Icons.Default.Badge, label = "Código", value = student.code)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        DetailInfoRow(icon = Icons.Default.Email, label = "Correo", value = student.email)
+                        Spacer(modifier = Modifier.height(12.dp))
+                        DetailInfoRow(icon = Icons.Default.School, label = "Biografía Académica", value = student.bio)
+
+                        Spacer(modifier = Modifier.height(28.dp))
+
+                        Button(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF512DA8),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                text = "REGRESAR AL DIRECTORIO",
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 0.8.sp
+                                ),
+                                color = Color.White
+                            )
+                        }
                     }
                 }
             }
