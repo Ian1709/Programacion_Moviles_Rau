@@ -3,8 +3,10 @@ package com.rau.navlab.screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Badge
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,9 +33,9 @@ fun DetailScreen(navController: NavController, itemId: Int) {
 
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF512DA8),
-            Color(0xFF7E57C2),
-            Color(0xFFEDE7F6)
+            Color(0xFF5E4B8B),
+            Color(0xFF7E6F9F),
+            Color(0xFFF6F5FA)
         )
     )
 
@@ -41,7 +44,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
             TopAppBar(
                 title = {
                     Text(
-                        "Detalle del Alumno",
+                        "Expediente Académico",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         color = Color.White
                     )
@@ -56,7 +59,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF512DA8)
+                    containerColor = Color(0xFF5E4B8B)
                 )
             )
         }
@@ -68,104 +71,94 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                 .padding(padding),
             contentAlignment = Alignment.Center
         ) {
-            ElevatedCard(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(24.dp),
-                shape = RoundedCornerShape(24.dp),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = Color.White
-                )
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    // Banner superior decorativo detrás del avatar
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(
-                                Brush.horizontalGradient(
-                                    listOf(Color(0xFF512DA8), Color(0xFF7E57C2))
-                                )
-                            )
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = Color.White // Blanco puro
                     )
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(28.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Spacer(modifier = Modifier.height(40.dp))
-                        // Avatar circular de 90.dp con borde blanco y sombra
-                        Surface(
-                            modifier = Modifier.size(90.dp),
-                            shape = CircleShape,
-                            color = Color(0xFFEDE7F6),
-                            shadowElevation = 6.dp,
-                            border = BorderStroke(3.dp, Color.White)
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Alumno",
-                                    tint = Color(0xFF512DA8),
-                                    modifier = Modifier.size(46.dp)
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = student.name,
-                            style = MaterialTheme.typography.headlineSmall.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = Color(0xFF1A1A1A)
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = student.career,
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            color = Color(0xFF512DA8)
-                        )
-
-                        Spacer(modifier = Modifier.height(20.dp))
-                        HorizontalDivider(color = Color(0xFFEDE7F6))
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        DetailInfoRow(icon = Icons.Default.Badge, label = "Código", value = student.code)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        DetailInfoRow(icon = Icons.Default.Email, label = "Correo", value = student.email)
-                        Spacer(modifier = Modifier.height(12.dp))
-                        DetailInfoRow(icon = Icons.Default.School, label = "Biografía Académica", value = student.bio)
-
-                        Spacer(modifier = Modifier.height(28.dp))
-
-                        Button(
-                            onClick = { navController.popBackStack() },
+                        // Banner superior morado con esquinas inferiores redondeadas
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp),
-                            shape = RoundedCornerShape(14.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF512DA8),
-                                contentColor = Color.White
-                            )
+                                .height(110.dp)
+                                .background(
+                                    Color(0xFF5E4B8B),
+                                    shape = RoundedCornerShape(
+                                        topStart = 24.dp,
+                                        topEnd = 24.dp,
+                                        bottomStart = 32.dp,
+                                        bottomEnd = 32.dp
+                                    )
+                                )
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+                            Spacer(modifier = Modifier.height(48.dp))
+                            // Avatar circular grande flotante con borde blanco grueso (4.dp)
+                            Surface(
+                                modifier = Modifier.size(96.dp),
+                                shape = CircleShape,
+                                color = Color(0xFFEDE7F6),
+                                shadowElevation = 8.dp,
+                                border = BorderStroke(4.dp, Color.White)
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Icon(
+                                        imageVector = Icons.Default.Person,
+                                        contentDescription = "Alumno",
+                                        tint = Color(0xFF5E4B8B),
+                                        modifier = Modifier.size(50.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+
                             Text(
-                                text = "REGRESAR AL DIRECTORIO",
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.8.sp
+                                text = student.name,
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.Bold
                                 ),
-                                color = Color.White
+                                color = Color(0xFF1A1A1A)
                             )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = student.career,
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontWeight = FontWeight.SemiBold
+                                ),
+                                color = Color(0xFF5E4B8B)
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                            HorizontalDivider(color = Color(0xFFEFECEF))
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            DetailInfoRow(icon = Icons.Default.Badge, label = "Código", value = student.code)
+                            Spacer(modifier = Modifier.height(12.dp))
+                            DetailInfoRow(icon = Icons.Default.Email, label = "Correo", value = student.email)
+                            Spacer(modifier = Modifier.height(12.dp))
+                            DetailInfoRow(icon = Icons.Default.School, label = "Biografía Académica", value = student.bio)
+
+                            // Nota: Se elimina de forma definitiva el botón inferior de regreso, delegando la navegación a la flecha superior.
+                            Spacer(modifier = Modifier.height(16.dp))
                         }
                     }
                 }
@@ -175,7 +168,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
 }
 
 @Composable
-fun DetailInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+fun DetailInfoRow(icon: ImageVector, label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -190,7 +183,7 @@ fun DetailInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: 
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = Color(0xFF512DA8),
+                tint = Color(0xFF5E4B8B),
                 modifier = Modifier.size(18.dp)
             )
         }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -32,14 +33,14 @@ data class Student(
 )
 
 val mockStudents = listOf(
-    Student(1, "Carlos Mendoza", "Ingeniería de Software", "20241011", "carlos.mendoza@tecsup.edu.pe", "Apasionado por el desarrollo backend y arquitecturas limpias en Kotlin y Spring Boot."),
-    Student(2, "Ana Sofía Vargas", "Redes y Comunicaciones", "20241012", "ana.vargas@tecsup.edu.pe", "Especialista en seguridad de redes, ciberseguridad ofensiva y administración de servidores Linux."),
-    Student(3, "Luis Fernando Quispe", "Ciberseguridad", "20241013", "luis.quispe@tecsup.edu.pe", "Investigador de vulnerabilidades y analista de operaciones de seguridad SOC."),
-    Student(4, "María Fernanda Torres", "Inteligencia Artificial", "20241014", "maria.torres@tecsup.edu.pe", "Desarrolladora de modelos de Machine Learning y procesamiento de lenguaje natural con Python."),
-    Student(5, "Jorge Alberto Ruiz", "Ciencia de Datos", "20241015", "jorge.ruiz@tecsup.edu.pe", "Analista de grandes volúmenes de datos, visualización avanzada y estadística aplicada."),
-    Student(6, "Claudia Patricia Ramos", "Diseño y Desarrollo de Software", "20241016", "claudia.ramos@tecsup.edu.pe", "Diseñadora UI/UX y desarrolladora frontend especializada en experiencias móviles con Jetpack Compose."),
-    Student(7, "Diego Alejandro Rojas", "Desarrollo Móvil", "20241017", "diego.rojas@tecsup.edu.pe", "Entusiasta de Android nativo, arquitectura MVVM y concurrencia con Kotlin Coroutines y Flow."),
-    Student(8, "Valeria Nicole Benites", "Cloud Computing", "20241018", "valeria.benites@tecsup.edu.pe", "Arquitecta cloud junior certificada en despliegues automatizados con Docker y Kubernetes.")
+    Student(1, "Carlos Mendoza", "Ingeniería de Software", "202411", "carlos.mendoza@tecsup.edu.pe", "Apasionado por el desarrollo backend y arquitecturas limpias en Kotlin y Spring Boot."),
+    Student(2, "Ana Sofía Vargas", "Redes y Comunicaciones", "202412", "ana.vargas@tecsup.edu.pe", "Especialista en seguridad de redes, ciberseguridad ofensiva y administración de servidores Linux."),
+    Student(3, "Luis Fernando Quispe", "Ciberseguridad", "202413", "luis.quispe@tecsup.edu.pe", "Investigador de vulnerabilidades y analista de operaciones de seguridad SOC."),
+    Student(4, "María Fernanda Torres", "Inteligencia Artificial", "202414", "maria.torres@tecsup.edu.pe", "Desarrolladora de modelos de Machine Learning y procesamiento de lenguaje natural con Python."),
+    Student(5, "Jorge Alberto Ruiz", "Ciencia de Datos", "202415", "jorge.ruiz@tecsup.edu.pe", "Analista de grandes volúmenes de datos, visualización avanzada y estadística aplicada."),
+    Student(6, "Claudia Patricia Ramos", "Diseño y Desarrollo de Software", "202416", "claudia.ramos@tecsup.edu.pe", "Diseñadora UI/UX y desarrolladora frontend especializada en experiencias móviles con Jetpack Compose."),
+    Student(7, "Diego Alejandro Rojas", "Desarrollo Móvil", "202417", "diego.rojas@tecsup.edu.pe", "Entusiasta de Android nativo, arquitectura MVVM y concurrencia con Kotlin Coroutines y Flow."),
+    Student(8, "Valeria Nicole Benites", "Cloud Computing", "202418", "valeria.benites@tecsup.edu.pe", "Arquitecta cloud junior certificada en despliegues automatizados con Docker y Kubernetes.")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +48,9 @@ val mockStudents = listOf(
 fun ListScreen(navController: NavController) {
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF512DA8),
-            Color(0xFF7E57C2),
-            Color(0xFFEDE7F6)
+            Color(0xFF5E4B8B),
+            Color(0xFF7E6F9F),
+            Color(0xFFF6F5FA)
         )
     )
 
@@ -73,7 +74,7 @@ fun ListScreen(navController: NavController) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF512DA8)
+                    containerColor = Color(0xFF5E4B8B)
                 )
             )
         }
@@ -102,7 +103,7 @@ fun ListScreen(navController: NavController) {
                         shape = RoundedCornerShape(24.dp),
                         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                         colors = CardDefaults.elevatedCardColors(
-                            containerColor = Color.White
+                            containerColor = Color.White // Blanco puro
                         )
                     ) {
                         Row(
@@ -111,6 +112,7 @@ fun ListScreen(navController: NavController) {
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            // Avatar circular a la izquierda
                             Box(
                                 modifier = Modifier
                                     .size(48.dp)
@@ -121,10 +123,11 @@ fun ListScreen(navController: NavController) {
                                 Icon(
                                     imageVector = Icons.Default.Person,
                                     contentDescription = "Alumno",
-                                    tint = Color(0xFF512DA8)
+                                    tint = Color(0xFF5E4B8B)
                                 )
                             }
                             Spacer(modifier = Modifier.width(16.dp))
+                            // Nombre en negrita y carrera debajo en morado elegante
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = student.name,
@@ -139,9 +142,16 @@ fun ListScreen(navController: NavController) {
                                     style = MaterialTheme.typography.bodyMedium.copy(
                                         fontWeight = FontWeight.SemiBold
                                     ),
-                                    color = Color(0xFF512DA8)
+                                    color = Color(0xFF5E4B8B)
                                 )
                             }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            // Flecha indicadora a la derecha
+                            Icon(
+                                imageVector = Icons.Default.ChevronRight,
+                                contentDescription = "Ver detalle",
+                                tint = Color(0xFF757575)
+                            )
                         }
                     }
                 }

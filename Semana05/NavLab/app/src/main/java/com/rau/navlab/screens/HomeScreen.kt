@@ -28,9 +28,9 @@ import com.rau.navlab.navigation.Screen
 fun HomeScreen(navController: NavController) {
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF512DA8),
-            Color(0xFF7E57C2),
-            Color(0xFFEDE7F6)
+            Color(0xFF5E4B8B), // Tono morado de referencia
+            Color(0xFF7E6F9F),
+            Color(0xFFF6F5FA)  // Fondo lavanda suave de referencia
         )
     )
 
@@ -46,15 +46,18 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Espaciador superior flexible para desplazar el bloque de bienvenida más abajo
+            Spacer(modifier = Modifier.height(80.dp))
+
+            // Bloque de bienvenida desplazado más abajo, justo encima de las tarjetas de acceso
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Spacer(modifier = Modifier.height(36.dp))
                 Text(
                     text = "Portal Académico",
                     style = MaterialTheme.typography.labelLarge.copy(letterSpacing = 1.5.sp),
-                    color = Color(0xFFEDE7F6),
+                    color = Color(0xFFE2DFEC),
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -70,29 +73,34 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     text = "¿Qué acción académica deseas realizar hoy?",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFFE1DFE9),
+                    color = Color(0xFFEAE7F2),
                     textAlign = TextAlign.Center
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Tarjetas interactivas de acceso
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 MenuCard(
                     title = "Directorio de Alumnos",
-                    description = "Consulta el directorio de estudiantes y compañeros matriculados.",
+                    description = "Ver y gestionar estudiantes",
                     icon = Icons.Default.People,
                     onClick = { navController.navigate(Screen.List.route) }
                 )
 
                 MenuCard(
                     title = "Mi Perfil Académico",
-                    description = "Visualiza tu información personal, historial y estado académico.",
+                    description = "Datos personales y progreso",
                     icon = Icons.Default.Person,
                     onClick = { navController.navigate(Screen.Profile.route) }
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
 
             // Botón compacto de cerrar sesión
             Button(
@@ -150,7 +158,7 @@ fun MenuCard(
         shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = Color.White
+            containerColor = Color.White // Blanco puro para contraste contra modo oscuro
         )
     ) {
         Row(
@@ -169,7 +177,7 @@ fun MenuCard(
                 Icon(
                     imageVector = icon,
                     contentDescription = title,
-                    tint = Color(0xFF512DA8),
+                    tint = Color(0xFF5E4B8B),
                     modifier = Modifier.size(28.dp)
                 )
             }

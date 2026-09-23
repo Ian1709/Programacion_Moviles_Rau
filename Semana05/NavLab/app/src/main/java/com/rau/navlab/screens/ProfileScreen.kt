@@ -35,9 +35,9 @@ import com.rau.navlab.navigation.Screen
 fun ProfileScreen(navController: NavController) {
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF512DA8),
-            Color(0xFF7E57C2),
-            Color(0xFFEDE7F6)
+            Color(0xFF5E4B8B),
+            Color(0xFF7E6F9F),
+            Color(0xFFF6F5FA)
         )
     )
 
@@ -61,7 +61,7 @@ fun ProfileScreen(navController: NavController) {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF512DA8)
+                    containerColor = Color(0xFF5E4B8B)
                 )
             )
         }
@@ -84,20 +84,24 @@ fun ProfileScreen(navController: NavController) {
                     shape = RoundedCornerShape(24.dp),
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
                     colors = CardDefaults.elevatedCardColors(
-                        containerColor = Color.White
+                        containerColor = Color.White // Blanco puro
                     )
                 ) {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        // Banner superior decorativo detrás del avatar
+                        // Banner superior morado con esquinas inferiores redondeadas
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(100.dp)
+                                .height(110.dp)
                                 .background(
-                                    Brush.horizontalGradient(
-                                        listOf(Color(0xFF512DA8), Color(0xFF7E57C2))
+                                    Color(0xFF5E4B8B),
+                                    shape = RoundedCornerShape(
+                                        topStart = 24.dp,
+                                        topEnd = 24.dp,
+                                        bottomStart = 32.dp,
+                                        bottomEnd = 32.dp
                                     )
                                 )
                         )
@@ -108,21 +112,21 @@ fun ProfileScreen(navController: NavController) {
                                 .padding(24.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Spacer(modifier = Modifier.height(40.dp))
-                            // Avatar circular de 90.dp con borde blanco y sombra
+                            Spacer(modifier = Modifier.height(48.dp))
+                            // Avatar circular grande flotante con borde blanco grueso (4.dp)
                             Surface(
-                                modifier = Modifier.size(90.dp),
+                                modifier = Modifier.size(96.dp),
                                 shape = CircleShape,
                                 color = Color(0xFFEDE7F6),
-                                shadowElevation = 6.dp,
-                                border = BorderStroke(3.dp, Color.White)
+                                shadowElevation = 8.dp,
+                                border = BorderStroke(4.dp, Color.White)
                             ) {
                                 Box(contentAlignment = Alignment.Center) {
                                     Icon(
                                         imageVector = Icons.Default.Person,
                                         contentDescription = "Foto de Perfil",
-                                        tint = Color(0xFF512DA8),
-                                        modifier = Modifier.size(46.dp)
+                                        tint = Color(0xFF5E4B8B),
+                                        modifier = Modifier.size(50.dp)
                                     )
                                 }
                             }
@@ -143,11 +147,11 @@ fun ProfileScreen(navController: NavController) {
                             )
 
                             Spacer(modifier = Modifier.height(20.dp))
-                            HorizontalDivider(color = Color(0xFFEDE7F6))
+                            HorizontalDivider(color = Color(0xFFEFECEF))
                             Spacer(modifier = Modifier.height(20.dp))
 
                             // Sección 1: Información Personal
-                            SectionHeader(title = "Información Personal")
+                            ProfileSectionHeader(title = "Información Personal")
                             Spacer(modifier = Modifier.height(12.dp))
                             ProfileDetailRow(icon = Icons.Default.Person, label = "Nombre", value = "Ian Rau")
                             Spacer(modifier = Modifier.height(10.dp))
@@ -156,11 +160,11 @@ fun ProfileScreen(navController: NavController) {
                             ProfileDetailRow(icon = Icons.Default.Phone, label = "Teléfono", value = "+51 966 904 778")
 
                             Spacer(modifier = Modifier.height(24.dp))
-                            HorizontalDivider(color = Color(0xFFEDE7F6))
+                            HorizontalDivider(color = Color(0xFFEFECEF))
                             Spacer(modifier = Modifier.height(20.dp))
 
                             // Sección 2: Información Académica
-                            SectionHeader(title = "Información Académica")
+                            ProfileSectionHeader(title = "Información Académica")
                             Spacer(modifier = Modifier.height(12.dp))
                             ProfileDetailRow(icon = Icons.Default.School, label = "Carrera", value = "Diseño y Desarrollo de Software")
                             Spacer(modifier = Modifier.height(10.dp))
@@ -170,7 +174,7 @@ fun ProfileScreen(navController: NavController) {
 
                             Spacer(modifier = Modifier.height(28.dp))
 
-                            // Botón compacto de Cerrar Sesión
+                            // Botón compacto rojizo de Cerrar Sesión
                             Button(
                                 onClick = {
                                     navController.navigate(Screen.Login.route) {
@@ -217,7 +221,7 @@ fun ProfileScreen(navController: NavController) {
 }
 
 @Composable
-fun SectionHeader(title: String) {
+fun ProfileSectionHeader(title: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Start
@@ -227,7 +231,7 @@ fun SectionHeader(title: String) {
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold
             ),
-            color = Color(0xFF512DA8)
+            color = Color(0xFF5E4B8B)
         )
     }
 }
@@ -248,7 +252,7 @@ fun ProfileDetailRow(icon: ImageVector, label: String, value: String) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = Color(0xFF512DA8),
+                tint = Color(0xFF5E4B8B),
                 modifier = Modifier.size(18.dp)
             )
         }
