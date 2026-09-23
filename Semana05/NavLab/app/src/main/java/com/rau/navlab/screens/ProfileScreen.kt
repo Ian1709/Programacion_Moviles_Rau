@@ -72,7 +72,7 @@ fun ProfileScreen(navController: NavController) {
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = Color.White // Forzado a blanco para evitar modo oscuro
                 )
             ) {
                 Column(
@@ -81,10 +81,10 @@ fun ProfileScreen(navController: NavController) {
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Avatar circular con ícono
+                    // Avatar circular centrado de tamaño 90.dp con fondo lavanda claro e ícono en morado
                     Box(
                         modifier = Modifier
-                            .size(80.dp)
+                            .size(90.dp)
                             .clip(CircleShape)
                             .background(Color(0xFFEDE7F6)),
                         contentAlignment = Alignment.Center
@@ -93,7 +93,7 @@ fun ProfileScreen(navController: NavController) {
                             imageVector = Icons.Default.Person,
                             contentDescription = "Foto de Perfil",
                             tint = Color(0xFF512DA8),
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(46.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -103,13 +103,13 @@ fun ProfileScreen(navController: NavController) {
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),
-                        color = Color(0xFF311B92)
+                        color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Estudiante de Ingeniería de Software",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = Color(0xFF616161) // Gris oscuro para descripción
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -125,6 +125,7 @@ fun ProfileScreen(navController: NavController) {
 
                     Spacer(modifier = Modifier.height(28.dp))
 
+                    // Botón de navegación con fondo morado sólido y texto blanco en mayúsculas
                     Button(
                         onClick = {
                             navController.navigate(Screen.Home.route) {
@@ -136,7 +137,8 @@ fun ProfileScreen(navController: NavController) {
                             .height(50.dp),
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF512DA8)
+                            containerColor = Color(0xFF512DA8),
+                            contentColor = Color.White
                         )
                     ) {
                         Text(
@@ -179,14 +181,14 @@ fun ProfileDetailRow(icon: androidx.compose.ui.graphics.vector.ImageVector, labe
             Text(
                 text = label,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Color(0xFF757575) // Gris oscuro para etiqueta
             )
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold
                 ),
-                color = Color(0xFF311B92)
+                color = Color(0xFF1A1A1A) // Título casi negro para valor
             )
         }
     }

@@ -92,7 +92,7 @@ fun ListScreen(navController: NavController) {
                         shape = RoundedCornerShape(16.dp),
                         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
                         colors = CardDefaults.elevatedCardColors(
-                            containerColor = MaterialTheme.colorScheme.surface
+                            containerColor = Color.White // Forzado a blanco para evitar modo oscuro
                         )
                     ) {
                         Row(
@@ -121,13 +121,13 @@ fun ListScreen(navController: NavController) {
                                     style = MaterialTheme.typography.bodyLarge.copy(
                                         fontWeight = FontWeight.Bold
                                     ),
-                                    color = Color(0xFF311B92)
+                                    color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
                                 )
                                 Spacer(modifier = Modifier.height(2.dp))
                                 Text(
                                     text = "Código: 202410${index + 10} • Activo",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = Color(0xFF616161) // Gris oscuro para subtítulo
                                 )
                             }
                         }

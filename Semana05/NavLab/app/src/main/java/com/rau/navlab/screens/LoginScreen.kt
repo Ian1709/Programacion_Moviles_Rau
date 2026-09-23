@@ -47,7 +47,7 @@ fun LoginScreen(navController: NavController) {
             shape = RoundedCornerShape(24.dp),
             elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
             colors = CardDefaults.elevatedCardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = Color.White // Forzado a blanco para evitar modo oscuro
             )
         ) {
             Column(
@@ -70,7 +70,7 @@ fun LoginScreen(navController: NavController) {
                 Text(
                     text = "Inicia sesión con tu cuenta institucional",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color(0xFF616161) // Gris oscuro para alto contraste
                 )
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -92,7 +92,9 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF512DA8),
-                        focusedLabelColor = Color(0xFF512DA8)
+                        focusedLabelColor = Color(0xFF512DA8),
+                        unfocusedTextColor = Color(0xFF1A1A1A),
+                        focusedTextColor = Color(0xFF1A1A1A)
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -117,12 +119,14 @@ fun LoginScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = Color(0xFF512DA8),
-                        focusedLabelColor = Color(0xFF512DA8)
+                        focusedLabelColor = Color(0xFF512DA8),
+                        unfocusedTextColor = Color(0xFF1A1A1A),
+                        focusedTextColor = Color(0xFF1A1A1A)
                     )
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Botón Principal INICIAR SESIÓN
+                // Botón Principal INICIAR SESIÓN (Fondo morado sólido, texto blanco en mayúsculas)
                 Button(
                     onClick = {
                         navController.navigate(Screen.Home.route) {
@@ -134,7 +138,8 @@ fun LoginScreen(navController: NavController) {
                         .height(52.dp),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF512DA8)
+                        containerColor = Color(0xFF512DA8),
+                        contentColor = Color.White
                     )
                 ) {
                     Text(
@@ -155,7 +160,7 @@ fun LoginScreen(navController: NavController) {
                     Text(
                         text = "¿Olvidaste tus credenciales?",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF673AB7)
+                        color = Color(0xFF512DA8)
                     )
                 }
             }

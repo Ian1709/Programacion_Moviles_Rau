@@ -69,7 +69,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
+                    containerColor = Color.White // Forzado a blanco para evitar modo oscuro
                 )
             ) {
                 Column(
@@ -78,9 +78,10 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Avatar circular centrado de tamaño 90.dp con fondo lavanda claro e ícono en morado
                     Box(
                         modifier = Modifier
-                            .size(72.dp)
+                            .size(90.dp)
                             .clip(CircleShape)
                             .background(Color(0xFFEDE7F6)),
                         contentAlignment = Alignment.Center
@@ -89,7 +90,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                             imageVector = Icons.Default.Info,
                             contentDescription = "Detalle",
                             tint = Color(0xFF512DA8),
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(46.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -99,13 +100,13 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),
-                        color = Color(0xFF311B92)
+                        color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Información detallada del estudiante seleccionado en el directorio institucional.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = Color(0xFF616161) // Gris oscuro para descripción
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -116,7 +117,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFEDE7F6).copy(alpha = 0.5f)
+                            containerColor = Color(0xFFF3E5F5) // Fondo lavanda claro para contraste
                         )
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
@@ -129,13 +130,14 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                             Text(
                                 text = "Este registro fue validado correctamente desde el sistema de navegación del Portal Académico.",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = Color(0xFF424242) // Gris oscuro para alto contraste
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.height(28.dp))
 
+                    // Botón de navegación con fondo morado sólido y texto blanco en mayúsculas
                     Button(
                         onClick = { navController.popBackStack() },
                         modifier = Modifier
@@ -143,7 +145,8 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                             .height(50.dp),
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF512DA8)
+                            containerColor = Color(0xFF512DA8),
+                            contentColor = Color.White
                         )
                     ) {
                         Text(

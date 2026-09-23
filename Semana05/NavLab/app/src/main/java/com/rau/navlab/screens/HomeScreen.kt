@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -68,7 +68,7 @@ fun HomeScreen(navController: NavController) {
                 Text(
                     text = "¿Qué acción académica deseas realizar hoy?",
                     style = MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFFD1C4E9)
+                    color = Color(0xFFE1DFE9)
                 )
             }
 
@@ -94,8 +94,8 @@ fun HomeScreen(navController: NavController) {
                 )
             }
 
-            // Parte inferior: Cerrar Sesión Seguro
-            OutlinedButton(
+            // Parte inferior: Cerrar Sesión Seguro (Botón con fondo morado sólido / contraste fuerte y texto blanco en mayúsculas)
+            Button(
                 onClick = {
                     navController.navigate(Screen.Login.route) {
                         popUpTo(Screen.Home.route) { inclusive = true }
@@ -105,12 +105,9 @@ fun HomeScreen(navController: NavController) {
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.White.copy(alpha = 0.9f),
-                    contentColor = Color(0xFFD32F2F)
-                ),
-                border = ButtonDefaults.outlinedButtonBorder.copy(
-                    brush = Brush.linearGradient(listOf(Color(0xFFD32F2F), Color(0xFFD32F2F)))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF4527A0),
+                    contentColor = Color.White
                 )
             ) {
                 Row(
@@ -118,9 +115,9 @@ fun HomeScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ExitToApp,
+                        imageVector = Icons.AutoMirrored.Filled.Logout,
                         contentDescription = "Cerrar Sesión",
-                        tint = Color(0xFFD32F2F)
+                        tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
@@ -129,7 +126,7 @@ fun HomeScreen(navController: NavController) {
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp
                         ),
-                        color = Color(0xFFD32F2F)
+                        color = Color.White
                     )
                 }
             }
@@ -151,7 +148,7 @@ fun MenuCard(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = Color.White // Forzado a blanco para evitar modo oscuro
         )
     ) {
         Row(
@@ -160,7 +157,7 @@ fun MenuCard(
                 .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Ícono dentro de un contenedor circular
+            // Ícono dentro de un contenedor circular con fondo lavanda y tinte morado
             Box(
                 modifier = Modifier
                     .size(56.dp)
@@ -184,13 +181,13 @@ fun MenuCard(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = Color(0xFF311B92)
+                    color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color(0xFF616161) // Gris oscuro para descripción
                 )
             }
         }
