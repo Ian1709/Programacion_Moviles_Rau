@@ -28,9 +28,9 @@ import com.rau.navlab.navigation.Screen
 fun HomeScreen(navController: NavController) {
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF512DA8), // Morado intenso
-            Color(0xFF7E57C2), // Morado intermedio
-            Color(0xFFEDE7F6)  // Lavanda suave
+            Color(0xFF512DA8),
+            Color(0xFF7E57C2),
+            Color(0xFFEDE7F6)
         )
     )
 
@@ -46,7 +46,6 @@ fun HomeScreen(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Cabecera de bienvenida centrada horizontalmente
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -76,7 +75,6 @@ fun HomeScreen(navController: NavController) {
                 )
             }
 
-            // Tarjetas interactivas horizontales tipo menú
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -96,7 +94,7 @@ fun HomeScreen(navController: NavController) {
                 )
             }
 
-            // Parte inferior: Cerrar Sesión Seguro
+            // Botón compacto de cerrar sesión
             Button(
                 onClick = {
                     navController.navigate(Screen.Login.route) {
@@ -105,12 +103,13 @@ fun HomeScreen(navController: NavController) {
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
-                shape = RoundedCornerShape(14.dp),
+                    .height(42.dp),
+                shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF4527A0),
-                    contentColor = Color.White
-                )
+                    containerColor = Color(0xFFFFEBEE),
+                    contentColor = Color(0xFFD32F2F)
+                ),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -119,16 +118,17 @@ fun HomeScreen(navController: NavController) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.Logout,
                         contentDescription = "Cerrar Sesión",
-                        tint = Color.White
+                        tint = Color(0xFFD32F2F),
+                        modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "CERRAR SESIÓN SEGURO",
-                        style = MaterialTheme.typography.bodyLarge.copy(
+                        style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 0.8.sp
                         ),
-                        color = Color.White
+                        color = Color(0xFFD32F2F)
                     )
                 }
             }
@@ -147,7 +147,7 @@ fun MenuCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(24.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = Color.White

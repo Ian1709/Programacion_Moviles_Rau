@@ -6,7 +6,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Badge
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,6 +25,8 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(navController: NavController, itemId: Int) {
+    val student = mockStudents.find { it.id == itemId } ?: mockStudents.first()
+
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF512DA8),
@@ -69,7 +74,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                 shape = RoundedCornerShape(24.dp),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.elevatedCardColors(
-                    containerColor = Color.White // Forzado a blanco para evitar modo oscuro
+                    containerColor = Color.White
                 )
             ) {
                 Column(
@@ -78,7 +83,7 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Avatar circular centrado de tamaño 90.dp con fondo lavanda claro e ícono en morado
+                    // Avatar circular centrado de 90.dp
                     Box(
                         modifier = Modifier
                             .size(90.dp)
@@ -87,8 +92,8 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "Detalle",
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "Alumno",
                             tint = Color(0xFF512DA8),
                             modifier = Modifier.size(46.dp)
                         )
@@ -96,48 +101,33 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "Registro Académico #$itemId",
+                        text = student.name,
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold
                         ),
-                        color = Color(0xFF1A1A1A) // Título casi negro para alto contraste
+                        color = Color(0xFF1A1A1A)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Información detallada del estudiante seleccionado en el directorio institucional.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF616161) // Gris oscuro para descripción
+                        text = student.career,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = Color(0xFF512DA8)
                     )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     HorizontalDivider(color = Color(0xFFEDE7F6))
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color(0xFFF3E5F5) // Fondo lavanda claro para contraste
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Text(
-                                text = "ID de Registro: $itemId",
-                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                                color = Color(0xFF512DA8)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Este registro fue validado correctamente desde el sistema de navegación del Portal Académico.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color(0xFF424242) // Gris oscuro para alto contraste
-                            )
-                        }
-                    }
+                    DetailInfoRow(icon = Icons.Default.Badge, label = "Código", value = student.code)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    DetailInfoRow(icon = Icons.Default.Email, label = "Correo", value = student.email)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    DetailInfoRow(icon = Icons.Default.School, label = "Biografía Académica", value = student.bio)
 
                     Spacer(modifier = Modifier.height(28.dp))
 
-                    // Botón de navegación con fondo morado sólido y texto blanco en mayúsculas
                     Button(
                         onClick = { navController.popBackStack() },
                         modifier = Modifier
@@ -160,6 +150,44 @@ fun DetailScreen(navController: NavController, itemId: Int) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DetailInfoRow(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(38.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFEDE7F6)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = Color(0xFF512DA8),
+                modifier = Modifier.size(18.dp)
+            )
+        }
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF757575)
+            )
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = Color(0xFF1A1A1A)
+            )
         }
     }
 }

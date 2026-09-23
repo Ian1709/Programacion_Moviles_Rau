@@ -1,6 +1,5 @@
 package com.rau.navlab.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -119,7 +118,7 @@ fun ProfileScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Portal Académico - Estudiante",
+                            text = "Estudiante de Diseño y Desarrollo de Software",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color(0xFF616161)
                         )
@@ -152,8 +151,8 @@ fun ProfileScreen(navController: NavController) {
 
                         Spacer(modifier = Modifier.height(28.dp))
 
-                        // Botón de Cerrar Sesión con ícono de escape en rojo tenue
-                        OutlinedButton(
+                        // Botón compacto de Cerrar Sesión (height 42.dp, fondo rojizo suave, texto e ícono en rojo intenso)
+                        Button(
                             onClick = {
                                 navController.navigate(Screen.Login.route) {
                                     popUpTo(Screen.Home.route) { inclusive = true }
@@ -161,13 +160,13 @@ fun ProfileScreen(navController: NavController) {
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(50.dp),
-                            shape = RoundedCornerShape(14.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = Color(0xFFFFEBEE), // Rojo tenue muy suave
+                                .height(42.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFFEBEE),
                                 contentColor = Color(0xFFD32F2F)
                             ),
-                            border = BorderStroke(1.dp, Color(0xFFEF9A9A))
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
                         ) {
                             Row(
                                 horizontalArrangement = Arrangement.Center,
@@ -176,12 +175,13 @@ fun ProfileScreen(navController: NavController) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.Logout,
                                     contentDescription = "Cerrar Sesión",
-                                    tint = Color(0xFFD32F2F)
+                                    tint = Color(0xFFD32F2F),
+                                    modifier = Modifier.size(18.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "CERRAR SESIÓN",
-                                    style = MaterialTheme.typography.bodyLarge.copy(
+                                    style = MaterialTheme.typography.bodyMedium.copy(
                                         fontWeight = FontWeight.Bold,
                                         letterSpacing = 0.8.sp
                                     ),
