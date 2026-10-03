@@ -2,6 +2,7 @@ package com.tecsup.mibodega.ui.componentes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -12,13 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 /**
- * Input con label arriba (fuera del recuadro), como en los mockups
- * de Registro y Datos de entrega. Se usa en: Registro, Datos de entrega.
- *
- * @param teclado tipo de teclado, ej. KeyboardType.Phone para el teléfono
+ * Input con etiqueta arriba (fuera del recuadro), soporte para validación con bordes rojos
+ * y mensaje de error.
  */
 @Composable
 fun CampoTexto(
@@ -27,30 +27,45 @@ fun CampoTexto(
     onValorCambia: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
-    teclado: KeyboardType = KeyboardType.Text
+    teclado: KeyboardType = KeyboardType.Text,
+    esError: Boolean = false,
+    mensajeError: String? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = etiqueta,
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground
+            color = if (esError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onBackground
         )
         OutlinedTextField(
             value = valor,
             onValueChange = onValorCambia,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             placeholder = placeholder?.let { { Text(it) } },
             singleLine = true,
+            isError = esError,
+            visualTransformation = visualTransformation,
+            trailingIcon = trailingIcon,
             shape = RoundedCornerShape(10.dp),
             keyboardOptions = KeyboardOptions(keyboardType = teclado),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                focusedBorderColor = MaterialTheme.colorScheme.primary
+                unfocusedBorderColor = if (esError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.outline,
+                focusedBorderColor = if (esError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                errorBorderColor = MaterialTheme.colorScheme.error
             )
         )
+        if (esError && !mensajeError.isNullOrBlank()) {
+            Text(
+                text = mensajeError,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(top = 4.dp, start = 4.dp)
+            )
+        }
     }
 }

@@ -22,10 +22,11 @@ import com.tecsup.mibodega.ui.cliente.screens.bienvenida.BienvenidaScreen
 import com.tecsup.mibodega.ui.cliente.screens.carrito.CarritoScreen
 import com.tecsup.mibodega.ui.cliente.screens.detalle.DetalleProductoScreen
 import com.tecsup.mibodega.ui.cliente.screens.inicio.InicioScreen
-import com.tecsup.mibodega.ui.cliente.screens.registro.RegistroScreen
+import com.tecsup.mibodega.ui.cliente.screens.login.PantallaLogin
+import com.tecsup.mibodega.ui.cliente.screens.registro.PantallaCrearCuenta
 
 /**
- * Contenedor principal de navegación con animaciones entre pantallas (AnimatedNavHost / NavHost).
+ * Contenedor principal de navegación con animaciones entre pantallas.
  */
 @Composable
 fun AppNavegacion() {
@@ -68,8 +69,22 @@ fun AppNavegacion() {
             )
         }
 
+        composable(Rutas.LOGIN) {
+            PantallaLogin(
+                onVolver = { navController.popBackStack() },
+                onLoginExitoso = {
+                    navController.navigate(Rutas.INICIO) {
+                        popUpTo(Rutas.BIENVENIDA) { inclusive = true }
+                    }
+                },
+                onIrARegistro = {
+                    navController.navigate(Rutas.REGISTRO)
+                }
+            )
+        }
+
         composable(Rutas.REGISTRO) {
-            RegistroScreen(
+            PantallaCrearCuenta(
                 onVolver = { navController.popBackStack() },
                 onCrearCuenta = { _, _, _, _ ->
                     navController.navigate(Rutas.INICIO) {
@@ -77,10 +92,6 @@ fun AppNavegacion() {
                     }
                 }
             )
-        }
-
-        composable(Rutas.LOGIN) {
-            // Se integrará PantallaLogin en el Hito 2
         }
 
         composable(Rutas.INICIO) {
