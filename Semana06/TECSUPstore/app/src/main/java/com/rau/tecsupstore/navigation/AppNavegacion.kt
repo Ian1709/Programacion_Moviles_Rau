@@ -30,7 +30,10 @@ fun AppNavegacion() {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            AppDrawerContent(destinoActual) { opcion ->
+            AppDrawer(
+                destinoActual = destinoActual,
+                contadorFavoritos = contadorFavoritos
+            ) { opcion ->
                 destinoActual = opcion
                 scope.launch { drawerState.close() }
             }

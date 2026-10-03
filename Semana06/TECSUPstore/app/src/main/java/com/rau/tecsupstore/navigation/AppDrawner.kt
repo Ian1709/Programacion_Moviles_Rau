@@ -11,12 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+data class DrawerItem(val titulo: String)
+
 @Composable
-fun AppDrawerContent(
+fun AppDrawer(
     destinoActual: String,
+    contadorFavoritos: Int,
     onSeleccionar: (String) -> Unit
 ) {
-    val opciones = listOf("Inicio", "Mis pedidos", "Favoritos", "Perfil", "Cerrar sesion")
+    val opciones = listOf(
+        DrawerItem("Inicio"),
+        DrawerItem("Mis pedidos"),
+        DrawerItem("Favoritos"),
+        DrawerItem("Perfil"),
+        DrawerItem("Cerrar sesion")
+    )
 
     ModalDrawerSheet {
         Column(Modifier.padding(16.dp)) {
@@ -25,12 +34,17 @@ fun AppDrawerContent(
             Text("ian.rau@tecsup.edu.pe", style = MaterialTheme.typography.bodySmall)
         }
         HorizontalDivider()
-        opciones.forEach { opcion ->
+        opciones.forEach { item ->
             NavigationDrawerItem(
-                label = { Text(opcion) },
+                label = { Text(item.titulo) },
                 icon = { Icon(Icons.Outlined.Circle, null) },
-                selected = destinoActual == opcion,
-                onClick = { onSeleccionar(opcion) },
+                selected = destinoActual == item.titulo,
+                onClick = { onSeleccionar(item.titulo) },
+                badge = {
+                    if (item.titulo == "Favoritos" && contadorFavoritos > 0) {
+                        Badge { Text(contadorFavoritos.toString()) }
+                    }
+                },
                 modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
             )
         }
