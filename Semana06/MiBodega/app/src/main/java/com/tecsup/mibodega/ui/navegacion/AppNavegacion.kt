@@ -21,7 +21,7 @@ import com.tecsup.mibodega.ui.cliente.modelo.listaProductosFake
 import com.tecsup.mibodega.ui.cliente.screens.bienvenida.BienvenidaScreen
 import com.tecsup.mibodega.ui.cliente.screens.carrito.CarritoScreen
 import com.tecsup.mibodega.ui.cliente.screens.categorias.PantallaCategorias
-import com.tecsup.mibodega.ui.cliente.screens.detalle.DetalleProductoScreen
+import com.tecsup.mibodega.ui.cliente.screens.detalle.PantallaDetalleProducto
 import com.tecsup.mibodega.ui.cliente.screens.inicio.PantallaInicio
 import com.tecsup.mibodega.ui.cliente.screens.login.PantallaLogin
 import com.tecsup.mibodega.ui.cliente.screens.pedidos.PantallaMisPedidos
@@ -167,8 +167,12 @@ fun AppNavegacion() {
             val productoId = backStackEntry.arguments?.getInt("productoId") ?: 0
             val producto = listaProductosFake.firstOrNull { it.id == productoId } ?: listaProductosFake.first()
 
-            DetalleProductoScreen(
+            PantallaDetalleProducto(
                 producto = producto,
+                esFavorito = favoritosIds.contains(producto.id),
+                onToggleFavorito = {
+                    favoritosIds = if (favoritosIds.contains(producto.id)) favoritosIds - producto.id else favoritosIds + producto.id
+                },
                 onVolver = { navController.popBackStack() },
                 onAgregarAlCarrito = { productoSeleccionado, cantidad ->
                     carrito = agregarOSumarProducto(carrito, productoSeleccionado, cantidad)
