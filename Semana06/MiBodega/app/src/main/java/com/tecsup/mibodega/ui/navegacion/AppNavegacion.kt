@@ -36,6 +36,7 @@ fun AppNavegacion() {
     val navController = rememberNavController()
     var carrito by remember { mutableStateOf<List<ItemCarrito>>(emptyList()) }
     var favoritosIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
+    var categoriaSeleccionadaGlobal by remember { mutableStateOf("Todos") }
 
     fun navegarABottomBar(destino: Int) {
         when (destino) {
@@ -112,6 +113,7 @@ fun AppNavegacion() {
                 productos = listaProductosFake,
                 cantidadCarrito = carrito.sumOf { it.cantidad },
                 favoritosIds = favoritosIds,
+                categoriaInicial = categoriaSeleccionadaGlobal,
                 onToggleFavorito = { id ->
                     favoritosIds = if (favoritosIds.contains(id)) favoritosIds - id else favoritosIds + id
                 },
@@ -131,8 +133,9 @@ fun AppNavegacion() {
             PantallaCategorias(
                 cantidadCarrito = carrito.sumOf { it.cantidad },
                 onVerCarrito = { navController.navigate(Rutas.CARRITO) },
-                onSeleccionarCategoria = { categoria ->
-                    navController.navigate(Rutas.INICIO)
+                onSeleccionarCategoria = { cat ->
+                    categoriaSeleccionadaGlobal = cat
+                    navController.navigate(Rutas.INICIO) { popUpTo(Rutas.INICIO) { inclusive = true } }
                 },
                 destinoSeleccionado = 1,
                 onSeleccionarDestino = { navega -> navegarABottomBar(navega) }

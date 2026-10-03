@@ -58,14 +58,14 @@ enum class OpcionOrden {
 }
 
 /**
- * PantallaInicio (Hito 4): Catálogo de productos con NavigationBar (BottomBar)
- * de 4 destinos y Badge reactivo en el ícono del carrito de la TopBar.
+ * PantallaInicio (Hito 5): Catálogo con LazyRow de categorías filtrables dinámicamente.
  */
 @Composable
 fun PantallaInicio(
     productos: List<Producto> = listaProductosFake,
     cantidadCarrito: Int,
     favoritosIds: Set<Int> = emptySet(),
+    categoriaInicial: String = "Todos",
     onToggleFavorito: (Int) -> Unit = {},
     onVerCarrito: () -> Unit,
     onProductoClick: (Producto) -> Unit,
@@ -73,13 +73,13 @@ fun PantallaInicio(
     destinoSeleccionado: Int = 0,
     onSeleccionarDestino: (Int) -> Unit = {}
 ) {
-    var categoriaSeleccionada by remember { mutableStateOf(listaCategorias.first()) }
+    var categoriaSeleccionada by remember(categoriaInicial) { mutableStateOf(categoriaInicial) }
     var textoBusqueda by remember { mutableStateOf("") }
     var ordenSeleccionado by remember { mutableStateOf(OpcionOrden.DEFECTO) }
     var soloFavoritos by remember { mutableStateOf(false) }
     var menuOrdenExpandido by remember { mutableStateOf(false) }
 
-    // Filtrado por categoría, búsqueda y favoritos
+    // Filtrado dinámico por categoría, búsqueda y favoritos
     val productosFiltrados = productos.filter { producto ->
         val coincideCategoria = categoriaSeleccionada == "Todos" || producto.categoria == categoriaSeleccionada
         val coincideBusqueda = producto.nombre.contains(textoBusqueda, ignoreCase = true) ||
@@ -138,7 +138,7 @@ fun PantallaInicio(
                 )
             }
 
-            // Barra de Categorías (LazyRow)
+            // LazyRow de Categorías Filtrables
             item {
                 Text(
                     text = "Categorías",
@@ -152,8 +152,14 @@ fun PantallaInicio(
                     contentPadding = PaddingValues(vertical = 4.dp)
                 ) {
                     items(listaCategorias) { categoria ->
+                        val cantidadPorCategoria = if (categoria == "Todos") {
+                            productos.size
+                        } else {
+                            productos.count { it.categoria == categoria }
+                        }
+
                         ChipCategoria(
-                            texto = categoria,
+                            texto = "$categoria ($cantidadPorCategoria)",
                             seleccionado = categoria == categoriaSeleccionada && !soloFavoritos,
                             onClick = {
                                 categoriaSeleccionada = categoria
@@ -246,7 +252,7 @@ fun PantallaInicio(
                 }
             }
 
-            // Encabezado de Productos
+            // Encabezado de Productos con categoría activa
             item {
                 Row(
                     modifier = Modifier
@@ -256,12 +262,12 @@ fun PantallaInicio(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (soloFavoritos) "Mis Productos Favoritos" else "Productos",
+                        text = if (soloFavoritos) "Mis Productos Favoritos" else "Categoría: $categoriaSeleccionada",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "${productosOrdenados.size} result.",
+                        text = "${productosOrdenados.size} prod.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -278,7 +284,7 @@ fun PantallaInicio(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = if (soloFavoritos) "No tienes productos marcados como favoritos" else "No se encontraron productos",
+                            text = if (soloFavoritos) "No tienes productos marcados como favoritos" else "No hay productos en esta categoría",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
