@@ -20,9 +20,12 @@ import com.tecsup.mibodega.ui.cliente.modelo.Producto
 import com.tecsup.mibodega.ui.cliente.modelo.listaProductosFake
 import com.tecsup.mibodega.ui.cliente.screens.bienvenida.BienvenidaScreen
 import com.tecsup.mibodega.ui.cliente.screens.carrito.CarritoScreen
+import com.tecsup.mibodega.ui.cliente.screens.categorias.PantallaCategorias
 import com.tecsup.mibodega.ui.cliente.screens.detalle.DetalleProductoScreen
 import com.tecsup.mibodega.ui.cliente.screens.inicio.PantallaInicio
 import com.tecsup.mibodega.ui.cliente.screens.login.PantallaLogin
+import com.tecsup.mibodega.ui.cliente.screens.pedidos.PantallaMisPedidos
+import com.tecsup.mibodega.ui.cliente.screens.perfil.PantallaPerfil
 import com.tecsup.mibodega.ui.cliente.screens.registro.PantallaCrearCuenta
 
 /**
@@ -33,6 +36,15 @@ fun AppNavegacion() {
     val navController = rememberNavController()
     var carrito by remember { mutableStateOf<List<ItemCarrito>>(emptyList()) }
     var favoritosIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
+
+    fun navegarABottomBar(destino: Int) {
+        when (destino) {
+            0 -> navController.navigate(Rutas.INICIO) { popUpTo(Rutas.INICIO) { inclusive = true } }
+            1 -> navController.navigate(Rutas.CATEGORIAS) { popUpTo(Rutas.INICIO) }
+            2 -> navController.navigate(Rutas.MIS_PEDIDOS) { popUpTo(Rutas.INICIO) }
+            3 -> navController.navigate(Rutas.PERFIL) { popUpTo(Rutas.INICIO) }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -109,7 +121,39 @@ fun AppNavegacion() {
                 },
                 onAgregarProducto = { producto ->
                     carrito = agregarOSumarProducto(carrito, producto, 1)
-                }
+                },
+                destinoSeleccionado = 0,
+                onSeleccionarDestino = { navega -> navegarABottomBar(navega) }
+            )
+        }
+
+        composable(Rutas.CATEGORIAS) {
+            PantallaCategorias(
+                cantidadCarrito = carrito.sumOf { it.cantidad },
+                onVerCarrito = { navController.navigate(Rutas.CARRITO) },
+                onSeleccionarCategoria = { categoria ->
+                    navController.navigate(Rutas.INICIO)
+                },
+                destinoSeleccionado = 1,
+                onSeleccionarDestino = { navega -> navegarABottomBar(navega) }
+            )
+        }
+
+        composable(Rutas.MIS_PEDIDOS) {
+            PantallaMisPedidos(
+                cantidadCarrito = carrito.sumOf { it.cantidad },
+                onVerCarrito = { navController.navigate(Rutas.CARRITO) },
+                destinoSeleccionado = 2,
+                onSeleccionarDestino = { navega -> navegarABottomBar(navega) }
+            )
+        }
+
+        composable(Rutas.PERFIL) {
+            PantallaPerfil(
+                cantidadCarrito = carrito.sumOf { it.cantidad },
+                onVerCarrito = { navController.navigate(Rutas.CARRITO) },
+                destinoSeleccionado = 3,
+                onSeleccionarDestino = { navega -> navegarABottomBar(navega) }
             )
         }
 
@@ -165,20 +209,8 @@ fun AppNavegacion() {
             // Se integrará PantallaConfirmacion en el Hito 8
         }
 
-        composable(Rutas.MIS_PEDIDOS) {
-            // Se integrará PantallaMisPedidos en el Hito 8
-        }
-
-        composable(Rutas.CATEGORIAS) {
-            // Se integrará vista Categorías en Hito 4/5
-        }
-
-        composable(Rutas.PERFIL) {
-            // Se integrará vista Perfil en Hito 4/8
-        }
-
         composable(Rutas.FAVORITOS) {
-            // Se integrará vista Favoritos en Hito 3/4
+            // Se integrará vista Favoritos si es ruta independiente
         }
     }
 }
