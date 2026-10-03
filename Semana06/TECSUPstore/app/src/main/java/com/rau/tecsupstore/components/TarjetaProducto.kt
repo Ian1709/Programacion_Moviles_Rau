@@ -2,8 +2,11 @@ package com.rau.tecsupstore.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,14 +34,18 @@ fun TarjetaProducto(producto: Producto) {
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                     DropdownMenuItem(
                         text = { Text("Favoritos") },
+                        leadingIcon = { Icon(Icons.Default.FavoriteBorder, null) },
                         onClick = { expanded = false }
                     )
                     DropdownMenuItem(
                         text = { Text("Compartir") },
+                        leadingIcon = { Icon(Icons.Default.Share, null) },
                         onClick = { expanded = false }
                     )
+                    HorizontalDivider()
                     DropdownMenuItem(
                         text = { Text("Reportar") },
+                        leadingIcon = { Icon(Icons.Default.Warning, null) },
                         onClick = { expanded = false }
                     )
                 }
