@@ -21,7 +21,7 @@ import com.tecsup.mibodega.ui.cliente.modelo.listaProductosFake
 import com.tecsup.mibodega.ui.cliente.screens.bienvenida.BienvenidaScreen
 import com.tecsup.mibodega.ui.cliente.screens.carrito.CarritoScreen
 import com.tecsup.mibodega.ui.cliente.screens.detalle.DetalleProductoScreen
-import com.tecsup.mibodega.ui.cliente.screens.inicio.InicioScreen
+import com.tecsup.mibodega.ui.cliente.screens.inicio.PantallaInicio
 import com.tecsup.mibodega.ui.cliente.screens.login.PantallaLogin
 import com.tecsup.mibodega.ui.cliente.screens.registro.PantallaCrearCuenta
 
@@ -32,6 +32,7 @@ import com.tecsup.mibodega.ui.cliente.screens.registro.PantallaCrearCuenta
 fun AppNavegacion() {
     val navController = rememberNavController()
     var carrito by remember { mutableStateOf<List<ItemCarrito>>(emptyList()) }
+    var favoritosIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
 
     NavHost(
         navController = navController,
@@ -95,8 +96,13 @@ fun AppNavegacion() {
         }
 
         composable(Rutas.INICIO) {
-            InicioScreen(
+            PantallaInicio(
+                productos = listaProductosFake,
                 cantidadCarrito = carrito.sumOf { it.cantidad },
+                favoritosIds = favoritosIds,
+                onToggleFavorito = { id ->
+                    favoritosIds = if (favoritosIds.contains(id)) favoritosIds - id else favoritosIds + id
+                },
                 onVerCarrito = { navController.navigate(Rutas.CARRITO) },
                 onProductoClick = { producto ->
                     navController.navigate(Rutas.detalle(producto.id))
@@ -172,7 +178,7 @@ fun AppNavegacion() {
         }
 
         composable(Rutas.FAVORITOS) {
-            // Se integrará vista Favoritos en Hito 3
+            // Se integrará vista Favoritos en Hito 3/4
         }
     }
 }
