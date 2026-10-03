@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.dp
 data class Producto(val id: String, val nombre: String, val precio: Double)
 
 @Composable
-fun TarjetaProducto(producto: Producto) {
+fun TarjetaProducto(
+    producto: Producto,
+    onAgregarFavorito: () -> Unit = {}
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(modifier = Modifier.fillMaxWidth().padding(8.dp, 4.dp)) {
@@ -35,7 +38,10 @@ fun TarjetaProducto(producto: Producto) {
                     DropdownMenuItem(
                         text = { Text("Favoritos") },
                         leadingIcon = { Icon(Icons.Default.FavoriteBorder, null) },
-                        onClick = { expanded = false }
+                        onClick = {
+                            expanded = false
+                            onAgregarFavorito()
+                        }
                     )
                     DropdownMenuItem(
                         text = { Text("Compartir") },

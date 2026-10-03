@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.rau.tecsupstore.components.Producto
 import com.rau.tecsupstore.components.TarjetaProducto
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ fun AppNavegacion() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var destinoActual by remember { mutableStateOf("Mis pedidos") }
+    var contadorFavoritos by remember { mutableStateOf(0) }
 
     val productos = listOf(
         Producto("1", "Audifonos", 89.00),
@@ -42,13 +44,23 @@ fun AppNavegacion() {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, "Menú")
                         }
+                    },
+                    actions = {
+                        Text(
+                            text = "Favoritos: $contadorFavoritos",
+                            modifier = Modifier.padding(end = 16.dp),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 )
             }
         ) { padding ->
             LazyColumn(modifier = Modifier.padding(padding)) {
                 items(productos) { producto ->
-                    TarjetaProducto(producto)
+                    TarjetaProducto(
+                        producto = producto,
+                        onAgregarFavorito = { contadorFavoritos++ }
+                    )
                 }
             }
         }
