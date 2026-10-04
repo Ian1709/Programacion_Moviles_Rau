@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
@@ -24,6 +25,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -58,7 +60,8 @@ enum class OpcionOrden {
 }
 
 /**
- * PantallaInicio (Hito 5): Catálogo con LazyRow de categorías filtrables dinámicamente.
+ * PantallaInicio (Fase 2 - Commit 1): Implementación del buscador en tiempo real
+ * gestionando el estado mutable (textoBusqueda) y botón de limpieza.
  */
 @Composable
 fun PantallaInicio(
@@ -74,7 +77,10 @@ fun PantallaInicio(
     onSeleccionarDestino: (Int) -> Unit = {}
 ) {
     var categoriaSeleccionada by remember(categoriaInicial) { mutableStateOf(categoriaInicial) }
+    
+    // ESTADO MUTABLE DEL BUSCADOR EN TIEMPO REAL
     var textoBusqueda by remember { mutableStateOf("") }
+    
     var ordenSeleccionado by remember { mutableStateOf(OpcionOrden.DEFECTO) }
     var soloFavoritos by remember { mutableStateOf(false) }
     var menuOrdenExpandido by remember { mutableStateOf(false) }
@@ -82,9 +88,13 @@ fun PantallaInicio(
     // Filtrado dinámico por categoría, búsqueda y favoritos
     val productosFiltrados = productos.filter { producto ->
         val coincideCategoria = categoriaSeleccionada == "Todos" || producto.categoria == categoriaSeleccionada
+        
+        // EVALUACIÓN EN TIEMPO REAL DEL TEXTO INGRESADO
         val coincideBusqueda = producto.nombre.contains(textoBusqueda, ignoreCase = true) ||
                 producto.descripcion.contains(textoBusqueda, ignoreCase = true)
+                
         val coincideFavoritos = !soloFavoritos || favoritosIds.contains(producto.id)
+        
         coincideCategoria && coincideBusqueda && coincideFavoritos
     }
 
@@ -117,16 +127,27 @@ fun PantallaInicio(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            // Buscador
+            // BUSCADOR EN TIEMPO REAL (OutlinedTextField)
             item {
                 OutlinedTextField(
                     value = textoBusqueda,
-                    onValueChange = { textoBusqueda = it },
+                    onValueChange = { nuevoTexto -> 
+                        // ACTUALIZACIÓN DEL ESTADO MUTABLE EN TIEMPO REAL
+                        textoBusqueda = nuevoTexto 
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     placeholder = { Text("Buscar productos...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+                    trailingIcon = {
+                        // Botón "X" para limpiar el buscador en tiempo real
+                        if (textoBusqueda.isNotEmpty()) {
+                            IconButton(onClick = { textoBusqueda = "" }) {
+                                Icon(Icons.Default.Clear, contentDescription = "Limpiar búsqueda")
+                            }
+                        }
+                    },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     colors = OutlinedTextFieldDefaults.colors(
