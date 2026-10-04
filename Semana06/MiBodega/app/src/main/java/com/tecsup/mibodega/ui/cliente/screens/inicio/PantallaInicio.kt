@@ -60,8 +60,8 @@ enum class OpcionOrden {
 }
 
 /**
- * PantallaInicio (Fase 2 - Commit 1): Implementación del buscador en tiempo real
- * gestionando el estado mutable (textoBusqueda) y botón de limpieza.
+ * PantallaInicio (Fase 2 - Commit 2): Lógica combinada de filtros
+ * (Buscador + LazyRow de categorías) y actualización del grid/listado.
  */
 @Composable
 fun PantallaInicio(
@@ -76,29 +76,38 @@ fun PantallaInicio(
     destinoSeleccionado: Int = 0,
     onSeleccionarDestino: (Int) -> Unit = {}
 ) {
+    // 1. ESTADO DEL FILTRO POR CATEGORÍA
     var categoriaSeleccionada by remember(categoriaInicial) { mutableStateOf(categoriaInicial) }
     
-    // ESTADO MUTABLE DEL BUSCADOR EN TIEMPO REAL
+    // 2. ESTADO MUTABLE DEL BUSCADOR EN TIEMPO REAL
     var textoBusqueda by remember { mutableStateOf("") }
     
     var ordenSeleccionado by remember { mutableStateOf(OpcionOrden.DEFECTO) }
     var soloFavoritos by remember { mutableStateOf(false) }
     var menuOrdenExpandido by remember { mutableStateOf(false) }
 
-    // Filtrado dinámico por categoría, búsqueda y favoritos
+    // =========================================================================
+    // LÓGICA COMBINADA DE FILTROS: Buscador + Categoría + Favoritos
+    // =========================================================================
     val productosFiltrados = productos.filter { producto ->
+        
+        // CONDICIÓN A: Filtro por categoría seleccionada
         val coincideCategoria = categoriaSeleccionada == "Todos" || producto.categoria == categoriaSeleccionada
         
-        // EVALUACIÓN EN TIEMPO REAL DEL TEXTO INGRESADO
-        val coincideBusqueda = producto.nombre.contains(textoBusqueda, ignoreCase = true) ||
+        // CONDICIÓN B: Filtro dinámico por el texto del buscador
+        // Asegura que al borrar el texto, vuelva a mostrar los de la categoría
+        val coincideBusqueda = textoBusqueda.isBlank() || 
+                producto.nombre.contains(textoBusqueda, ignoreCase = true) ||
                 producto.descripcion.contains(textoBusqueda, ignoreCase = true)
                 
+        // CONDICIÓN C: Filtro de estado favorito
         val coincideFavoritos = !soloFavoritos || favoritosIds.contains(producto.id)
         
+        // OPERACIÓN AND (&&): Todas las condiciones deben cumplirse simultáneamente
         coincideCategoria && coincideBusqueda && coincideFavoritos
     }
 
-    // Ordenamiento por precio
+    // Ordenamiento por precio (se aplica a la lista ya filtrada por categoría y buscador)
     val productosOrdenados = when (ordenSeleccionado) {
         OpcionOrden.MENOR_A_MAYOR -> productosFiltrados.sortedBy { it.precio }
         OpcionOrden.MAYOR_A_MENOR -> productosFiltrados.sortedByDescending { it.precio }
@@ -127,21 +136,23 @@ fun PantallaInicio(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            // BUSCADOR EN TIEMPO REAL (OutlinedTextField)
+            // =================================================================
+            // 1. BARRA DE BÚSQUEDA EN TIEMPO REAL
+            // =================================================================
             item {
                 OutlinedTextField(
                     value = textoBusqueda,
                     onValueChange = { nuevoTexto -> 
-                        // ACTUALIZACIÓN DEL ESTADO MUTABLE EN TIEMPO REAL
+                        // Al escribir, actualiza el estado y dispara la recomposición de los filtros
                         textoBusqueda = nuevoTexto 
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
-                    placeholder = { Text("Buscar productos...") },
+                    placeholder = { Text("Buscar en ${if (categoriaSeleccionada == "Todos") "todas las categorías" else categoriaSeleccionada}...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
                     trailingIcon = {
-                        // Botón "X" para limpiar el buscador en tiempo real
+                        // Botón para limpiar rápidamente el buscador sin alterar la categoría
                         if (textoBusqueda.isNotEmpty()) {
                             IconButton(onClick = { textoBusqueda = "" }) {
                                 Icon(Icons.Default.Clear, contentDescription = "Limpiar búsqueda")
@@ -159,7 +170,9 @@ fun PantallaInicio(
                 )
             }
 
-            // LazyRow de Categorías Filtrables
+            // =================================================================
+            // 2. LAZYROW DE CATEGORÍAS FILTRABLES
+            // =================================================================
             item {
                 Text(
                     text = "Categorías",
@@ -173,6 +186,7 @@ fun PantallaInicio(
                     contentPadding = PaddingValues(vertical = 4.dp)
                 ) {
                     items(listaCategorias) { categoria ->
+                        // El contador de productos por categoría no se ve afectado por el buscador
                         val cantidadPorCategoria = if (categoria == "Todos") {
                             productos.size
                         } else {
@@ -183,6 +197,8 @@ fun PantallaInicio(
                             texto = "$categoria ($cantidadPorCategoria)",
                             seleccionado = categoria == categoriaSeleccionada && !soloFavoritos,
                             onClick = {
+                                // Al cambiar la categoría, el buscador en tiempo real se mantiene activo
+                                // aplicando la COMBINACIÓN DE AMBOS FILTROS.
                                 categoriaSeleccionada = categoria
                                 soloFavoritos = false
                             }
@@ -200,7 +216,6 @@ fun PantallaInicio(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Botón con menú desplegable para ordenar por precio
                     Box {
                         OutlinedButton(
                             onClick = { menuOrdenExpandido = true },
@@ -248,7 +263,6 @@ fun PantallaInicio(
                         }
                     }
 
-                    // Chip para filtrar solo Favoritos
                     FilterChip(
                         selected = soloFavoritos,
                         onClick = { soloFavoritos = !soloFavoritos },
@@ -273,7 +287,9 @@ fun PantallaInicio(
                 }
             }
 
-            // Encabezado de Productos con categoría activa
+            // =================================================================
+            // 3. ACTUALIZACIÓN DEL GRID Y LISTADO
+            // =================================================================
             item {
                 Row(
                     modifier = Modifier
@@ -282,8 +298,16 @@ fun PantallaInicio(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    val encabezado = if (textoBusqueda.isNotEmpty()) {
+                        "Resultados para \"$textoBusqueda\""
+                    } else if (soloFavoritos) {
+                        "Mis Productos Favoritos"
+                    } else {
+                        "Categoría: $categoriaSeleccionada"
+                    }
+                    
                     Text(
-                        text = if (soloFavoritos) "Mis Productos Favoritos" else "Categoría: $categoriaSeleccionada",
+                        text = encabezado,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -304,10 +328,19 @@ fun PantallaInicio(
                             .padding(vertical = 32.dp),
                         contentAlignment = Alignment.Center
                     ) {
+                        val mensajeVacio = if (textoBusqueda.isNotEmpty()) {
+                            "No se encontraron resultados para \"$textoBusqueda\" en esta categoría."
+                        } else if (soloFavoritos) {
+                            "No tienes productos marcados como favoritos"
+                        } else {
+                            "No hay productos en esta categoría"
+                        }
+                        
                         Text(
-                            text = if (soloFavoritos) "No tienes productos marcados como favoritos" else "No hay productos en esta categoría",
+                            text = mensajeVacio,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
                     }
                 }
