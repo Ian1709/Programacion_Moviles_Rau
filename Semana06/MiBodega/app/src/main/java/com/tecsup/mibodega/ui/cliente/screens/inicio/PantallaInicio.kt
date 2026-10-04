@@ -4,15 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -20,6 +24,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.SearchOff
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
@@ -41,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tecsup.mibodega.ui.cliente.modelo.Producto
@@ -50,7 +56,6 @@ import com.tecsup.mibodega.ui.componentes.BarraNavegacionInferior
 import com.tecsup.mibodega.ui.componentes.BarraSuperiorBodega
 import com.tecsup.mibodega.ui.componentes.ProductoCard
 import com.tecsup.mibodega.ui.theme.BodegaTheme
-import com.tecsup.mibodega.ui.theme.GrisClaro
 import com.tecsup.mibodega.ui.theme.VerdeBodega
 
 enum class OpcionOrden {
@@ -60,8 +65,8 @@ enum class OpcionOrden {
 }
 
 /**
- * PantallaInicio (Fase 2 - Commit 2): Lógica combinada de filtros
- * (Buscador + LazyRow de categorías) y actualización del grid/listado.
+ * PantallaInicio (Fase 2 - Commit 3): Refinamiento visual y UI de la
+ * barra de búsqueda en tiempo real y Empty State.
  */
 @Composable
 fun PantallaInicio(
@@ -76,38 +81,22 @@ fun PantallaInicio(
     destinoSeleccionado: Int = 0,
     onSeleccionarDestino: (Int) -> Unit = {}
 ) {
-    // 1. ESTADO DEL FILTRO POR CATEGORÍA
     var categoriaSeleccionada by remember(categoriaInicial) { mutableStateOf(categoriaInicial) }
-    
-    // 2. ESTADO MUTABLE DEL BUSCADOR EN TIEMPO REAL
     var textoBusqueda by remember { mutableStateOf("") }
-    
     var ordenSeleccionado by remember { mutableStateOf(OpcionOrden.DEFECTO) }
     var soloFavoritos by remember { mutableStateOf(false) }
     var menuOrdenExpandido by remember { mutableStateOf(false) }
 
-    // =========================================================================
-    // LÓGICA COMBINADA DE FILTROS: Buscador + Categoría + Favoritos
-    // =========================================================================
     val productosFiltrados = productos.filter { producto ->
-        
-        // CONDICIÓN A: Filtro por categoría seleccionada
         val coincideCategoria = categoriaSeleccionada == "Todos" || producto.categoria == categoriaSeleccionada
-        
-        // CONDICIÓN B: Filtro dinámico por el texto del buscador
-        // Asegura que al borrar el texto, vuelva a mostrar los de la categoría
         val coincideBusqueda = textoBusqueda.isBlank() || 
                 producto.nombre.contains(textoBusqueda, ignoreCase = true) ||
                 producto.descripcion.contains(textoBusqueda, ignoreCase = true)
-                
-        // CONDICIÓN C: Filtro de estado favorito
         val coincideFavoritos = !soloFavoritos || favoritosIds.contains(producto.id)
         
-        // OPERACIÓN AND (&&): Todas las condiciones deben cumplirse simultáneamente
         coincideCategoria && coincideBusqueda && coincideFavoritos
     }
 
-    // Ordenamiento por precio (se aplica a la lista ya filtrada por categoría y buscador)
     val productosOrdenados = when (ordenSeleccionado) {
         OpcionOrden.MENOR_A_MAYOR -> productosFiltrados.sortedBy { it.precio }
         OpcionOrden.MAYOR_A_MENOR -> productosFiltrados.sortedByDescending { it.precio }
@@ -136,43 +125,51 @@ fun PantallaInicio(
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
-            // =================================================================
-            // 1. BARRA DE BÚSQUEDA EN TIEMPO REAL
-            // =================================================================
+            // Buscador refactorizado visualmente
             item {
                 OutlinedTextField(
                     value = textoBusqueda,
-                    onValueChange = { nuevoTexto -> 
-                        // Al escribir, actualiza el estado y dispara la recomposición de los filtros
-                        textoBusqueda = nuevoTexto 
-                    },
+                    onValueChange = { textoBusqueda = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    placeholder = { Text("Buscar en ${if (categoriaSeleccionada == "Todos") "todas las categorías" else categoriaSeleccionada}...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
+                        .padding(top = 12.dp, bottom = 4.dp),
+                    placeholder = { 
+                        Text(
+                            text = "Buscar en ${if (categoriaSeleccionada == "Todos") "todo" else categoriaSeleccionada.lowercase()}...",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    },
+                    leadingIcon = { 
+                        Icon(
+                            imageVector = Icons.Default.Search, 
+                            contentDescription = "Buscar",
+                            tint = VerdeBodega
+                        ) 
+                    },
                     trailingIcon = {
-                        // Botón para limpiar rápidamente el buscador sin alterar la categoría
                         if (textoBusqueda.isNotEmpty()) {
                             IconButton(onClick = { textoBusqueda = "" }) {
-                                Icon(Icons.Default.Clear, contentDescription = "Limpiar búsqueda")
+                                Icon(
+                                    imageVector = Icons.Default.Clear, 
+                                    contentDescription = "Limpiar búsqueda",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         }
                     },
                     singleLine = true,
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(16.dp), // Bordes más redondeados
                     colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = GrisClaro,
-                        focusedContainerColor = GrisClaro,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
                         unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = VerdeBodega
+                        focusedBorderColor = VerdeBodega,
+                        cursorColor = VerdeBodega
                     )
                 )
             }
 
-            // =================================================================
-            // 2. LAZYROW DE CATEGORÍAS FILTRABLES
-            // =================================================================
+            // LazyRow de Categorías
             item {
                 Text(
                     text = "Categorías",
@@ -186,7 +183,6 @@ fun PantallaInicio(
                     contentPadding = PaddingValues(vertical = 4.dp)
                 ) {
                     items(listaCategorias) { categoria ->
-                        // El contador de productos por categoría no se ve afectado por el buscador
                         val cantidadPorCategoria = if (categoria == "Todos") {
                             productos.size
                         } else {
@@ -197,8 +193,6 @@ fun PantallaInicio(
                             texto = "$categoria ($cantidadPorCategoria)",
                             seleccionado = categoria == categoriaSeleccionada && !soloFavoritos,
                             onClick = {
-                                // Al cambiar la categoría, el buscador en tiempo real se mantiene activo
-                                // aplicando la COMBINACIÓN DE AMBOS FILTROS.
                                 categoriaSeleccionada = categoria
                                 soloFavoritos = false
                             }
@@ -207,7 +201,7 @@ fun PantallaInicio(
                 }
             }
 
-            // Opciones de Ordenamiento y Filtro de Favoritos
+            // Filtros de ordenamiento y favoritos
             item {
                 Row(
                     modifier = Modifier
@@ -224,14 +218,16 @@ fun PantallaInicio(
                             Text(
                                 text = when (ordenSeleccionado) {
                                     OpcionOrden.DEFECTO -> "Ordenar por precio"
-                                    OpcionOrden.MENOR_A_MAYOR -> "Precio: Menor a Mayor"
-                                    OpcionOrden.MAYOR_A_MENOR -> "Precio: Mayor a Menor"
+                                    OpcionOrden.MENOR_A_MAYOR -> "Menor a Mayor"
+                                    OpcionOrden.MAYOR_A_MENOR -> "Mayor a Menor"
                                 },
-                                style = MaterialTheme.typography.bodySmall
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Icon(
                                 Icons.Default.ArrowDropDown,
-                                contentDescription = "Menú ordenamiento"
+                                contentDescription = "Menú ordenamiento",
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
@@ -247,14 +243,14 @@ fun PantallaInicio(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Precio: Menor a Mayor ⬆️") },
+                                text = { Text("Precio: Menor a Mayor") },
                                 onClick = {
                                     ordenSeleccionado = OpcionOrden.MENOR_A_MAYOR
                                     menuOrdenExpandido = false
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Precio: Mayor a Menor ⬇️") },
+                                text = { Text("Precio: Mayor a Menor") },
                                 onClick = {
                                     ordenSeleccionado = OpcionOrden.MAYOR_A_MENOR
                                     menuOrdenExpandido = false
@@ -287,9 +283,7 @@ fun PantallaInicio(
                 }
             }
 
-            // =================================================================
-            // 3. ACTUALIZACIÓN DEL GRID Y LISTADO
-            // =================================================================
+            // Encabezado de Productos
             item {
                 Row(
                     modifier = Modifier
@@ -299,9 +293,9 @@ fun PantallaInicio(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val encabezado = if (textoBusqueda.isNotEmpty()) {
-                        "Resultados para \"$textoBusqueda\""
+                        "Resultados de búsqueda"
                     } else if (soloFavoritos) {
-                        "Mis Productos Favoritos"
+                        "Mis Favoritos"
                     } else {
                         "Categoría: $categoriaSeleccionada"
                     }
@@ -309,7 +303,8 @@ fun PantallaInicio(
                     Text(
                         text = encabezado,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = VerdeBodega
                     )
                     Text(
                         text = "${productosOrdenados.size} prod.",
@@ -319,29 +314,48 @@ fun PantallaInicio(
                 }
             }
 
-            // Grilla de Productos Renderizada en filas dentro de la LazyColumn
+            // Grilla de Productos o Estado Vacío refinado
             if (productosOrdenados.isEmpty()) {
                 item {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 32.dp),
+                            .padding(vertical = 48.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        val mensajeVacio = if (textoBusqueda.isNotEmpty()) {
-                            "No se encontraron resultados para \"$textoBusqueda\" en esta categoría."
-                        } else if (soloFavoritos) {
-                            "No tienes productos marcados como favoritos"
-                        } else {
-                            "No hay productos en esta categoría"
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = if (textoBusqueda.isNotEmpty()) Icons.Default.SearchOff else Icons.Default.FavoriteBorder,
+                                    contentDescription = "Sin resultados",
+                                    tint = VerdeBodega,
+                                    modifier = Modifier.size(40.dp)
+                                )
+                            }
+                            
+                            Spacer(Modifier.height(16.dp))
+                            
+                            val mensajeVacio = if (textoBusqueda.isNotEmpty()) {
+                                "No se encontraron resultados para \"$textoBusqueda\" en la categoría seleccionada."
+                            } else if (soloFavoritos) {
+                                "Aún no tienes productos marcados como favoritos."
+                            } else {
+                                "No hay productos disponibles en esta categoría."
+                            }
+                            
+                            Text(
+                                text = mensajeVacio,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 24.dp)
+                            )
                         }
-                        
-                        Text(
-                            text = mensajeVacio,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
                     }
                 }
             } else {
@@ -389,8 +403,8 @@ private fun ChipCategoria(
     seleccionado: Boolean,
     onClick: () -> Unit
 ) {
-    val fondo = if (seleccionado) VerdeBodega else GrisClaro
-    val contenido = if (seleccionado) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val fondo = if (seleccionado) VerdeBodega else MaterialTheme.colorScheme.surfaceVariant
+    val contenido = if (seleccionado) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
 
     Row(
         modifier = Modifier
