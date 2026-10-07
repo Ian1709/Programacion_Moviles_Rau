@@ -2,6 +2,11 @@ package com.rau.tecsupfit.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val DarkGreen = Color(0xFF0F5A47)
+val SoftGreenBg = Color(0xFFE4F3EF)
+val MediumGreen = Color(0xFF1E8266)
+val LightGreenChip = Color(0xFFC7EADF)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
