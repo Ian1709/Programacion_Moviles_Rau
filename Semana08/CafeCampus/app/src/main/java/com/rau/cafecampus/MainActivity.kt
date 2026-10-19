@@ -4,44 +4,34 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.rau.cafecampus.data.prefs.PreferenciasStore
+import com.rau.cafecampus.data.repository.CafeRepositoryRoom
+import com.rau.cafecampus.ui.navigation.NavCafe
 import com.rau.cafecampus.ui.theme.CafeCampusTheme
+import com.rau.cafecampus.viewmodel.CafeViewModelFactory
+import com.rau.cafecampus.viewmodel.SesionViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val app = application as CafeApp
+        val repository = CafeRepositoryRoom(app.database)
+        val preferenciasStore = PreferenciasStore(applicationContext)
+        val factory = CafeViewModelFactory(repository, preferenciasStore)
+
         setContent {
             CafeCampusTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navController = rememberNavController()
+                val sesionViewModel: SesionViewModel = viewModel(factory = factory)
+                NavCafe(
+                    navController = navController,
+                    sesionViewModel = sesionViewModel
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CafeCampusTheme {
-        Greeting("Android")
     }
 }
