@@ -1,12 +1,14 @@
 package com.rau.cafecampus.ui.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.rau.cafecampus.ui.admin.MenuAdminScreen
+import com.rau.cafecampus.ui.admin.PanelScreen
+import com.rau.cafecampus.ui.admin.PedidosAdminScreen
 import com.rau.cafecampus.ui.cliente.ConfirmarPedidoScreen
 import com.rau.cafecampus.ui.cliente.DetalleProductoScreen
 import com.rau.cafecampus.ui.cliente.LoginScreen
@@ -15,6 +17,8 @@ import com.rau.cafecampus.ui.cliente.MisPedidosScreen
 import com.rau.cafecampus.ui.cliente.SeguimientoScreen
 import com.rau.cafecampus.ui.cliente.SplashScreen
 import com.rau.cafecampus.viewmodel.MenuViewModel
+import com.rau.cafecampus.viewmodel.PanelAdminViewModel
+import com.rau.cafecampus.viewmodel.PedidosAdminViewModel
 import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
@@ -23,7 +27,9 @@ fun NavCafe(
     navController: NavHostController,
     sesionViewModel: SesionViewModel,
     menuViewModel: MenuViewModel,
-    pedidosViewModel: PedidosClienteViewModel
+    pedidosViewModel: PedidosClienteViewModel,
+    panelAdminViewModel: PanelAdminViewModel,
+    pedidosAdminViewModel: PedidosAdminViewModel
 ) {
     NavHost(
         navController = navController,
@@ -149,8 +155,41 @@ fun NavCafe(
             )
         }
 
+        // Rutas del Administrador
         composable(Rutas.MenuAdmin.ruta) {
-            Text("Pantalla de Menú Admin (En desarrollo)")
+            PanelScreen(
+                panelViewModel = panelAdminViewModel,
+                sesionViewModel = sesionViewModel,
+                onVerPedidos = { navController.navigate(Rutas.PedidosAdmin.ruta) },
+                onGestionarMenu = { navController.navigate(Rutas.PanelAdmin.ruta) },
+                onAjustes = {
+                    sesionViewModel.cerrarSesion()
+                    navController.navigate(Rutas.Login.ruta) { popUpTo(0) { inclusive = true } }
+                },
+                onCerrarSesion = {
+                    sesionViewModel.cerrarSesion()
+                    navController.navigate(Rutas.Login.ruta) { popUpTo(0) { inclusive = true } }
+                }
+            )
+        }
+
+        composable(Rutas.PedidosAdmin.ruta) {
+            PedidosAdminScreen(
+                pedidosAdminViewModel = pedidosAdminViewModel,
+                onVolver = { navController.popBackStack() },
+                onGestionarMenu = { navController.navigate(Rutas.PanelAdmin.ruta) },
+                onAjustes = {
+                    sesionViewModel.cerrarSesion()
+                    navController.navigate(Rutas.Login.ruta) { popUpTo(0) { inclusive = true } }
+                },
+                onDetallePedido = { }
+            )
+        }
+
+        composable(Rutas.PanelAdmin.ruta) {
+            MenuAdminScreen(
+                onVolver = { navController.popBackStack() }
+            )
         }
     }
 }
