@@ -39,6 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rau.cafecampus.ui.components.CafeBottomBar
+import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.components.ProductoCard
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.MenuViewModel
@@ -51,6 +53,7 @@ fun MenuScreen(
     sesionViewModel: SesionViewModel,
     onProductoClick: (Int) -> Unit,
     onIrAConfirmarPedido: () -> Unit,
+    onIrAPedidos: () -> Unit,
     onCerrarSesion: () -> Unit
 ) {
     val uiState by menuViewModel.uiState.collectAsState()
@@ -72,7 +75,7 @@ fun MenuScreen(
                 title = {
                     Column {
                         Text(
-                            text = if (nombreUsuario.isNotBlank()) "Hola, $nombreUsuario" else "☕ CafeCampus",
+                            text = if (nombreUsuario.isNotBlank()) "Hola, $nombreUsuario 👋" else "☕ CafeCampus",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -97,46 +100,61 @@ fun MenuScreen(
             )
         },
         bottomBar = {
-            if (uiState.carrito.isNotEmpty()) {
-                Surface(
-                    shadowElevation = 8.dp,
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+            Column {
+                if (uiState.carrito.isNotEmpty()) {
+                    Surface(
+                        shadowElevation = 8.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Column {
-                            Text(
-                                text = "${menuViewModel.totalItemsCarrito()} productos en carrito",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "Total: S/ %.2f".format(menuViewModel.totalCarrito()),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = NaranjaEstudiante
-                            )
-                        }
-
-                        Button(
-                            onClick = onIrAConfirmarPedido,
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = NaranjaEstudiante)
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = "Ver Carrito",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp
-                            )
+                            Column {
+                                Text(
+                                    text = "${menuViewModel.totalItemsCarrito()} productos en carrito",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = "Total: S/ %.2f".format(menuViewModel.totalCarrito()),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = NaranjaEstudiante
+                                )
+                            }
+
+                            Button(
+                                onClick = onIrAConfirmarPedido,
+                                shape = RoundedCornerShape(12.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = NaranjaEstudiante)
+                            ) {
+                                Text(
+                                    text = "Ver Carrito",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 15.sp
+                                )
+                            }
                         }
                     }
                 }
+                CafeBottomBar(
+                    tabActual = ClienteTab.MENU,
+                    onTabSeleccionada = { tab ->
+                        when (tab) {
+                            ClienteTab.MENU -> {}
+                            ClienteTab.PEDIDOS -> onIrAPedidos()
+                            ClienteTab.PERFIL -> {
+                                sesionViewModel.cerrarSesion()
+                                onCerrarSesion()
+                            }
+                        }
+                    }
+                )
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }

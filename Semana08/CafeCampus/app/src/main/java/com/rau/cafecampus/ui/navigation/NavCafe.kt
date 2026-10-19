@@ -7,18 +7,23 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.rau.cafecampus.ui.cliente.ConfirmarPedidoScreen
 import com.rau.cafecampus.ui.cliente.DetalleProductoScreen
 import com.rau.cafecampus.ui.cliente.LoginScreen
 import com.rau.cafecampus.ui.cliente.MenuScreen
+import com.rau.cafecampus.ui.cliente.MisPedidosScreen
+import com.rau.cafecampus.ui.cliente.SeguimientoScreen
 import com.rau.cafecampus.ui.cliente.SplashScreen
 import com.rau.cafecampus.viewmodel.MenuViewModel
+import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
 @Composable
 fun NavCafe(
     navController: NavHostController,
     sesionViewModel: SesionViewModel,
-    menuViewModel: MenuViewModel
+    menuViewModel: MenuViewModel,
+    pedidosViewModel: PedidosClienteViewModel
 ) {
     NavHost(
         navController = navController,
@@ -71,6 +76,9 @@ fun NavCafe(
                 onIrAConfirmarPedido = {
                     navController.navigate(Rutas.ConfirmarPedido.ruta)
                 },
+                onIrAPedidos = {
+                    navController.navigate(Rutas.MisPedidos.ruta)
+                },
                 onCerrarSesion = {
                     navController.navigate(Rutas.Login.ruta) {
                         popUpTo(Rutas.MenuCliente.ruta) { inclusive = true }
@@ -92,7 +100,53 @@ fun NavCafe(
         }
 
         composable(Rutas.ConfirmarPedido.ruta) {
-            Text("Pantalla Confirmar Pedido (Próximo commit)")
+            ConfirmarPedidoScreen(
+                menuViewModel = menuViewModel,
+                pedidosViewModel = pedidosViewModel,
+                onVolverAlMenu = { navController.popBackStack() },
+                onPedidoConfirmado = { pedidoId ->
+                    navController.navigate(Rutas.Seguimiento.crearRuta(pedidoId)) {
+                        popUpTo(Rutas.MenuCliente.ruta) { inclusive = false }
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Rutas.Seguimiento.ruta,
+            arguments = listOf(navArgument("pedidoId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val pedidoId = backStackEntry.arguments?.getLong("pedidoId") ?: 0L
+            SeguimientoScreen(
+                pedidoId = pedidoId,
+                pedidosViewModel = pedidosViewModel,
+                onVolverAlMenu = {
+                    navController.navigate(Rutas.MenuCliente.ruta) {
+                        popUpTo(Rutas.MenuCliente.ruta) { inclusive = true }
+                    }
+                },
+                onVerMisPedidos = {
+                    navController.navigate(Rutas.MisPedidos.ruta) {
+                        popUpTo(Rutas.MenuCliente.ruta) { inclusive = false }
+                    }
+                }
+            )
+        }
+
+        composable(Rutas.MisPedidos.ruta) {
+            MisPedidosScreen(
+                pedidosViewModel = pedidosViewModel,
+                onVolverAlMenu = { navController.popBackStack() },
+                onVerSeguimiento = { pedidoId ->
+                    navController.navigate(Rutas.Seguimiento.crearRuta(pedidoId))
+                },
+                onCerrarSesion = {
+                    sesionViewModel.cerrarSesion()
+                    navController.navigate(Rutas.Login.ruta) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+            )
         }
 
         composable(Rutas.MenuAdmin.ruta) {
