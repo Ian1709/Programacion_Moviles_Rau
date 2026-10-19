@@ -28,6 +28,7 @@ class SesionViewModel(
 
     val isLoggedIn = preferenciasStore.isLoggedIn
     val userRole = preferenciasStore.userRole
+    val userName = preferenciasStore.userName
 
     fun onCorreoChange(nuevoCorreo: String) {
         _uiState.value = _uiState.value.copy(correo = nuevoCorreo, mensajeError = null)
