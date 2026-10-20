@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,18 +42,23 @@ import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.components.PedidoCard
 import com.rau.cafecampus.ui.theme.FondoSegmentoGris
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
+import com.rau.cafecampus.viewmodel.MenuViewModel
 import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MisPedidosScreen(
     pedidosViewModel: PedidosClienteViewModel,
+    menuViewModel: MenuViewModel,
     onVolverAlMenu: () -> Unit,
     onVerSeguimiento: (Long) -> Unit,
     onCerrarSesion: () -> Unit
 ) {
     val misPedidos by pedidosViewModel.misPedidos.collectAsState()
     var tabSeleccionada by remember { mutableIntStateOf(0) } // 0: Activos, 1: Historial
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     val pedidosFiltrados = misPedidos.filter { item ->
         val estado = item.pedido.estado.uppercase()
@@ -90,7 +98,8 @@ fun MisPedidosScreen(
                     }
                 }
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -173,7 +182,18 @@ fun MisPedidosScreen(
                     items(pedidosFiltrados, key = { it.pedido.id }) { pedidoConDetalle ->
                         PedidoCard(
                             pedidoConDetalle = pedidoConDetalle,
-                            onClick = { onVerSeguimiento(pedidoConDetalle.pedido.id) }
+                            onClick = { onVerSeguimiento(pedidoConDetalle.pedido.id) },
+                            onRepetirPedido = {
+                                pedidosViewModel.repetirPedido(
+                                    pedidoConDetalle = pedidoConDetalle,
+                                    menuViewModel = menuViewModel,
+                                    onResultado = { mensaje ->
+                                        coroutineScope.launch {
+                                            snackbarHostState.showSnackbar(mensaje)
+                                        }
+                                    }
+                                )
+                            }
                         )
                     }
                 }

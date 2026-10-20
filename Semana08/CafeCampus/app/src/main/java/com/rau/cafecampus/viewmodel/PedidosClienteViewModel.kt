@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -107,6 +106,38 @@ class PedidosClienteViewModel(
                     mensajeError = "Error al registrar el pedido: ${e.message}"
                 )
             }
+        }
+    }
+
+    fun repetirPedido(
+        pedidoConDetalle: PedidoConDetalle,
+        menuViewModel: MenuViewModel,
+        onResultado: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val agregados = mutableListOf<String>()
+            val omitidos = mutableListOf<String>()
+
+            for (detalle in pedidoConDetalle.detalles) {
+                val productoActual = repository.obtenerProductoPorId(detalle.productoId)
+                if (productoActual != null && productoActual.disponible) {
+                    menuViewModel.agregarAlCarrito(productoActual, detalle.cantidad)
+                    agregados.add(productoActual.nombre)
+                } else {
+                    omitidos.add(detalle.nombreProducto)
+                }
+            }
+
+            val mensaje = when {
+                agregados.isNotEmpty() && omitidos.isNotEmpty() ->
+                    "Se cargaron los productos al carrito. Omitidos por no estar disponibles: ${omitidos.joinToString(", ")}"
+                agregados.isNotEmpty() ->
+                    "¡Pedido #${pedidoConDetalle.pedido.id} cargado nuevamente en el carrito!"
+                else ->
+                    "No se pudo repetir el pedido: los productos ya no están disponibles."
+            }
+
+            onResultado(mensaje)
         }
     }
 

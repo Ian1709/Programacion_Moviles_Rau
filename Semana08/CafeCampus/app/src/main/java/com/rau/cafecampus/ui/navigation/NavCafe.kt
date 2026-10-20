@@ -145,6 +145,7 @@ fun NavCafe(
         composable(Rutas.MisPedidos.ruta) {
             MisPedidosScreen(
                 pedidosViewModel = pedidosViewModel,
+                menuViewModel = menuViewModel,
                 onVolverAlMenu = { navController.popBackStack() },
                 onVerSeguimiento = { pedidoId ->
                     navController.navigate(Rutas.Seguimiento.crearRuta(pedidoId))
