@@ -54,6 +54,7 @@ fun PanelScreen(
 ) {
     val metricas by panelViewModel.metricas.collectAsState()
     val todosPedidos by panelViewModel.todosLosPedidos.collectAsState()
+    val graficoHoras by panelViewModel.pedidosPorHora.collectAsState()
     val nuevosPedidos = todosPedidos.filter { it.pedido.estado.uppercase() == "PENDIENTE" }
 
     Scaffold(
@@ -172,7 +173,7 @@ fun PanelScreen(
                 }
             }
 
-            // Sección: Pedidos por hora (Simulación visual de gráfico de barras)
+            // Sección: Gráfico REAL de Pedidos por Hora
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -181,35 +182,46 @@ fun PanelScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Pedidos por hora",
+                            text = "Pedidos por hora (Datos reales Room)",
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        val maxCantidad = (graficoHoras.maxOfOrNull { it.cantidadPedidos } ?: 1).coerceAtLeast(1)
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(90.dp),
+                                .height(100.dp),
                             horizontalArrangement = Arrangement.SpaceEvenly,
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            val horas = listOf("8h" to 3, "9h" to 6, "10h" to 9, "11h" to 5, "12h" to 7)
-                            val maxVal = 10
+                            graficoHoras.forEach { horaItem ->
+                                val porcentaje = (horaItem.cantidadPedidos.toFloat() / maxCantidad.toFloat()).coerceIn(0.1f, 1f)
+                                val esPico = horaItem.cantidadPedidos > 0 && horaItem.cantidadPedidos == maxCantidad
 
-                            horas.forEach { (hora, cant) ->
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(text = "$cant", fontSize = 10.sp, color = Color.Gray)
+                                    Text(
+                                        text = "${horaItem.cantidadPedidos}",
+                                        fontSize = 10.sp,
+                                        fontWeight = if (esPico) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (esPico) AzulAdmin else Color.Gray
+                                    )
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Box(
                                         modifier = Modifier
-                                            .width(28.dp)
-                                            .height(((cant.toFloat() / maxVal) * 50).dp)
+                                            .width(22.dp)
+                                            .height((porcentaje * 60).dp)
                                             .clip(RoundedCornerShape(6.dp))
-                                            .background(if (hora == "10h") AzulAdmin else Color(0xFFC5CAE9))
+                                            .background(if (esPico) AzulAdmin else Color(0xFFC5CAE9))
                                     )
                                     Spacer(modifier = Modifier.height(6.dp))
-                                    Text(text = hora, fontSize = 11.sp, color = Color.Gray)
+                                    Text(
+                                        text = horaItem.horaTexto,
+                                        fontSize = 10.sp,
+                                        color = Color.Gray
+                                    )
                                 }
                             }
                         }

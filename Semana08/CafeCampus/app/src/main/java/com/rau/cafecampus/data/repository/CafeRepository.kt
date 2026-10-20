@@ -21,5 +21,6 @@ interface CafeRepository {
     suspend fun crearPedido(pedido: Pedido, detalles: List<DetallePedido>): Long
     fun obtenerPedidosPorCliente(clienteId: Int): Flow<List<PedidoConDetalle>>
     fun obtenerTodosLosPedidos(): Flow<List<PedidoConDetalle>>
+    fun obtenerPedidosValidos(): Flow<List<Pedido>>
     suspend fun actualizarEstadoPedido(pedidoId: Long, nuevoEstado: String)
 }

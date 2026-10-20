@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import java.util.Calendar
 
 data class PanelMetrics(
     val ventasTotales: Double = 0.0,
@@ -17,6 +18,12 @@ data class PanelMetrics(
     val listosCount: Int = 0,
     val entregadosCount: Int = 0,
     val canceladosCount: Int = 0
+)
+
+data class HoraEstadistica(
+    val horaTexto: String,
+    val horaInt: Int,
+    val cantidadPedidos: Int
 )
 
 class PanelAdminViewModel(
@@ -40,4 +47,23 @@ class PanelAdminViewModel(
             canceladosCount = pedidos.count { it.pedido.estado.uppercase() == "CANCELADO" }
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PanelMetrics())
+
+    // Gráfico real de pedidos por hora del día desde Room (excluyendo cancelados)
+    val pedidosPorHora: StateFlow<List<HoraEstadistica>> = repository.obtenerPedidosValidos().map { pedidos ->
+        val horasDeseadas = listOf(8, 9, 10, 11, 12, 13, 14, 15, 16, 17)
+        val cal = Calendar.getInstance()
+
+        val agruparPorHora = pedidos.groupBy { pedido ->
+            cal.timeInMillis = pedido.fecha
+            cal.get(Calendar.HOUR_OF_DAY)
+        }
+
+        horasDeseadas.map { h ->
+            HoraEstadistica(
+                horaTexto = "${h}h",
+                horaInt = h,
+                cantidadPedidos = agruparPorHora[h]?.size ?: 0
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 }

@@ -59,6 +59,10 @@ class CafeRepositoryRoom(
         return pedidoDao.obtenerTodosLosPedidos()
     }
 
+    override fun obtenerPedidosValidos(): Flow<List<Pedido>> {
+        return pedidoDao.obtenerPedidosValidos()
+    }
+
     override suspend fun actualizarEstadoPedido(pedidoId: Long, nuevoEstado: String) {
         pedidoDao.actualizarEstado(pedidoId, nuevoEstado)
     }

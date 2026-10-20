@@ -34,6 +34,9 @@ abstract class PedidoDao {
     @Query("SELECT * FROM pedidos ORDER BY fecha DESC")
     abstract fun obtenerTodosLosPedidos(): Flow<List<PedidoConDetalle>>
 
+    @Query("SELECT * FROM pedidos WHERE estado != 'CANCELADO' ORDER BY fecha ASC")
+    abstract fun obtenerPedidosValidos(): Flow<List<Pedido>>
+
     @Query("UPDATE pedidos SET estado = :nuevoEstado WHERE id = :pedidoId")
     abstract suspend fun actualizarEstado(pedidoId: Long, nuevoEstado: String)
 }
