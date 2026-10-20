@@ -29,6 +29,11 @@ class SesionViewModel(
     val isLoggedIn = preferenciasStore.isLoggedIn
     val userRole = preferenciasStore.userRole
     val userName = preferenciasStore.userName
+    val userEmail = preferenciasStore.userEmail
+
+    val modoOscuro = preferenciasStore.modoOscuro
+    val notificaciones = preferenciasStore.notificaciones
+    val recibirPedidos = preferenciasStore.recibirPedidos
 
     fun onCorreoChange(nuevoCorreo: String) {
         _uiState.value = _uiState.value.copy(correo = nuevoCorreo, mensajeError = null)
@@ -52,6 +57,22 @@ class SesionViewModel(
                 mensajeError = null
             )
         }
+    }
+
+    fun toggleModoOscuro(activo: Boolean) {
+        viewModelScope.launch { preferenciasStore.setModoOscuro(activo) }
+    }
+
+    fun toggleNotificaciones(activo: Boolean) {
+        viewModelScope.launch { preferenciasStore.setNotificaciones(activo) }
+    }
+
+    fun toggleRecibirPedidos(activo: Boolean) {
+        viewModelScope.launch { preferenciasStore.setRecibirPedidos(activo) }
+    }
+
+    fun cambiarRolDemo(nuevoRol: String) {
+        viewModelScope.launch { preferenciasStore.cambiarRol(nuevoRol) }
     }
 
     fun iniciarSesion() {

@@ -14,7 +14,7 @@ object DatosIniciales {
         ),
         Usuario(
             id = 2,
-            nombre = "Juan Pérez",
+            nombre = "Ian Rau",
             correo = "estudiante@cafecampus.com",
             clave = "123456",
             rol = "CLIENTE"

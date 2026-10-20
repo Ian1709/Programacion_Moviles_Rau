@@ -172,7 +172,7 @@ fun PedidosAdminScreen(
                                         Text("👤", fontSize = 20.sp)
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = "%04d Juan Pérez".format(pedido.id),
+                                            text = "%04d Ian Rau".format(pedido.id),
                                             fontWeight = FontWeight.Bold,
                                             fontSize = 15.sp
                                         )

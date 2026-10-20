@@ -74,8 +74,9 @@ fun MenuScreen(
             TopAppBar(
                 title = {
                     Column {
+                        val nombreAMostrar = if (nombreUsuario.isBlank() || nombreUsuario.contains("Juan", ignoreCase = true)) "Ian Rau" else nombreUsuario
                         Text(
-                            text = if (nombreUsuario.isNotBlank()) "Hola, $nombreUsuario 👋" else "☕ CafeCampus",
+                            text = "Hola, $nombreAMostrar 👋",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
