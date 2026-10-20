@@ -88,7 +88,7 @@ fun DetalleProductoScreen(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    ProductoIcono(categoria = prod.categoria, tamano = 100.dp)
+                    ProductoIcono(categoria = prod.categoria, imagenUrl = prod.imagenUrl, tamano = 120.dp)
 
                     Spacer(modifier = Modifier.height(24.dp))
 

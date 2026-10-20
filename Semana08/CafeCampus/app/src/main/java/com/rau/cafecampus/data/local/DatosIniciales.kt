@@ -28,6 +28,7 @@ object DatosIniciales {
             descripcion = "Café pasado con agua caliente",
             precio = 5.0,
             categoria = "BEBIDAS",
+            imagenUrl = "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500",
             disponible = true
         ),
         Producto(
@@ -36,6 +37,7 @@ object DatosIniciales {
             descripcion = "Espresso con leche al vapor",
             precio = 7.5,
             categoria = "BEBIDAS",
+            imagenUrl = "https://images.unsplash.com/photo-1534778101976-62847782c213?w=500",
             disponible = true
         ),
         Producto(
@@ -44,6 +46,7 @@ object DatosIniciales {
             descripcion = "Pan integral con pollo deshilachado y mayonesa",
             precio = 9.0,
             categoria = "COMIDAS",
+            imagenUrl = "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500",
             disponible = true
         ),
         Producto(
@@ -52,6 +55,7 @@ object DatosIniciales {
             descripcion = "Bizcocho esponjoso con chispas de chocolate",
             precio = 4.5,
             categoria = "POSTRES",
+            imagenUrl = "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=500",
             disponible = true
         )
     )

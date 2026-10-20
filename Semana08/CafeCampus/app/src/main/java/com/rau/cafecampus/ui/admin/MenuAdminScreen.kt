@@ -150,7 +150,11 @@ fun MenuAdminScreen(
                                     .padding(16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                ProductoIcono(categoria = producto.categoria, tamano = 52.dp)
+                                ProductoIcono(
+                                    categoria = producto.categoria,
+                                    imagenUrl = producto.imagenUrl,
+                                    tamano = 52.dp
+                                )
 
                                 Spacer(modifier = Modifier.width(12.dp))
 

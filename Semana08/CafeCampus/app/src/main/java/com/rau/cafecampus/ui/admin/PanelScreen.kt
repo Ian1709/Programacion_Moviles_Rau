@@ -259,7 +259,7 @@ fun PanelScreen(
                         ) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "#%04d Juan P.".format(item.pedido.id),
+                                    text = "#%04d Ian R.".format(item.pedido.id),
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp
                                 )

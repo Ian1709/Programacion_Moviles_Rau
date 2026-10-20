@@ -11,7 +11,11 @@ import com.rau.cafecampus.data.repository.CafeRepositoryRoom
 import com.rau.cafecampus.ui.navigation.NavCafe
 import com.rau.cafecampus.ui.theme.CafeCampusTheme
 import com.rau.cafecampus.viewmodel.CafeViewModelFactory
+import com.rau.cafecampus.viewmodel.MenuAdminViewModel
 import com.rau.cafecampus.viewmodel.MenuViewModel
+import com.rau.cafecampus.viewmodel.PanelAdminViewModel
+import com.rau.cafecampus.viewmodel.PedidosAdminViewModel
+import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
 class MainActivity : ComponentActivity() {
@@ -29,11 +33,19 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val sesionViewModel: SesionViewModel = viewModel(factory = factory)
                 val menuViewModel: MenuViewModel = viewModel(factory = factory)
+                val pedidosViewModel: PedidosClienteViewModel = viewModel(factory = factory)
+                val panelAdminViewModel: PanelAdminViewModel = viewModel(factory = factory)
+                val pedidosAdminViewModel: PedidosAdminViewModel = viewModel(factory = factory)
+                val menuAdminViewModel: MenuAdminViewModel = viewModel(factory = factory)
 
                 NavCafe(
                     navController = navController,
                     sesionViewModel = sesionViewModel,
-                    menuViewModel = menuViewModel
+                    menuViewModel = menuViewModel,
+                    pedidosViewModel = pedidosViewModel,
+                    panelAdminViewModel = panelAdminViewModel,
+                    pedidosAdminViewModel = pedidosAdminViewModel,
+                    menuAdminViewModel = menuAdminViewModel
                 )
             }
         }

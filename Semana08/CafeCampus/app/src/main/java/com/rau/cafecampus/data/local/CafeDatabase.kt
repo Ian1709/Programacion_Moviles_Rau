@@ -53,8 +53,8 @@ abstract class CafeDatabase : RoomDatabase() {
         private class CafeDatabaseCallback(
             private val scope: CoroutineScope
         ) : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                super.onCreate(db)
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
                 INSTANCE?.let { database ->
                     scope.launch(Dispatchers.IO) {
                         poblarBaseDeDatos(database)

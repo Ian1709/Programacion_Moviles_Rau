@@ -115,7 +115,7 @@ fun ConfirmarPedidoScreen(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        ProductoIcono(categoria = item.producto.categoria, tamano = 44.dp)
+                                        ProductoIcono(categoria = item.producto.categoria, imagenUrl = item.producto.imagenUrl, tamano = 44.dp)
                                         Spacer(modifier = Modifier.width(12.dp))
                                         Column {
                                             Text(

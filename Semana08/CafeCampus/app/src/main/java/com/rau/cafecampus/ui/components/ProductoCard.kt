@@ -45,7 +45,11 @@ fun ProductoCard(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ProductoIcono(categoria = producto.categoria, tamano = 60.dp)
+            ProductoIcono(
+                categoria = producto.categoria,
+                imagenUrl = producto.imagenUrl,
+                tamano = 60.dp
+            )
 
             Spacer(modifier = Modifier.width(16.dp))
 
