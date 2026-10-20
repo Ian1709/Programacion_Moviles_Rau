@@ -27,6 +27,9 @@ class MenuViewModel(
     private val _uiState = MutableStateFlow(MenuUiState())
     val uiState: StateFlow<MenuUiState> = _uiState.asStateFlow()
 
+    private val _textoBusqueda = MutableStateFlow("")
+    val textoBusqueda: StateFlow<String> = _textoBusqueda.asStateFlow()
+
     // Flujo de todos los productos disponibles en Room
     val productosDisponibles: StateFlow<List<Producto>> = repository.obtenerProductosDisponibles()
         .stateIn(
@@ -35,21 +38,30 @@ class MenuViewModel(
             initialValue = emptyList()
         )
 
-    // Productos filtrados dinámicamente por categoría
+    // Productos filtrados dinámicamente por categoría y búsqueda por nombre/descripción
     val productosFiltrados: StateFlow<List<Producto>> = combine(
         productosDisponibles,
-        _uiState
-    ) { productos, state ->
-        if (state.categoriaSeleccionada == "TODOS") {
-            productos
-        } else {
-            productos.filter { it.categoria.equals(state.categoriaSeleccionada, ignoreCase = true) }
+        _uiState,
+        _textoBusqueda
+    ) { productos, state, query ->
+        val q = query.trim()
+        productos.filter { prod ->
+            val coincideCategoria = state.categoriaSeleccionada == "TODOS" ||
+                    prod.categoria.equals(state.categoriaSeleccionada, ignoreCase = true)
+            val coincideBusqueda = q.isEmpty() ||
+                    prod.nombre.contains(q, ignoreCase = true) ||
+                    prod.descripcion.contains(q, ignoreCase = true)
+            coincideCategoria && coincideBusqueda
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
+
+    fun onTextoBusquedaChange(nuevoTexto: String) {
+        _textoBusqueda.value = nuevoTexto
+    }
 
     fun seleccionarCategoria(categoria: String) {
         _uiState.value = _uiState.value.copy(categoriaSeleccionada = categoria)

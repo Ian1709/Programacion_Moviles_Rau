@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.CafeBottomBar
+import com.rau.cafecampus.ui.components.CafeTextField
 import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.components.ProductoCard
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
@@ -58,6 +59,7 @@ fun MenuScreen(
 ) {
     val uiState by menuViewModel.uiState.collectAsState()
     val productosFiltrados by menuViewModel.productosFiltrados.collectAsState()
+    val textoBusqueda by menuViewModel.textoBusqueda.collectAsState()
     val nombreUsuario by sesionViewModel.userName.collectAsState(initial = "")
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -165,6 +167,16 @@ fun MenuScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            // Barra de Búsqueda
+            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
+                CafeTextField(
+                    value = textoBusqueda,
+                    onValueChange = { menuViewModel.onTextoBusquedaChange(it) },
+                    label = "Buscar productos...",
+                    activeColor = NaranjaEstudiante
+                )
+            }
+
             // Fila de Filtros de Categoría
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -184,7 +196,7 @@ fun MenuScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Lista de productos
             if (productosFiltrados.isEmpty()) {
