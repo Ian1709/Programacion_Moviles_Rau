@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.text.Normalizer
 
 data class MenuUiState(
     val categoriaSeleccionada: String = "TODOS",
@@ -38,19 +39,26 @@ class MenuViewModel(
             initialValue = emptyList()
         )
 
-    // Productos filtrados dinámicamente por categoría y búsqueda por nombre/descripción
+    private fun String.normalizarTexto(): String {
+        val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
+        return Regex("\\p{InCombiningDiacriticalMarks}+").replace(temp, "").lowercase().trim()
+    }
+
+    // Productos filtrados flexiblemente por categoría y búsqueda insensible a tildes/mayúsculas
     val productosFiltrados: StateFlow<List<Producto>> = combine(
         productosDisponibles,
         _uiState,
         _textoBusqueda
     ) { productos, state, query ->
-        val q = query.trim()
+        val q = query.normalizarTexto()
         productos.filter { prod ->
             val coincideCategoria = state.categoriaSeleccionada == "TODOS" ||
                     prod.categoria.equals(state.categoriaSeleccionada, ignoreCase = true)
+            val nombreNorm = prod.nombre.normalizarTexto()
+            val descNorm = prod.descripcion.normalizarTexto()
             val coincideBusqueda = q.isEmpty() ||
-                    prod.nombre.contains(q, ignoreCase = true) ||
-                    prod.descripcion.contains(q, ignoreCase = true)
+                    nombreNorm.contains(q) ||
+                    descNorm.contains(q)
             coincideCategoria && coincideBusqueda
         }
     }.stateIn(
