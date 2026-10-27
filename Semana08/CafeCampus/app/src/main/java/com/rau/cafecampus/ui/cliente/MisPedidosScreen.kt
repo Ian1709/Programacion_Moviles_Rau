@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.CafeBottomBar
 import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.components.PedidoCard
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.MenuViewModel
 import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
@@ -76,12 +75,13 @@ fun MisPedidosScreen(
                     Text(
                         text = "Mis pedidos",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onVolverAlMenu) {
-                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -109,7 +109,7 @@ fun MisPedidosScreen(
         ) {
             // Segmented Control Tabs (Activos | Historial)
             Surface(
-                color = FondoSegmentoGris,
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,7 +123,7 @@ fun MisPedidosScreen(
                 ) {
                     // Pestaña Activos
                     Surface(
-                        color = if (tabSeleccionada == 0) Color.White else Color.Transparent,
+                        color = if (tabSeleccionada == 0) MaterialTheme.colorScheme.surface else Color.Transparent,
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier
                             .weight(1f)
@@ -133,7 +133,7 @@ fun MisPedidosScreen(
                         Box(contentAlignment = Alignment.Center) {
                             Text(
                                 text = "Activos",
-                                color = if (tabSeleccionada == 0) NaranjaEstudiante else Color.Gray,
+                                color = if (tabSeleccionada == 0) NaranjaEstudiante else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = if (tabSeleccionada == 0) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 14.sp
                             )
@@ -142,7 +142,7 @@ fun MisPedidosScreen(
 
                     // Pestaña Historial
                     Surface(
-                        color = if (tabSeleccionada == 1) Color.White else Color.Transparent,
+                        color = if (tabSeleccionada == 1) MaterialTheme.colorScheme.surface else Color.Transparent,
                         shape = RoundedCornerShape(10.dp),
                         modifier = Modifier
                             .weight(1f)
@@ -152,7 +152,7 @@ fun MisPedidosScreen(
                         Box(contentAlignment = Alignment.Center) {
                             Text(
                                 text = "Historial",
-                                color = if (tabSeleccionada == 1) NaranjaEstudiante else Color.Gray,
+                                color = if (tabSeleccionada == 1) NaranjaEstudiante else MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = if (tabSeleccionada == 1) FontWeight.Bold else FontWeight.Normal,
                                 fontSize = 14.sp
                             )
@@ -170,7 +170,7 @@ fun MisPedidosScreen(
                 ) {
                     Text(
                         text = if (tabSeleccionada == 0) "No tienes pedidos activos" else "No tienes pedidos en el historial",
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 14.sp
                     )
                 }

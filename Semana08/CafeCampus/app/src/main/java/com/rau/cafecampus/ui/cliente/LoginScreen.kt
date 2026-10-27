@@ -37,8 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.CafeTextField
 import com.rau.cafecampus.ui.theme.AzulAdmin
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
-import com.rau.cafecampus.ui.theme.FondoTarjetaAdmin
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
@@ -88,14 +86,14 @@ fun LoginScreen(
                 Text(
                     text = "Ingresa para continuar",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
 
                 // Selector de Rol Segmentado
                 Surface(
-                    color = FondoSegmentoGris,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -119,7 +117,7 @@ fun LoginScreen(
                             Box(contentAlignment = Alignment.Center) {
                                 Text(
                                     text = "Estudiante",
-                                    color = if (!esAdmin) Color.White else Color.Gray,
+                                    color = if (!esAdmin) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (!esAdmin) FontWeight.Bold else FontWeight.Normal,
                                     fontSize = 14.sp
                                 )
@@ -138,7 +136,7 @@ fun LoginScreen(
                             Box(contentAlignment = Alignment.Center) {
                                 Text(
                                     text = "Administrador",
-                                    color = if (esAdmin) Color.White else Color.Gray,
+                                    color = if (esAdmin) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (esAdmin) FontWeight.Bold else FontWeight.Normal,
                                     fontSize = 14.sp
                                 )
@@ -226,7 +224,7 @@ fun LoginScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "¿No tienes cuenta? ",
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontSize = 14.sp
                         )
                         Text(
@@ -240,7 +238,7 @@ fun LoginScreen(
                 } else {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = FondoTarjetaAdmin),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                         shape = RoundedCornerShape(12.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
@@ -253,7 +251,7 @@ fun LoginScreen(
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = "Puedes cambiar de perfil desde Ajustes para probar ambos roles.",
-                                color = Color(0xFF49454F),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
                         }

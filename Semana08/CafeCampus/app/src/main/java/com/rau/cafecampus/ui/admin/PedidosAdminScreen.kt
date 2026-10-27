@@ -43,7 +43,6 @@ import com.rau.cafecampus.ui.components.AdminBottomBar
 import com.rau.cafecampus.ui.components.AdminTab
 import com.rau.cafecampus.ui.components.EstadoChip
 import com.rau.cafecampus.ui.theme.AzulAdmin
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
 import com.rau.cafecampus.viewmodel.PedidosAdminViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,10 +69,10 @@ fun PedidosAdminScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Pedidos", fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+                title = { Text("Pedidos", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurface) },
                 navigationIcon = {
                     TextButton(onClick = onVolver) {
-                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -101,7 +100,7 @@ fun PedidosAdminScreen(
         ) {
             // Segmented Control Tabs (Nuevos | Preparando | Listos)
             Surface(
-                color = FondoSegmentoGris,
+                color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +126,7 @@ fun PedidosAdminScreen(
                             Box(contentAlignment = Alignment.Center) {
                                 Text(
                                     text = titulo,
-                                    color = if (seleccionada) Color.White else Color.Gray,
+                                    color = if (seleccionada) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontWeight = if (seleccionada) FontWeight.Bold else FontWeight.Normal,
                                     fontSize = 13.sp
                                 )
@@ -144,7 +143,7 @@ fun PedidosAdminScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No hay pedidos en esta sección", color = Color.Gray, fontSize = 14.sp)
+                    Text("No hay pedidos en esta sección", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
                 }
             } else {
                 LazyColumn(
@@ -160,7 +159,7 @@ fun PedidosAdminScreen(
                                 .fillMaxWidth()
                                 .clickable { onDetallePedido(pedido.id) },
                             shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(containerColor = FondoSegmentoGris.copy(alpha = 0.5f))
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Row(
@@ -174,7 +173,8 @@ fun PedidosAdminScreen(
                                         Text(
                                             text = "%04d Ian Rau".format(pedido.id),
                                             fontWeight = FontWeight.Bold,
-                                            fontSize = 15.sp
+                                            fontSize = 15.sp,
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                     EstadoChip(estado = pedido.estado)
@@ -185,7 +185,7 @@ fun PedidosAdminScreen(
                                 val resumenItems = detalles.joinToString(" + ") { "${it.cantidad} x ${it.nombreProducto}" }
                                 Text(
                                     text = resumenItems,
-                                    color = Color.DarkGray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 13.sp
                                 )
 
@@ -200,7 +200,7 @@ fun PedidosAdminScreen(
                                             pedido.total,
                                             if (pedido.nota.isNotBlank()) "· Nota: ${pedido.nota}" else ""
                                         ),
-                                        color = Color.Gray,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontSize = 12.sp
                                     )
                                 }

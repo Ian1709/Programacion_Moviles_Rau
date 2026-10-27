@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.ProductoIcono
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.MenuViewModel
 import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
@@ -75,12 +74,13 @@ fun ConfirmarPedidoScreen(
                     Text(
                         text = "Confirmar pedido",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onVolverAlMenu) {
-                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -100,11 +100,11 @@ fun ConfirmarPedidoScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = FondoSegmentoGris.copy(alpha = 0.5f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         if (menuState.carrito.isEmpty()) {
-                            Text("El carrito está vacío", color = Color.Gray)
+                            Text("El carrito está vacío", color = MaterialTheme.colorScheme.onSurfaceVariant)
                         } else {
                             menuState.carrito.forEach { item ->
                                 Row(
@@ -121,11 +121,12 @@ fun ConfirmarPedidoScreen(
                                             Text(
                                                 text = item.producto.nombre,
                                                 fontWeight = FontWeight.Bold,
-                                                fontSize = 15.sp
+                                                fontSize = 15.sp,
+                                                color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
                                                 text = "x${item.cantidad}",
-                                                color = Color.Gray,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                 fontSize = 13.sp
                                             )
                                         }
@@ -133,7 +134,8 @@ fun ConfirmarPedidoScreen(
                                     Text(
                                         text = "S/ %.2f".format(item.subtotal),
                                         fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp
+                                        fontSize = 15.sp,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
@@ -148,7 +150,8 @@ fun ConfirmarPedidoScreen(
                     Text(
                         text = "Hora de recojo",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
@@ -158,7 +161,7 @@ fun ConfirmarPedidoScreen(
                         horasRecojo.forEach { hora ->
                             val selected = confirmarState.horaRecojo == hora
                             Surface(
-                                color = if (selected) NaranjaEstudiante else FondoSegmentoGris,
+                                color = if (selected) NaranjaEstudiante else MaterialTheme.colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(20.dp),
                                 modifier = Modifier
                                     .weight(1f)
@@ -168,7 +171,7 @@ fun ConfirmarPedidoScreen(
                                 Box(contentAlignment = Alignment.Center) {
                                     Text(
                                         text = hora,
-                                        color = if (selected) Color.White else Color.Black,
+                                        color = if (selected) Color.White else MaterialTheme.colorScheme.onSurface,
                                         fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                                         fontSize = 13.sp
                                     )
@@ -185,7 +188,8 @@ fun ConfirmarPedidoScreen(
                     Text(
                         text = "Forma de pago",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Row(
@@ -195,7 +199,7 @@ fun ConfirmarPedidoScreen(
                         formasPago.forEach { pago ->
                             val selected = confirmarState.pago == pago
                             Surface(
-                                color = if (selected) Color.White else FondoSegmentoGris,
+                                color = if (selected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(16.dp),
                                 border = if (selected) androidx.compose.foundation.BorderStroke(2.dp, NaranjaEstudiante) else null,
                                 modifier = Modifier
@@ -206,7 +210,7 @@ fun ConfirmarPedidoScreen(
                                 Box(contentAlignment = Alignment.Center) {
                                     Text(
                                         text = pago,
-                                        color = if (selected) NaranjaEstudiante else Color.Black,
+                                        color = if (selected) NaranjaEstudiante else MaterialTheme.colorScheme.onSurface,
                                         fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                                         fontSize = 14.sp
                                     )
@@ -228,23 +232,23 @@ fun ConfirmarPedidoScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Subtotal", color = Color.Gray, fontSize = 14.sp)
-                        Text("S/ %.2f".format(subtotal), fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Subtotal", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                        Text("S/ %.2f".format(subtotal), fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                     }
                     Spacer(modifier = Modifier.height(6.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Servicio", color = Color.Gray, fontSize = 14.sp)
-                        Text("S/ 0.00", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                        Text("Servicio", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 14.sp)
+                        Text("S/ 0.00", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Total", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        Text("Total", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
                         Text(
                             text = "S/ %.2f".format(subtotal),
                             fontWeight = FontWeight.Bold,

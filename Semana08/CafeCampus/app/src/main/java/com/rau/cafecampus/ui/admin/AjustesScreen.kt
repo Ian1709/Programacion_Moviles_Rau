@@ -44,8 +44,6 @@ import com.rau.cafecampus.ui.components.AdminTab
 import com.rau.cafecampus.ui.components.CafeBottomBar
 import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.theme.AzulAdmin
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
-import com.rau.cafecampus.ui.theme.FondoTarjetaAdmin
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
@@ -68,7 +66,7 @@ fun AjustesScreen(
 
     val esAdmin = rol.equals("ADMIN", ignoreCase = true)
     val colorAcento = if (esAdmin) AzulAdmin else NaranjaEstudiante
-    val fondoBadge = if (esAdmin) FondoTarjetaAdmin else Color(0xFFFFF3E0)
+    val fondoBadge = if (esAdmin) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceVariant
 
     Scaffold(
         topBar = {
@@ -77,12 +75,13 @@ fun AjustesScreen(
                     Text(
                         text = if (esAdmin) "Ajustes" else "Mi Perfil",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onVolver) {
-                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -127,7 +126,7 @@ fun AjustesScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = FondoSegmentoGris.copy(alpha = 0.5f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 ) {
                     Row(
                         modifier = Modifier
@@ -151,11 +150,12 @@ fun AjustesScreen(
                             Text(
                                 text = if (nombre.isNotBlank()) nombre else if (esAdmin) "Administrador" else "Ian Rau",
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = if (correo.isNotBlank()) correo else if (esAdmin) "admin@cafecampus.com" else "estudiante@cafecampus.com",
-                                color = Color.Gray,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
                             Spacer(modifier = Modifier.height(6.dp))
@@ -223,7 +223,8 @@ fun AjustesScreen(
                 Text(
                     text = "Preferencias",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -231,7 +232,7 @@ fun AjustesScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = FondoSegmentoGris.copy(alpha = 0.5f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         // Modo Oscuro
@@ -241,8 +242,8 @@ fun AjustesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Modo oscuro", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                Text("Cambia el tema de la app", color = Color.Gray, fontSize = 12.sp)
+                                Text("Modo oscuro", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                                Text("Cambia el tema de la app", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                             }
                             Switch(
                                 checked = modoOscuro,
@@ -260,10 +261,10 @@ fun AjustesScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Column {
-                                Text("Notificaciones", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                Text("Notificaciones", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
                                 Text(
                                     text = if (esAdmin) "Avisar nuevos pedidos" else "Avisar estado de mis pedidos",
-                                    color = Color.Gray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.sp
                                 )
                             }
@@ -284,8 +285,8 @@ fun AjustesScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column {
-                                    Text("Recibir pedidos", fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                                    Text("Abrir o cerrar la cafetería", color = Color.Gray, fontSize = 12.sp)
+                                    Text("Recibir pedidos", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
+                                    Text("Abrir o cerrar la cafetería", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                                 }
                                 Switch(
                                     checked = recibirPedidos,
@@ -306,7 +307,7 @@ fun AjustesScreen(
                     colors = CardDefaults.cardColors(containerColor = fondoBadge)
                 ) {
                     Column(modifier = Modifier.padding(14.dp)) {
-                        Text("Se guardan en el dispositivo", color = Color.Gray, fontSize = 12.sp)
+                        Text("Se guardan en el dispositivo", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
                         Text("con DataStore", color = colorAcento, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
                 }

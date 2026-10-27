@@ -1,6 +1,7 @@
 package com.rau.cafecampus.ui.components
 
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -48,8 +49,8 @@ fun CafeBottomBar(
     onTabSeleccionada: (ClienteTab) -> Unit
 ) {
     NavigationBar(
-        containerColor = Color.White,
-        contentColor = Color.Gray
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         ClienteTab.entries.forEach { tab ->
             val seleccionada = tab == tabActual
@@ -86,8 +87,8 @@ fun AdminBottomBar(
     onTabSeleccionada: (AdminTab) -> Unit
 ) {
     NavigationBar(
-        containerColor = Color.White,
-        contentColor = Color.Gray
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         AdminTab.entries.forEach { tab ->
             val seleccionada = tab == tabActual
