@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.StepperEstado
-import com.rau.cafecampus.ui.theme.FondoSegmentoGris
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
 
@@ -51,12 +50,13 @@ fun SeguimientoScreen(
                     Text(
                         text = "Seguimiento",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
                     TextButton(onClick = onVolverAlMenu) {
-                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("‹", fontSize = 28.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -70,7 +70,7 @@ fun SeguimientoScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Cargando información del pedido...")
+                Text("Cargando información del pedido...", color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         } else {
             val pedido = pedidoConDetalle.pedido
@@ -134,14 +134,14 @@ fun SeguimientoScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = FondoSegmentoGris.copy(alpha = 0.6f))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         val resumenItems = detalles.joinToString(" · ") { "${it.cantidad} x ${it.nombreProducto}" }
                         Text(
                             text = resumenItems,
                             fontSize = 13.sp,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1
                         )
                         Spacer(modifier = Modifier.height(6.dp))

@@ -64,12 +64,13 @@ fun PanelScreen(
                         Text(
                             text = "Panel de control",
                             style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = "Cafetería · Hoy",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
@@ -177,13 +178,14 @@ fun PanelScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = "Pedidos por hora",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
+                            fontSize = 15.sp,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -199,7 +201,7 @@ fun PanelScreen(
 
                             horas.forEach { (hora, cant) ->
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(text = "$cant", fontSize = 10.sp, color = Color.Gray)
+                                    Text(text = "$cant", fontSize = 10.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Box(
                                         modifier = Modifier
@@ -209,7 +211,7 @@ fun PanelScreen(
                                             .background(if (hora == "10h") AzulAdmin else Color(0xFFC5CAE9))
                                     )
                                     Spacer(modifier = Modifier.height(6.dp))
-                                    Text(text = hora, fontSize = 11.sp, color = Color.Gray)
+                                    Text(text = hora, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                             }
                         }
@@ -227,7 +229,8 @@ fun PanelScreen(
                     Text(
                         text = "Nuevos pedidos",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     TextButton(onClick = onVerPedidos) {
                         Text(text = "Ver todos", color = AzulAdmin, fontWeight = FontWeight.Bold)
@@ -239,7 +242,7 @@ fun PanelScreen(
                 item {
                     Text(
                         text = "No hay pedidos pendientes por preparar",
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 13.sp
                     )
                 }
@@ -248,7 +251,7 @@ fun PanelScreen(
                     Card(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(14.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF8F9FA))
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         Row(
                             modifier = Modifier
@@ -261,12 +264,13 @@ fun PanelScreen(
                                 Text(
                                     text = "#%04d Ian R.".format(item.pedido.id),
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 val resumen = item.detalles.joinToString(" · ") { "${it.cantidad}x ${it.nombreProducto}" }
                                 Text(
                                     text = "$resumen · ${item.pedido.horaRecojo}",
-                                    color = Color.Gray,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     fontSize = 12.sp
                                 )
                             }

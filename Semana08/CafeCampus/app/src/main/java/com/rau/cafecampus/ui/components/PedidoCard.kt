@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -61,9 +60,10 @@ fun PedidoCard(
                 Text(
                     text = "Pedido #%04d".format(pedido.id),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-                Text("›", fontSize = 20.sp, color = Color.Gray, fontWeight = FontWeight.Bold)
+                Text("›", fontSize = 20.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
             }
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -71,7 +71,7 @@ fun PedidoCard(
             Text(
                 text = resumenDetalle,
                 fontSize = 13.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(2.dp))
@@ -79,7 +79,7 @@ fun PedidoCard(
             Text(
                 text = fechaFormateada,
                 fontSize = 12.sp,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(12.dp))

@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.rau.cafecampus.data.prefs.PreferenciasStore
@@ -29,9 +31,11 @@ class MainActivity : ComponentActivity() {
         val factory = CafeViewModelFactory(repository, preferenciasStore)
 
         setContent {
-            CafeCampusTheme {
+            val sesionViewModel: SesionViewModel = viewModel(factory = factory)
+            val modoOscuroActivo by sesionViewModel.modoOscuro.collectAsState(initial = false)
+
+            CafeCampusTheme(darkTheme = modoOscuroActivo) {
                 val navController = rememberNavController()
-                val sesionViewModel: SesionViewModel = viewModel(factory = factory)
                 val menuViewModel: MenuViewModel = viewModel(factory = factory)
                 val pedidosViewModel: PedidosClienteViewModel = viewModel(factory = factory)
                 val panelAdminViewModel: PanelAdminViewModel = viewModel(factory = factory)
