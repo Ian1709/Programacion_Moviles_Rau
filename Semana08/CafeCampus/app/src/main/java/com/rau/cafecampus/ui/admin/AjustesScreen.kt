@@ -1,5 +1,8 @@
 package com.rau.cafecampus.ui.admin
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,9 +39,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.rau.cafecampus.ui.components.AdminBottomBar
 import com.rau.cafecampus.ui.components.AdminTab
 import com.rau.cafecampus.ui.components.CafeBottomBar
@@ -64,9 +69,22 @@ fun AjustesScreen(
     val notificaciones by sesionViewModel.notificaciones.collectAsState(initial = true)
     val recibirPedidos by sesionViewModel.recibirPedidos.collectAsState(initial = true)
 
+    val fotoEstudiante by sesionViewModel.fotoPerfilEstudiante.collectAsState(initial = "")
+    val fotoAdmin by sesionViewModel.fotoPerfilAdmin.collectAsState(initial = "")
+
     val esAdmin = rol.equals("ADMIN", ignoreCase = true)
     val colorAcento = if (esAdmin) AzulAdmin else NaranjaEstudiante
-    val fondoBadge = if (esAdmin) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceVariant
+    val fondoBadge = MaterialTheme.colorScheme.surfaceVariant
+    val fotoActual = if (esAdmin) fotoAdmin else fotoEstudiante
+
+    // Launcher para seleccionar foto desde la galería del teléfono
+    val launcherGaleria = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            sesionViewModel.guardarFotoPerfil(it.toString(), esAdmin)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -121,7 +139,7 @@ fun AjustesScreen(
                 .padding(horizontal = 20.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Tarjeta de Perfil de Usuario
+            // Tarjeta de Perfil de Usuario con foto de galería personalizable
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -137,10 +155,21 @@ fun AjustesScreen(
                         Surface(
                             shape = CircleShape,
                             color = fondoBadge,
-                            modifier = Modifier.size(54.dp)
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clickable { launcherGaleria.launch("image/*") }
                         ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Text("👤", fontSize = 26.sp)
+                            if (fotoActual.isNotBlank()) {
+                                AsyncImage(
+                                    model = fotoActual,
+                                    contentDescription = "Foto de perfil",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text("👤", fontSize = 30.sp)
+                                }
                             }
                         }
 
@@ -158,19 +187,14 @@ fun AjustesScreen(
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 13.sp
                             )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Surface(
-                                color = fondoBadge,
-                                shape = RoundedCornerShape(8.dp)
-                            ) {
-                                Text(
-                                    text = if (esAdmin) "Perfil Administrador" else "Estudiante activo",
-                                    color = colorAcento,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                                )
-                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "📷 Cambiar foto de perfil",
+                                color = colorAcento,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.clickable { launcherGaleria.launch("image/*") }
+                            )
                         }
                     }
                 }

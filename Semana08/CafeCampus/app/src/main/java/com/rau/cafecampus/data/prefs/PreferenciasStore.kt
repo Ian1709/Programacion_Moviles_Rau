@@ -26,6 +26,9 @@ class PreferenciasStore(private val context: Context) {
         private val NOTIFICACIONES = booleanPreferencesKey("notificaciones")
         private val RECIBIR_PEDIDOS = booleanPreferencesKey("recibir_pedidos")
         private val NOTIFICACION_PENDIENTE = stringPreferencesKey("notificacion_pendiente")
+
+        private val FOTO_PERFIL_ESTUDIANTE = stringPreferencesKey("foto_perfil_estudiante")
+        private val FOTO_PERFIL_ADMIN = stringPreferencesKey("foto_perfil_admin")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -62,6 +65,14 @@ class PreferenciasStore(private val context: Context) {
 
     val notificacionPendiente: Flow<String> = context.dataStore.data.map { preferences ->
         preferences[NOTIFICACION_PENDIENTE] ?: ""
+    }
+
+    val fotoPerfilEstudiante: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[FOTO_PERFIL_ESTUDIANTE] ?: ""
+    }
+
+    val fotoPerfilAdmin: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[FOTO_PERFIL_ADMIN] ?: ""
     }
 
     suspend fun guardaSesion(id: Int, nombre: String, correo: String, rol: String) {
@@ -102,6 +113,16 @@ class PreferenciasStore(private val context: Context) {
     suspend fun limpiarNotificacionPendiente() {
         context.dataStore.edit { preferences ->
             preferences[NOTIFICACION_PENDIENTE] = ""
+        }
+    }
+
+    suspend fun setFotoPerfil(uriString: String, esAdmin: Boolean) {
+        context.dataStore.edit { preferences ->
+            if (esAdmin) {
+                preferences[FOTO_PERFIL_ADMIN] = uriString
+            } else {
+                preferences[FOTO_PERFIL_ESTUDIANTE] = uriString
+            }
         }
     }
 

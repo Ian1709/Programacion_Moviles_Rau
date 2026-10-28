@@ -36,6 +36,9 @@ class SesionViewModel(
     val recibirPedidos = preferenciasStore.recibirPedidos
     val notificacionPendiente = preferenciasStore.notificacionPendiente
 
+    val fotoPerfilEstudiante = preferenciasStore.fotoPerfilEstudiante
+    val fotoPerfilAdmin = preferenciasStore.fotoPerfilAdmin
+
     fun setNotificacionPendiente(mensaje: String) {
         viewModelScope.launch {
             preferenciasStore.setNotificacionPendiente(mensaje)
@@ -45,6 +48,12 @@ class SesionViewModel(
     fun limpiarNotificacionPendiente() {
         viewModelScope.launch {
             preferenciasStore.limpiarNotificacionPendiente()
+        }
+    }
+
+    fun guardarFotoPerfil(uriString: String, esAdmin: Boolean) {
+        viewModelScope.launch {
+            preferenciasStore.setFotoPerfil(uriString, esAdmin)
         }
     }
 
