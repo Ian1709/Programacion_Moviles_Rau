@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -114,29 +115,57 @@ fun ConfirmarPedidoScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
                                         ProductoIcono(categoria = item.producto.categoria, imagenUrl = item.producto.imagenUrl, tamano = 44.dp)
-                                        Spacer(modifier = Modifier.width(12.dp))
-                                        Column {
+                                        Spacer(modifier = Modifier.width(10.dp))
+                                        Column(modifier = Modifier.weight(1f)) {
                                             Text(
                                                 text = item.producto.nombre,
                                                 fontWeight = FontWeight.Bold,
-                                                fontSize = 15.sp,
+                                                fontSize = 14.sp,
                                                 color = MaterialTheme.colorScheme.onSurface
                                             )
                                             Text(
-                                                text = "x${item.cantidad}",
+                                                text = "S/ %.2f c/u".format(item.producto.precio),
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                fontSize = 13.sp
+                                                fontSize = 12.sp
                                             )
                                         }
                                     }
-                                    Text(
-                                        text = "S/ %.2f".format(item.subtotal),
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 15.sp,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
+
+                                    // Controles de cantidad (- 1 +) y botón Eliminar (🗑️)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        TextButton(
+                                            onClick = { menuViewModel.actualizarCantidadItem(item.producto.id, item.cantidad - 1) },
+                                            contentPadding = PaddingValues(horizontal = 4.dp)
+                                        ) {
+                                            Text("-", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = NaranjaEstudiante)
+                                        }
+                                        Text(
+                                            text = "${item.cantidad}",
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 14.sp,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        TextButton(
+                                            onClick = { menuViewModel.actualizarCantidadItem(item.producto.id, item.cantidad + 1) },
+                                            contentPadding = PaddingValues(horizontal = 4.dp)
+                                        ) {
+                                            Text("+", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = NaranjaEstudiante)
+                                        }
+
+                                        Spacer(modifier = Modifier.width(4.dp))
+
+                                        TextButton(
+                                            onClick = { menuViewModel.removerDelCarrito(item.producto.id) },
+                                            contentPadding = PaddingValues(horizontal = 4.dp)
+                                        ) {
+                                            Text("🗑️", fontSize = 16.sp)
+                                        }
+                                    }
                                 }
                             }
                         }

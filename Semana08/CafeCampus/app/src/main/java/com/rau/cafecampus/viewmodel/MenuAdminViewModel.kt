@@ -18,6 +18,7 @@ data class FormularioProductoUiState(
     val descripcion: String = "",
     val precio: String = "",
     val categoria: String = "BEBIDAS",
+    val imagenUrl: String = "",
     val disponible: Boolean = true,
     val estaCargando: Boolean = false,
     val mensajeError: String? = null,
@@ -64,6 +65,7 @@ class MenuAdminViewModel(
                     descripcion = prod.descripcion,
                     precio = prod.precio.toString(),
                     categoria = prod.categoria,
+                    imagenUrl = prod.imagenUrl,
                     disponible = prod.disponible
                 )
             }
@@ -84,6 +86,10 @@ class MenuAdminViewModel(
 
     fun onCategoriaChange(nueva: String) {
         _uiState.value = _uiState.value.copy(categoria = nueva)
+    }
+
+    fun onImagenUrlChange(nuevaUrl: String) {
+        _uiState.value = _uiState.value.copy(imagenUrl = nuevaUrl)
     }
 
     fun onDisponibleChange(nuevo: Boolean) {
@@ -124,6 +130,7 @@ class MenuAdminViewModel(
                 descripcion = descripcion,
                 precio = precioVal,
                 categoria = state.categoria,
+                imagenUrl = state.imagenUrl,
                 disponible = state.disponible
             )
             try {
