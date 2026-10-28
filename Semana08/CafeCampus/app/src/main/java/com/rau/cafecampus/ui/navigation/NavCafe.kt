@@ -81,6 +81,7 @@ fun NavCafe(
             MenuScreen(
                 menuViewModel = menuViewModel,
                 sesionViewModel = sesionViewModel,
+                pedidosViewModel = pedidosViewModel,
                 onProductoClick = { productoId ->
                     navController.navigate(Rutas.DetalleProducto.crearRuta(productoId))
                 },
@@ -174,6 +175,7 @@ fun NavCafe(
         composable(Rutas.PedidosAdmin.ruta) {
             PedidosAdminScreen(
                 pedidosAdminViewModel = pedidosAdminViewModel,
+                sesionViewModel = sesionViewModel,
                 onVolver = { navController.popBackStack() },
                 onGestionarMenu = { navController.navigate(Rutas.PanelAdmin.ruta) },
                 onAjustes = { navController.navigate(Rutas.Ajustes.ruta) },
@@ -191,6 +193,7 @@ fun NavCafe(
             DetallePedidoAdminScreen(
                 pedidoId = pedidoId,
                 pedidosAdminViewModel = pedidosAdminViewModel,
+                sesionViewModel = sesionViewModel,
                 onVolver = { navController.popBackStack() }
             )
         }

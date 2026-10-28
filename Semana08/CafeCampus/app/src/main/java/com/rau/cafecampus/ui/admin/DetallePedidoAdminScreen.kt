@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.rau.cafecampus.ui.components.EstadoChip
 import com.rau.cafecampus.ui.theme.AzulAdmin
 import com.rau.cafecampus.viewmodel.PedidosAdminViewModel
+import com.rau.cafecampus.viewmodel.SesionViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,6 +48,7 @@ import java.util.Locale
 fun DetallePedidoAdminScreen(
     pedidoId: Long,
     pedidosAdminViewModel: PedidosAdminViewModel,
+    sesionViewModel: SesionViewModel? = null,
     onVolver: () -> Unit
 ) {
     val todosPedidos by pedidosAdminViewModel.todosLosPedidos.collectAsState()
@@ -226,7 +228,7 @@ fun DetallePedidoAdminScreen(
                                     modifier = Modifier
                                         .weight(1f)
                                         .height(38.dp)
-                                        .clickable { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, codigo) }
+                                        .clickable { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, codigo, sesionViewModel) }
                                 ) {
                                     Box(contentAlignment = Alignment.Center) {
                                         Text(
@@ -248,7 +250,7 @@ fun DetallePedidoAdminScreen(
                         when (pedido.estado.uppercase()) {
                             "PENDIENTE" -> {
                                 Button(
-                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "EN_PREPARACION") },
+                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "EN_PREPARACION", sesionViewModel) },
                                     colors = ButtonDefaults.buttonColors(containerColor = AzulAdmin),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier
@@ -260,7 +262,7 @@ fun DetallePedidoAdminScreen(
                             }
                             "EN_PREPARACION" -> {
                                 Button(
-                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "LISTO") },
+                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "LISTO", sesionViewModel) },
                                     colors = ButtonDefaults.buttonColors(containerColor = AzulAdmin),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier
@@ -272,7 +274,7 @@ fun DetallePedidoAdminScreen(
                             }
                             "LISTO" -> {
                                 Button(
-                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "ENTREGADO") },
+                                    onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "ENTREGADO", sesionViewModel) },
                                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                                     shape = RoundedCornerShape(12.dp),
                                     modifier = Modifier
@@ -286,7 +288,7 @@ fun DetallePedidoAdminScreen(
 
                         if (pedido.estado.uppercase() != "CANCELADO" && pedido.estado.uppercase() != "ENTREGADO") {
                             OutlinedButton(
-                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "CANCELADO") },
+                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "CANCELADO", sesionViewModel) },
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Red),
                                 border = androidx.compose.foundation.BorderStroke(1.5.dp, Color.Red),

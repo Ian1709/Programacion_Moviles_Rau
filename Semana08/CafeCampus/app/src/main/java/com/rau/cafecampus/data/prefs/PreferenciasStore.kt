@@ -25,6 +25,7 @@ class PreferenciasStore(private val context: Context) {
         private val MODO_OSCURO = booleanPreferencesKey("modo_oscuro")
         private val NOTIFICACIONES = booleanPreferencesKey("notificaciones")
         private val RECIBIR_PEDIDOS = booleanPreferencesKey("recibir_pedidos")
+        private val NOTIFICACION_PENDIENTE = stringPreferencesKey("notificacion_pendiente")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -59,6 +60,10 @@ class PreferenciasStore(private val context: Context) {
         preferences[RECIBIR_PEDIDOS] ?: true
     }
 
+    val notificacionPendiente: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[NOTIFICACION_PENDIENTE] ?: ""
+    }
+
     suspend fun guardaSesion(id: Int, nombre: String, correo: String, rol: String) {
         val nombreAMostrar = if (correo == "estudiante@cafecampus.com" || nombre.contains("Juan", ignoreCase = true)) "Ian Rau" else nombre
         context.dataStore.edit { preferences ->
@@ -85,6 +90,18 @@ class PreferenciasStore(private val context: Context) {
     suspend fun setRecibirPedidos(activo: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[RECIBIR_PEDIDOS] = activo
+        }
+    }
+
+    suspend fun setNotificacionPendiente(mensaje: String) {
+        context.dataStore.edit { preferences ->
+            preferences[NOTIFICACION_PENDIENTE] = mensaje
+        }
+    }
+
+    suspend fun limpiarNotificacionPendiente() {
+        context.dataStore.edit { preferences ->
+            preferences[NOTIFICACION_PENDIENTE] = ""
         }
     }
 

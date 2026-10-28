@@ -25,6 +25,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -58,6 +59,13 @@ fun MisPedidosScreen(
     var tabSeleccionada by remember { mutableIntStateOf(0) } // 0: Activos, 1: Historial
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
+    // Escuchar el SharedFlow de notificaciones en tiempo real emitido por el ViewModel
+    LaunchedEffect(Unit) {
+        pedidosViewModel.eventosNotificacion.collect { mensaje ->
+            snackbarHostState.showSnackbar(mensaje)
+        }
+    }
 
     val pedidosFiltrados = misPedidos.filter { item ->
         val estado = item.pedido.estado.uppercase()

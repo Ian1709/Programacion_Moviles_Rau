@@ -45,6 +45,7 @@ import com.rau.cafecampus.ui.components.ClienteTab
 import com.rau.cafecampus.ui.components.ProductoCard
 import com.rau.cafecampus.ui.theme.NaranjaEstudiante
 import com.rau.cafecampus.viewmodel.MenuViewModel
+import com.rau.cafecampus.viewmodel.PedidosClienteViewModel
 import com.rau.cafecampus.viewmodel.SesionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,6 +53,7 @@ import com.rau.cafecampus.viewmodel.SesionViewModel
 fun MenuScreen(
     menuViewModel: MenuViewModel,
     sesionViewModel: SesionViewModel,
+    pedidosViewModel: PedidosClienteViewModel? = null,
     onProductoClick: (Int) -> Unit,
     onIrAConfirmarPedido: () -> Unit,
     onIrAPedidos: () -> Unit,
@@ -61,6 +63,7 @@ fun MenuScreen(
     val productosFiltrados by menuViewModel.productosFiltrados.collectAsState()
     val textoBusqueda by menuViewModel.textoBusqueda.collectAsState()
     val nombreUsuario by sesionViewModel.userName.collectAsState(initial = "")
+    val notificacionPendiente by sesionViewModel.notificacionPendiente.collectAsState(initial = "")
     val snackbarHostState = remember { SnackbarHostState() }
 
     val categorias = listOf("TODOS", "BEBIDAS", "COMIDAS", "POSTRES")
@@ -68,6 +71,22 @@ fun MenuScreen(
     LaunchedEffect(uiState.mensajeInfo) {
         uiState.mensajeInfo?.let { mensaje ->
             snackbarHostState.showSnackbar(mensaje)
+        }
+    }
+
+    // Desplegar automáticamente la notificación en cuanto se cambia al perfil Estudiante
+    LaunchedEffect(notificacionPendiente) {
+        if (notificacionPendiente.isNotBlank()) {
+            snackbarHostState.showSnackbar(notificacionPendiente)
+            sesionViewModel.limpiarNotificacionPendiente()
+        }
+    }
+
+    pedidosViewModel?.let { pViewModel ->
+        LaunchedEffect(Unit) {
+            pViewModel.eventosNotificacion.collect { mensajeNotificacion ->
+                snackbarHostState.showSnackbar(mensajeNotificacion)
+            }
         }
     }
 

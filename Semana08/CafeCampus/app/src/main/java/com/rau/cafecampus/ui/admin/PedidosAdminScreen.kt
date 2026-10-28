@@ -44,11 +44,13 @@ import com.rau.cafecampus.ui.components.AdminTab
 import com.rau.cafecampus.ui.components.EstadoChip
 import com.rau.cafecampus.ui.theme.AzulAdmin
 import com.rau.cafecampus.viewmodel.PedidosAdminViewModel
+import com.rau.cafecampus.viewmodel.SesionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PedidosAdminScreen(
     pedidosAdminViewModel: PedidosAdminViewModel,
+    sesionViewModel: SesionViewModel? = null,
     onVolver: () -> Unit,
     onGestionarMenu: () -> Unit,
     onAjustes: () -> Unit,
@@ -215,7 +217,7 @@ fun PedidosAdminScreen(
                                     when (pedido.estado.uppercase()) {
                                         "PENDIENTE" -> {
                                             Button(
-                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "EN_PREPARACION") },
+                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "EN_PREPARACION", sesionViewModel) },
                                                 colors = ButtonDefaults.buttonColors(containerColor = AzulAdmin),
                                                 shape = RoundedCornerShape(12.dp),
                                                 modifier = Modifier.weight(1f)
@@ -223,7 +225,7 @@ fun PedidosAdminScreen(
                                                 Text("Pasar a Preparando", fontSize = 13.sp, fontWeight = FontWeight.Bold)
                                             }
                                             Button(
-                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "CANCELADO") },
+                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "CANCELADO", sesionViewModel) },
                                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFEBEE), contentColor = Color(0xFFC62828)),
                                                 shape = RoundedCornerShape(12.dp)
                                             ) {
@@ -232,7 +234,7 @@ fun PedidosAdminScreen(
                                         }
                                         "EN_PREPARACION" -> {
                                             Button(
-                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "LISTO") },
+                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "LISTO", sesionViewModel) },
                                                 colors = ButtonDefaults.buttonColors(containerColor = AzulAdmin),
                                                 shape = RoundedCornerShape(12.dp),
                                                 modifier = Modifier.weight(1f)
@@ -242,7 +244,7 @@ fun PedidosAdminScreen(
                                         }
                                         "LISTO" -> {
                                             Button(
-                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "ENTREGADO") },
+                                                onClick = { pedidosAdminViewModel.actualizarEstadoPedido(pedido.id, "ENTREGADO", sesionViewModel) },
                                                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
                                                 shape = RoundedCornerShape(12.dp),
                                                 modifier = Modifier.weight(1f)

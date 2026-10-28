@@ -9,9 +9,13 @@ import com.rau.cafecampus.data.prefs.PreferenciasStore
 import com.rau.cafecampus.data.repository.CafeRepository
 import com.rau.cafecampus.model.ItemCarrito
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
@@ -35,6 +39,13 @@ class PedidosClienteViewModel(
     private val _uiState = MutableStateFlow(ConfirmarPedidoUiState())
     val uiState: StateFlow<ConfirmarPedidoUiState> = _uiState.asStateFlow()
 
+    // SharedFlow con replay = 1 para retener la notificación al cambiar de administrador a estudiante
+    private val _eventosNotificacion = MutableSharedFlow<String>(
+        replay = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    val eventosNotificacion: SharedFlow<String> = _eventosNotificacion.asSharedFlow()
+
     val userId: StateFlow<Int> = preferenciasStore.userId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 2) // Fallback al estudiante por defecto (ID = 2)
 
@@ -46,6 +57,31 @@ class PedidosClienteViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private var estadosPrevios = mapOf<Long, String>()
+
+    init {
+        // Escuchar cambios de estado en Room en tiempo real
+        viewModelScope.launch {
+            misPedidos.collect { lista ->
+                val mapaNuevo = lista.associate { it.pedido.id to it.pedido.estado }
+                if (estadosPrevios.isNotEmpty()) {
+                    mapaNuevo.forEach { (id, nuevoEstado) ->
+                        val estadoAnterior = estadosPrevios[id]
+                        if (estadoAnterior != null && estadoAnterior != nuevoEstado) {
+                            val mensajeValidacion = if (nuevoEstado == "EN_PREPARACION" || nuevoEstado == "VALIDADO") {
+                                "🔔 ¡Tu pedido #%04d ha sido validado con éxito por el administrador!".format(id)
+                            } else {
+                                "🔔 ¡Tu pedido #%04d ha sido marcado como '%s' por el administrador!".format(id, nuevoEstado)
+                            }
+                            _eventosNotificacion.emit(mensajeValidacion)
+                        }
+                    }
+                }
+                estadosPrevios = mapaNuevo
+            }
+        }
+    }
+
     fun onHoraRecojoChange(nuevaHora: String) {
         _uiState.value = _uiState.value.copy(horaRecojo = nuevaHora)
     }
@@ -56,6 +92,13 @@ class PedidosClienteViewModel(
 
     fun onNotaChange(nuevaNota: String) {
         _uiState.value = _uiState.value.copy(nota = nuevaNota)
+    }
+
+    fun validarPedidoPorAdmin(pedidoId: Long, nuevoEstado: String = "VALIDADO") {
+        viewModelScope.launch {
+            repository.actualizarEstadoPedido(pedidoId, nuevoEstado)
+            _eventosNotificacion.emit("🔔 ¡Tu pedido #%04d ha sido validado con éxito por el administrador!".format(pedidoId))
+        }
     }
 
     fun confirmarPedido(
@@ -99,6 +142,7 @@ class PedidosClienteViewModel(
                     estaCargando = false,
                     pedidoIdExito = pedidoId
                 )
+                _eventosNotificacion.emit("🎉 ¡Pedido #%04d registrado con éxito!".format(pedidoId))
                 onExito(pedidoId)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

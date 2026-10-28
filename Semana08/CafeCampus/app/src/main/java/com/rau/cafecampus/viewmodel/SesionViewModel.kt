@@ -34,6 +34,19 @@ class SesionViewModel(
     val modoOscuro = preferenciasStore.modoOscuro
     val notificaciones = preferenciasStore.notificaciones
     val recibirPedidos = preferenciasStore.recibirPedidos
+    val notificacionPendiente = preferenciasStore.notificacionPendiente
+
+    fun setNotificacionPendiente(mensaje: String) {
+        viewModelScope.launch {
+            preferenciasStore.setNotificacionPendiente(mensaje)
+        }
+    }
+
+    fun limpiarNotificacionPendiente() {
+        viewModelScope.launch {
+            preferenciasStore.limpiarNotificacionPendiente()
+        }
+    }
 
     fun onCorreoChange(nuevoCorreo: String) {
         _uiState.value = _uiState.value.copy(correo = nuevoCorreo, mensajeError = null)

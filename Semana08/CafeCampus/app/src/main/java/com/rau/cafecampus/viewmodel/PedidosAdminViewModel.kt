@@ -37,9 +37,19 @@ class PedidosAdminViewModel(
         _filtroEstado.value = nuevoFiltro
     }
 
-    fun actualizarEstadoPedido(pedidoId: Long, nuevoEstado: String) {
+    fun actualizarEstadoPedido(
+        pedidoId: Long,
+        nuevoEstado: String,
+        sesionViewModel: SesionViewModel? = null
+    ) {
         viewModelScope.launch {
             repository.actualizarEstadoPedido(pedidoId, nuevoEstado)
+            val mensaje = if (nuevoEstado == "EN_PREPARACION" || nuevoEstado == "VALIDADO") {
+                "🔔 ¡Tu pedido #%04d ha sido validado con éxito por el administrador!".format(pedidoId)
+            } else {
+                "🔔 ¡Tu pedido #%04d ha sido marcado como '%s' por el administrador!".format(pedidoId, nuevoEstado)
+            }
+            sesionViewModel?.setNotificacionPendiente(mensaje)
         }
     }
 }
