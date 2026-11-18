@@ -14,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -26,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.tecsup.campusgps.model.UbicacionUi
+import com.tecsup.campusgps.util.formatearDistancia
 import com.tecsup.campusgps.viewmodel.MapaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +37,7 @@ fun PantallaMapa(vm: MapaViewModel) {
     val estado by vm.estado.collectAsState()
     val lugares by vm.lugares.collectAsState()
     val seleccionado by vm.seleccionado.collectAsState()
+    val masCercano by vm.masCercano.collectAsState()
 
     val permisoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -94,10 +97,27 @@ fun PantallaMapa(vm: MapaViewModel) {
                 )
             }
 
+            OutlinedButton(
+                onClick = { vm.seleccionar(masCercano?.id) },
+                enabled = masCercano != null,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Ir al más cercano")
+            }
+            masCercano?.let { lugar ->
+                val distanciaMasCercana =
+                    lugares.firstOrNull { it.lugar.id == lugar.id }?.metros
+                if (distanciaMasCercana != null) {
+                    Text(
+                        "Más cercano: ${lugar.nombre} (${formatearDistancia(distanciaMasCercana)})"
+                    )
+                }
+            }
             MapaUbicacion(
                 estado = estado,
                 lugares = lugares,
                 seleccionado = seleccionado,
+                masCercanoId = masCercano?.id,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
