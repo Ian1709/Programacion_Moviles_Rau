@@ -33,12 +33,13 @@ fun ListaLugares(
     lugares: List<LugarConDistancia>,
     seleccionado: Int?,
     onClick: (Int) -> Unit,
+    masCercanoId: Int? = null,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(
             items = lugares,
@@ -71,14 +72,20 @@ fun ListaLugares(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
+                    .padding(horizontal = 9.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
                             .size(12.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
+                            .background(
+                                if (item.lugar.id == masCercanoId) {
+                                    androidx.compose.ui.graphics.Color(0xFF36A66A)
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                }
+                            )
                     )
                     Row(
                         modifier = Modifier
