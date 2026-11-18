@@ -44,7 +44,7 @@ fun PantallaTareas(viewModel: TareasViewModel) {
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(onClick = viewModel::tocar) { Text("Tócame: $toques", fontSize = 11.sp) }
-                        Button(onClick = viewModel::tareaLargaMala) { Text("Tarea larga (MAL)", fontSize = 11.sp) }
+                        Button(onClick = viewModel::tareaLarga) { Text("Tarea larga", fontSize = 11.sp) }
                     }
                     Spacer(Modifier.height(6.dp))
                     Text(mensaje, fontSize = 12.sp)

@@ -1,8 +1,14 @@
 package com.rau.centrotareas.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TareasViewModel : ViewModel() {
     private val _toques = MutableStateFlow(0)
@@ -12,9 +18,16 @@ class TareasViewModel : ViewModel() {
 
     fun tocar() { _toques.value++ }
 
-    fun tareaLargaMala() {
+    fun tareaLarga() {
         _mensaje.value = "Trabajando..."
-        Thread.sleep(4000)
-        _mensaje.value = "Terminó"
+        viewModelScope.launch {
+            Log.d("HILO", "antes: ${Thread.currentThread().name}")
+            withContext(Dispatchers.Default) {
+                Log.d("HILO", "dentro: ${Thread.currentThread().name}")
+                delay(4000)
+            }
+            Log.d("HILO", "después: ${Thread.currentThread().name}")
+            _mensaje.value = "Terminó"
+        }
     }
 }
