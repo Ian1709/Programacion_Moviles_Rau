@@ -8,6 +8,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import com.rau.centrotareas.model.ProgresoPrimos
 import kotlinx.coroutines.withContext
 
 class TareasRepositoryLocal : TareasRepository {
@@ -26,6 +27,18 @@ class TareasRepositoryLocal : TareasRepository {
         }
         cantidad
     }
+
+    override fun contarPrimosConProgreso(hasta: Int): Flow<ProgresoPrimos> = flow {
+        var cantidad = 0
+        val intervalo = (hasta / 100).coerceAtLeast(1)
+        for (numero in 2..hasta) {
+            currentCoroutineContext().ensureActive()
+            if (esPrimo(numero)) cantidad++
+            if (numero % intervalo == 0 || numero == hasta) {
+                emit(ProgresoPrimos(cantidad, numero.toFloat() / hasta))
+            }
+        }
+    }.flowOn(Dispatchers.Default)
 
     private fun esPrimo(numero: Int): Boolean {
         if (numero < 2) return false

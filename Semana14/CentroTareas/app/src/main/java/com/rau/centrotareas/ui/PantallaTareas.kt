@@ -144,13 +144,21 @@ fun PantallaTareas(viewModel: TareasViewModel) {
                         Text("Contar", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                     }
                     Spacer(Modifier.width(8.dp))
-                    BotonContorno(onClick = viewModel::cancelarPrimos, enabled = primos == PrimosUi.Calculando) {
+                    BotonContorno(onClick = viewModel::cancelarPrimos, enabled = primos is PrimosUi.Calculando) {
                         Text("Cancelar", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
                     }
                 }
                 when (val estado = primos) {
                     PrimosUi.Inicial -> Unit
-                    PrimosUi.Calculando -> Text("Calculando...", fontSize = 11.sp)
+                    is PrimosUi.Calculando -> Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        LinearProgressIndicator(
+                            progress = { estado.progreso },
+                            modifier = Modifier.fillMaxWidth().height(5.dp).clip(CircleShape),
+                            color = Azul,
+                            trackColor = Color(0xFFDDE2E5)
+                        )
+                        Text("Calculando... ${(estado.progreso * 100).toInt()} %", fontSize = 11.sp)
+                    }
                     PrimosUi.Cancelado -> Text("Cancelado", color = MaterialTheme.colorScheme.error, fontSize = 11.sp)
                     is PrimosUi.Listo -> CajaResultado(
                         "Primos hasta $hasta: ${estado.cantidad}\nTiempo: ${estado.milisegundos} ms",
