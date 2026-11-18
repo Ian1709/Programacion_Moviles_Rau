@@ -2,6 +2,8 @@ package com.tecsup.campusgps.data
 
 import android.content.Context
 import android.location.LocationManager
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -24,6 +26,10 @@ class UbicacionRepositoryGoogle(context: Context) : UbicacionRepository {
             longitud = location.longitude
         )
     }
+
+    override fun playServicesDisponible(): Boolean =
+        GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(appContext) ==
+            ConnectionResult.SUCCESS
 
     override fun gpsDisponible(): Boolean {
         val locationManager =

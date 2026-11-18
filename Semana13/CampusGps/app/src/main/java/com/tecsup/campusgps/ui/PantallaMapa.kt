@@ -32,7 +32,7 @@ import com.tecsup.campusgps.viewmodel.MapaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaMapa(vm: MapaViewModel) {
+fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
     val context = LocalContext.current
     val estado by vm.estado.collectAsState()
     val lugares by vm.lugares.collectAsState()
@@ -91,9 +91,10 @@ fun PantallaMapa(vm: MapaViewModel) {
                 is UbicacionUi.Lista -> Text(
                     "Latitud: ${actual.posicion.latitud}\nLongitud: ${actual.posicion.longitud}"
                 )
-                is UbicacionUi.Error -> Text(
-                    text = actual.mensaje,
-                    color = MaterialTheme.colorScheme.error
+                is UbicacionUi.Error -> MensajeError(
+                    error = actual,
+                    onAbrirAjustes = onAbrirAjustes,
+                    onReintentar = vm::buscar
                 )
             }
 

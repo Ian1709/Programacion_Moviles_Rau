@@ -1,6 +1,9 @@
 package com.tecsup.campusgps
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -24,7 +27,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CampusGpsTheme {
-                PantallaMapa(vm = mapaViewModel)
+                PantallaMapa(
+                    vm = mapaViewModel,
+                    onAbrirAjustes = {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", packageName, null)
+                        }
+                        startActivity(intent)
+                    }
+                )
             }
         }
     }

@@ -8,6 +8,7 @@ import com.tecsup.campusgps.model.Lugar
 import com.tecsup.campusgps.model.LugarConDistancia
 import com.tecsup.campusgps.model.Posicion
 import com.tecsup.campusgps.model.UbicacionUi
+import com.tecsup.campusgps.model.TipoError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,9 +33,10 @@ class MapaViewModel(
     private val _seleccionado = MutableStateFlow<Int?>(null)
     val seleccionado = _seleccionado.asStateFlow()
 
-    val masCercano: StateFlow<Lugar?> = _lugares
+    private val _masCercano: StateFlow<Lugar?> = _lugares
         .map { lista -> lista.firstOrNull { it.metros != null }?.lugar }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
+    val masCercano: StateFlow<Lugar?> = _masCercano
 
     private fun actualizarDistancias(posicion: Posicion) {
         _lugares.value = _lugares.value
@@ -50,21 +52,29 @@ class MapaViewModel(
     }
 
     fun permisoDenegado() {
-        _estado.value = UbicacionUi.Error("Permiso de ubicación denegado.")
+        _estado.value = UbicacionUi.Error("Permiso de ubicación denegado.", TipoError.SIN_PERMISO)
     }
 
     fun buscar() {
         viewModelScope.launch {
             _estado.value = UbicacionUi.Buscando
             try {
+                if (!ubicacionRepository.playServicesDisponible()) {
+                    _estado.value = UbicacionUi.Error(
+                        "Este dispositivo no tiene Google Play Services.",
+                        TipoError.SIN_PLAY_SERVICES
+                    )
+                    return@launch
+                }
+
                 if (!ubicacionRepository.gpsDisponible()) {
-                    _estado.value = UbicacionUi.Error("Activa el GPS e intenta de nuevo")
+                    _estado.value = UbicacionUi.Error("Activa el GPS e intenta de nuevo", TipoError.GPS_APAGADO)
                     return@launch
                 }
 
                 val posicion = ubicacionRepository.obtenerUbicacion()
                 _estado.value = if (posicion == null) {
-                    UbicacionUi.Error("Activa el GPS e intenta de nuevo")
+                    UbicacionUi.Error("Activa el GPS e intenta de nuevo", TipoError.GPS_APAGADO)
                 } else {
                     actualizarDistancias(posicion)
                     UbicacionUi.Lista(posicion)
@@ -72,7 +82,10 @@ class MapaViewModel(
             } catch (_: SecurityException) {
                 permisoDenegado()
             } catch (_: Exception) {
-                _estado.value = UbicacionUi.Error("Activa el GPS e intenta de nuevo")
+                _estado.value = UbicacionUi.Error(
+                    "Ocurrió un error al obtener la ubicación.",
+                    TipoError.OTRO
+                )
             }
         }
     }
