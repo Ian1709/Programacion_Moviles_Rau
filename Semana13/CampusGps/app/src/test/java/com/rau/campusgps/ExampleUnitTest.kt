@@ -1,4 +1,4 @@
-package com.tecsup.campusgps
+package com.rau.campusgps
 
 import org.junit.Test
 

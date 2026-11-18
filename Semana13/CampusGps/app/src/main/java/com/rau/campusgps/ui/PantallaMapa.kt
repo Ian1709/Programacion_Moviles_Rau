@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.ui
+package com.rau.campusgps.ui
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -31,9 +31,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.tecsup.campusgps.model.UbicacionUi
-import com.tecsup.campusgps.util.formatearDistancia
-import com.tecsup.campusgps.viewmodel.MapaViewModel
+import com.rau.campusgps.model.UbicacionUi
+import com.rau.campusgps.util.formatearDistancia
+import com.rau.campusgps.viewmodel.MapaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

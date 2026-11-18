@@ -12,13 +12,13 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.tecsup.campusgps"
+    namespace = "com.rau.campusgps"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.tecsup.campusgps"
+        applicationId = "com.rau.campusgps"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

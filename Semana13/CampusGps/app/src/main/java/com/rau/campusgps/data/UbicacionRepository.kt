@@ -1,6 +1,6 @@
-package com.tecsup.campusgps.data
+package com.rau.campusgps.data
 
-import com.tecsup.campusgps.model.Posicion
+import com.rau.campusgps.model.Posicion
 
 interface UbicacionRepository {
     suspend fun obtenerUbicacion(): Posicion?

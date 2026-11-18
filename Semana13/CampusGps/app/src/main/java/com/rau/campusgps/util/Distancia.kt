@@ -1,8 +1,8 @@
-package com.tecsup.campusgps.util
+package com.rau.campusgps.util
 
 import android.location.Location
-import com.tecsup.campusgps.model.Lugar
-import com.tecsup.campusgps.model.Posicion
+import com.rau.campusgps.model.Lugar
+import com.rau.campusgps.model.Posicion
 
 fun distanciaMetros(desde: Posicion, hasta: Lugar): Float {
     val resultado = FloatArray(1)

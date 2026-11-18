@@ -14,7 +14,7 @@ La clave local de este entorno está vacía; por eso las pruebas visuales de map
 ## Estructura de paquetes
 
 ```text
-app/src/main/java/com/tecsup/campusgps/
+app/src/main/java/com/rau/campusgps/
 ├── MainActivity.kt
 ├── data/
 │   ├── LugaresRepository.kt

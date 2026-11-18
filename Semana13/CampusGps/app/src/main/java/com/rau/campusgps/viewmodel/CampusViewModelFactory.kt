@@ -1,10 +1,10 @@
-package com.tecsup.campusgps.viewmodel
+package com.rau.campusgps.viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.tecsup.campusgps.data.LugaresRepositoryLocal
-import com.tecsup.campusgps.data.UbicacionRepositoryGoogle
+import com.rau.campusgps.data.LugaresRepositoryLocal
+import com.rau.campusgps.data.UbicacionRepositoryGoogle
 
 class CampusViewModelFactory(context: Context) : ViewModelProvider.Factory {
     private val appContext = context.applicationContext

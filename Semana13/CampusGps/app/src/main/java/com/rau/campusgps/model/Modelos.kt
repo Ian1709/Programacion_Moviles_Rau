@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.model
+package com.rau.campusgps.model
 
 data class Posicion(
     val latitud: Double,

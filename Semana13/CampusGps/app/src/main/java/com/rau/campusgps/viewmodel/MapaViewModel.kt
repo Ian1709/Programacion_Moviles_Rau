@@ -1,14 +1,14 @@
-package com.tecsup.campusgps.viewmodel
+package com.rau.campusgps.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tecsup.campusgps.data.LugaresRepository
-import com.tecsup.campusgps.data.UbicacionRepository
-import com.tecsup.campusgps.model.Lugar
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.model.Posicion
-import com.tecsup.campusgps.model.UbicacionUi
-import com.tecsup.campusgps.model.TipoError
+import com.rau.campusgps.data.LugaresRepository
+import com.rau.campusgps.data.UbicacionRepository
+import com.rau.campusgps.model.Lugar
+import com.rau.campusgps.model.LugarConDistancia
+import com.rau.campusgps.model.Posicion
+import com.rau.campusgps.model.UbicacionUi
+import com.rau.campusgps.model.TipoError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.tecsup.campusgps.util.distanciaMetros
+import com.rau.campusgps.util.distanciaMetros
 
 class MapaViewModel(
     private val ubicacionRepository: UbicacionRepository,
