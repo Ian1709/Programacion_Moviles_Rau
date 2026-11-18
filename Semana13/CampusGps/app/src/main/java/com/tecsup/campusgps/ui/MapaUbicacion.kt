@@ -3,16 +3,21 @@ package com.tecsup.campusgps.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tecsup.campusgps.model.LugarConDistancia
 import com.tecsup.campusgps.model.UbicacionUi
@@ -26,6 +31,11 @@ fun MapaUbicacion(
     radioMetros: Int = 100,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val temaOscuro = isSystemInDarkTheme()
+    val estiloOscuro = remember(context) {
+        MapStyleOptions.loadRawResourceStyle(context, com.tecsup.campusgps.R.raw.map_style_dark)
+    }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             LatLng(-12.0464, -77.0428),
@@ -59,7 +69,10 @@ fun MapaUbicacion(
 
     GoogleMap(
         modifier = modifier,
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(
+            mapStyleOptions = if (temaOscuro) estiloOscuro else null
+        )
     ) {
         if (estado is UbicacionUi.Lista) {
             Circle(
