@@ -2,10 +2,12 @@ package com.rau.campusgps.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val CampusNavy = Color(0xFF123247)
+val CampusBlue = Color(0xFF176B8A)
+val CampusCyan = Color(0xFF53B6CE)
+val CampusMint = Color(0xFF52A98A)
+val CampusGreen = Color(0xFF23845B)
+val CampusCanvas = Color(0xFFF2F6F8)
+val CampusInk = Color(0xFF193544)
+val CampusMuted = Color(0xFF657D89)
+val CampusOutline = Color(0xFFD9E4E9)

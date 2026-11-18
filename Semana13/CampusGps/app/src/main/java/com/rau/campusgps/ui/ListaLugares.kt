@@ -4,9 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rau.campusgps.model.LugarConDistancia
+import com.rau.campusgps.ui.theme.CampusBlue
+import com.rau.campusgps.ui.theme.CampusGreen
+import com.rau.campusgps.ui.theme.CampusMuted
 import com.rau.campusgps.util.formatearDistancia
 
 @Composable
@@ -38,83 +42,55 @@ fun ListaLugares(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        contentPadding = PaddingValues(vertical = 5.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(
-            items = lugares,
-            key = { it.lugar.id }
-        ) { item ->
-            val estaSeleccionado = item.lugar.id == seleccionado
+        items(lugares, key = { it.lugar.id }) { item ->
+            val selected = item.lugar.id == seleccionado
+            val nearest = item.lugar.id == masCercanoId
             Card(
                 onClick = { onClick(item.lugar.id) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .then(
-                        if (estaSeleccionado) {
-                            Modifier.border(
-                                width = 2.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                        } else {
-                            Modifier
-                        }
-                    ),
+                modifier = Modifier.fillMaxWidth().then(
+                    if (selected) Modifier.border(1.5.dp, CampusBlue, RoundedCornerShape(18.dp)) else Modifier
+                ),
+                shape = RoundedCornerShape(18.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = if (estaSeleccionado) {
-                        MaterialTheme.colorScheme.secondaryContainer
-                    } else {
-                        MaterialTheme.colorScheme.surface
-                    }
-                )
+                    containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = if (selected) 2.dp else 1.dp)
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                    .padding(horizontal = 9.dp, vertical = 7.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 13.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(11.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(
-                                if (item.lugar.id == masCercanoId) {
-                                    androidx.compose.ui.graphics.Color(0xFF36A66A)
-                                } else {
-                                    MaterialTheme.colorScheme.primary
-                                }
-                            )
-                    )
-                    Row(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        androidx.compose.foundation.layout.Column {
-                            Text(item.lugar.nombre, fontWeight = FontWeight.Bold)
-                            Text(
-                                item.lugar.categoria,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            if (item.dentroDelRadio == true) {
-                                Text(
-                                    "Dentro del radio",
-                                    color = MaterialTheme.colorScheme.primary,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
+                    Box(Modifier.size(11.dp).clip(CircleShape).background(if (nearest) CampusGreen else CampusBlue))
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(item.lugar.nombre, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, maxLines = 1)
+                        Text(item.lugar.categoria, color = CampusMuted, style = MaterialTheme.typography.bodySmall)
+                        if (nearest || item.dentroDelRadio == true) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                if (nearest) Tag("MÁS CERCANO", CampusGreen)
+                                if (item.dentroDelRadio == true) Tag("EN EL RADIO", CampusBlue)
                             }
                         }
-                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                    Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.surfaceVariant) {
                         Text(
-                            text = item.metros?.let(::formatearDistancia) ?: "Sin calcular",
-                            fontWeight = FontWeight.Medium
+                            item.metros?.let(::formatearDistancia) ?: "Sin calcular",
+                            Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun Tag(text: String, color: androidx.compose.ui.graphics.Color) {
+    Text(text, color = color, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
 }
