@@ -10,7 +10,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelProvider
+import com.rau.campusgps.ui.PantallaPresentacion
 import com.rau.campusgps.ui.PantallaMapa
 import com.rau.campusgps.ui.theme.CampusGpsTheme
 import com.rau.campusgps.viewmodel.CampusViewModelFactory
@@ -31,19 +35,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             val modoOscuroElegido by mapaViewModel.modoOscuro.collectAsState()
             val temaOscuro = modoOscuroElegido ?: isSystemInDarkTheme()
+            var mostrarPresentacion by rememberSaveable { mutableStateOf(true) }
 
             CampusGpsTheme(darkTheme = temaOscuro) {
-                PantallaMapa(
-                    vm = mapaViewModel,
-                    temaOscuro = temaOscuro,
-                    onCambiarTema = mapaViewModel::cambiarModoOscuro,
-                    onAbrirAjustes = {
-                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = Uri.fromParts("package", packageName, null)
+                if (mostrarPresentacion) {
+                    PantallaPresentacion(onContinuar = { mostrarPresentacion = false })
+                } else {
+                    PantallaMapa(
+                        vm = mapaViewModel,
+                        temaOscuro = temaOscuro,
+                        onCambiarTema = mapaViewModel::cambiarModoOscuro,
+                        onAbrirAjustes = {
+                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = Uri.fromParts("package", packageName, null)
+                            }
+                            startActivity(intent)
                         }
-                        startActivity(intent)
-                    }
-                )
+                    )
+                }
             }
         }
     }
