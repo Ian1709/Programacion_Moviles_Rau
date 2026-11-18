@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -30,10 +31,20 @@ class MapaViewModel(
     )
     val lugares = _lugares.asStateFlow()
 
+    private val _categoriaSeleccionada = MutableStateFlow<String?>(null)
+    val categoriaSeleccionada = _categoriaSeleccionada.asStateFlow()
+
+    val lugaresVisibles: StateFlow<List<LugarConDistancia>> = combine(
+        _lugares,
+        _categoriaSeleccionada
+    ) { lista, categoria ->
+        if (categoria == null) lista else lista.filter { it.lugar.categoria == categoria }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), _lugares.value)
+
     private val _seleccionado = MutableStateFlow<Int?>(null)
     val seleccionado = _seleccionado.asStateFlow()
 
-    private val _masCercano: StateFlow<Lugar?> = _lugares
+    private val _masCercano: StateFlow<Lugar?> = lugaresVisibles
         .map { lista -> lista.firstOrNull { it.metros != null }?.lugar }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), null)
     val masCercano: StateFlow<Lugar?> = _masCercano
@@ -49,6 +60,18 @@ class MapaViewModel(
     }
     fun seleccionar(id: Int?) {
         _seleccionado.value = id
+    }
+
+    fun filtrarPorCategoria(categoria: String?) {
+        _categoriaSeleccionada.value = categoria
+        val lugarSeleccionado = _lugares.value.firstOrNull {
+            it.lugar.id == _seleccionado.value
+        }
+        if (lugarSeleccionado != null && categoria != null &&
+            lugarSeleccionado.lugar.categoria != categoria
+        ) {
+            _seleccionado.value = null
+        }
     }
 
     fun permisoDenegado() {
