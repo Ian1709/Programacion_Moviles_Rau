@@ -34,7 +34,7 @@ fun MapaUbicacion(
     val context = LocalContext.current
     val temaOscuro = isSystemInDarkTheme()
     val estiloOscuro = remember(context) {
-        MapStyleOptions.loadRawResourceStyle(context, com.tecsup.campusgps.R.raw.map_style_dark)
+        MapStyleOptions.loadRawResourceStyle(context, com.rau.campusgps.R.raw.map_style_dark)
     }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
