@@ -6,14 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.rau.centrotareas.data.TareasRepository
 import com.rau.centrotareas.data.TareasRepositoryLocal
 import com.rau.centrotareas.model.PrimosUi
+import com.rau.centrotareas.model.CargaUi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal()) : ViewModel() {
     private val _toques = MutableStateFlow(0)
@@ -28,6 +32,8 @@ class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal
     private val _primos = MutableStateFlow<PrimosUi>(PrimosUi.Inicial)
     val primos: StateFlow<PrimosUi> = _primos
     private var trabajoPrimos: Job? = null
+    private val _carga = MutableStateFlow<CargaUi>(CargaUi.Inicial)
+    val carga: StateFlow<CargaUi> = _carga
 
     fun tocar() { _toques.value++ }
 
@@ -77,4 +83,25 @@ class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal
     }
 
     fun cancelarPrimos() { trabajoPrimos?.cancel() }
+
+    fun cargarUnaPorUna() = cargar(paralelo = false)
+    fun cargarALaVez() = cargar(paralelo = true)
+
+    private fun cargar(paralelo: Boolean) {
+        viewModelScope.launch {
+            _carga.value = CargaUi.Cargando
+            val inicio = System.currentTimeMillis()
+            val (perfil, pedidos) = if (paralelo) {
+                coroutineScope {
+                    val perfilDeferred = async { repo.cargarPerfil() }
+                    val pedidosDeferred = async { repo.cargarPedidos(false) }
+                    perfilDeferred.await() to pedidosDeferred.await()
+                }
+            } else {
+                val perfil = repo.cargarPerfil()
+                perfil to repo.cargarPedidos(false)
+            }
+            _carga.value = CargaUi.Exito(if (paralelo) "A la vez" else "Una por una", perfil, pedidos.size, System.currentTimeMillis() - inicio)
+        }
+    }
 }

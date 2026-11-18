@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.KeyboardType
 import com.rau.centrotareas.model.PrimosUi
+import com.rau.centrotareas.model.CargaUi
 import com.rau.centrotareas.viewmodel.TareasViewModel
 
 private val Fondo = Color(0xFFFCFAFF)
@@ -49,6 +51,7 @@ fun PantallaTareas(viewModel: TareasViewModel) {
     val progreso by viewModel.progreso.collectAsState()
     val corriendo by viewModel.corriendo.collectAsState()
     val primos by viewModel.primos.collectAsState()
+    val carga by viewModel.carga.collectAsState()
     var hasta by rememberSaveable { mutableStateOf("500000") }
     Scaffold(topBar = { SmallTopAppBar(title = { Text("CentroTareas", color = Color.White) }, colors = androidx.compose.material3.TopAppBarDefaults.smallTopAppBarColors(containerColor = Azul)) }, containerColor = Fondo) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -79,6 +82,21 @@ fun PantallaTareas(viewModel: TareasViewModel) {
                         PrimosUi.Calculando -> Text("Calculando...", fontSize = 12.sp)
                         PrimosUi.Cancelado -> Text("Cancelado", color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
                         is PrimosUi.Listo -> ResultBox("Primos hasta $hasta: ${estado.cantidad}\\nTiempo: ${estado.milisegundos} ms", Color(0xFFE3F4E4))
+                    }
+                }
+            }
+            Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(12.dp)) {
+                Column(Modifier.fillMaxWidth().padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Dos cargas", color = Azul, fontSize = 14.sp)
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        OutlinedButton(onClick = viewModel::cargarUnaPorUna) { Text("Una por una", fontSize = 11.sp) }
+                        Button(onClick = viewModel::cargarALaVez) { Text("A la vez", fontSize = 11.sp) }
+                    }
+                    when (val estado = carga) {
+                        CargaUi.Inicial -> Unit
+                        CargaUi.Cargando -> CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                        is CargaUi.Exito -> ResultBox("Modo: ${estado.modo}\\nPerfil: ${estado.perfil}\\nPedidos: ${estado.pedidos}\\nTiempo: ${estado.milisegundos} ms", Color(0xFFE3F4E4))
+                        is CargaUi.Error -> Unit
                     }
                 }
             }
