@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.ui.theme
+package com.rau.campusgps.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

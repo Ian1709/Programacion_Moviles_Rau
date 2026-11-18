@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.ui
+package com.rau.campusgps.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,8 +12,8 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.model.UbicacionUi
+import com.rau.campusgps.model.LugarConDistancia
+import com.rau.campusgps.model.UbicacionUi
 
 @Composable
 fun MapaUbicacion(

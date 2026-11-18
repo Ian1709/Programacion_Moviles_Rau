@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.ui
+package com.rau.campusgps.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,8 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tecsup.campusgps.model.TipoError
-import com.tecsup.campusgps.model.UbicacionUi
+import com.rau.campusgps.model.TipoError
+import com.rau.campusgps.model.UbicacionUi
 
 @Composable
 fun MensajeError(

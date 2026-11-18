@@ -1,4 +1,4 @@
-package com.tecsup.campusgps.ui
+package com.rau.campusgps.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,8 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tecsup.campusgps.model.LugarConDistancia
-import com.tecsup.campusgps.util.formatearDistancia
+import com.rau.campusgps.model.LugarConDistancia
+import com.rau.campusgps.util.formatearDistancia
 
 @Composable
 fun ListaLugares(

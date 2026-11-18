@@ -1,4 +1,4 @@
-package com.tecsup.campusgps
+package com.rau.campusgps
 
 import android.content.Intent
 import android.net.Uri
@@ -8,10 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.ViewModelProvider
-import com.tecsup.campusgps.ui.PantallaMapa
-import com.tecsup.campusgps.ui.theme.CampusGpsTheme
-import com.tecsup.campusgps.viewmodel.CampusViewModelFactory
-import com.tecsup.campusgps.viewmodel.MapaViewModel
+import com.rau.campusgps.ui.PantallaMapa
+import com.rau.campusgps.ui.theme.CampusGpsTheme
+import com.rau.campusgps.viewmodel.CampusViewModelFactory
+import com.rau.campusgps.viewmodel.MapaViewModel
 
 class MainActivity : ComponentActivity() {
     private lateinit var mapaViewModel: MapaViewModel
