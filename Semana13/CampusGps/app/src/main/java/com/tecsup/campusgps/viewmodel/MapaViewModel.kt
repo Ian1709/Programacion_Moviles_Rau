@@ -24,6 +24,9 @@ class MapaViewModel(
     )
     val lugares = _lugares.asStateFlow()
 
+    private val _seleccionado = MutableStateFlow<Int?>(null)
+    val seleccionado = _seleccionado.asStateFlow()
+
     private fun actualizarDistancias(posicion: Posicion) {
         _lugares.value = _lugares.value
             .map { lugarConDistancia ->
@@ -33,6 +36,10 @@ class MapaViewModel(
             }
             .sortedBy { it.metros }
     }
+    fun seleccionar(id: Int?) {
+        _seleccionado.value = id
+    }
+
     fun permisoDenegado() {
         _estado.value = UbicacionUi.Error("Permiso de ubicación denegado.")
     }
@@ -50,6 +57,7 @@ class MapaViewModel(
                 _estado.value = if (posicion == null) {
                     UbicacionUi.Error("Activa el GPS e intenta de nuevo")
                 } else {
+                    actualizarDistancias(posicion)
                     UbicacionUi.Lista(posicion)
                 }
             } catch (_: SecurityException) {

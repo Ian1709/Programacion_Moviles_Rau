@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -33,6 +34,7 @@ fun PantallaMapa(vm: MapaViewModel) {
     val context = LocalContext.current
     val estado by vm.estado.collectAsState()
     val lugares by vm.lugares.collectAsState()
+    val seleccionado by vm.seleccionado.collectAsState()
 
     val permisoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -57,30 +59,10 @@ fun PantallaMapa(vm: MapaViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            MapaUbicacion(
-                estado = estado,
-                lugares = lugares,
-                                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-            )
-
-            when (val actual = estado) {
-                UbicacionUi.SinBuscar -> Text("Pulsa el botón para obtener tu ubicación.")
-                UbicacionUi.Buscando -> CircularProgressIndicator()
-                is UbicacionUi.Lista -> Text(
-                    "Latitud: ${actual.posicion.latitud}\nLongitud: ${actual.posicion.longitud}"
-                )
-                is UbicacionUi.Error -> Text(
-                    text = actual.mensaje,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-
             Button(
                 onClick = {
                     if (tienePermiso) {
@@ -99,6 +81,36 @@ fun PantallaMapa(vm: MapaViewModel) {
             ) {
                 Text("Obtener mi ubicación")
             }
+
+            when (val actual = estado) {
+                UbicacionUi.SinBuscar -> Text("Pulsa el botón para obtener tu ubicación.")
+                UbicacionUi.Buscando -> CircularProgressIndicator()
+                is UbicacionUi.Lista -> Text(
+                    "Latitud: ${actual.posicion.latitud}\nLongitud: ${actual.posicion.longitud}"
+                )
+                is UbicacionUi.Error -> Text(
+                    text = actual.mensaje,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+
+            MapaUbicacion(
+                estado = estado,
+                lugares = lugares,
+                seleccionado = seleccionado,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            )
+
+            ListaLugares(
+                lugares = lugares,
+                seleccionado = seleccionado,
+                onClick = vm::seleccionar,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+            )
         }
     }
 }

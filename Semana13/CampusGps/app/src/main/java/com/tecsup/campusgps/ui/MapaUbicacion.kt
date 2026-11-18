@@ -19,6 +19,7 @@ import com.tecsup.campusgps.model.UbicacionUi
 fun MapaUbicacion(
     estado: UbicacionUi,
     lugares: List<LugarConDistancia>,
+    seleccionado: Int? = null,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState {
@@ -26,6 +27,18 @@ fun MapaUbicacion(
             LatLng(-12.0464, -77.0428),
             12f
         )
+    }
+
+    LaunchedEffect(seleccionado) {
+        val lugarSeleccionado = lugares.firstOrNull { it.lugar.id == seleccionado }?.lugar
+        if (lugarSeleccionado != null) {
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngZoom(
+                    LatLng(lugarSeleccionado.latitud, lugarSeleccionado.longitud),
+                    17f
+                )
+            )
+        }
     }
 
     LaunchedEffect(estado) {
