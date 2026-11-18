@@ -92,6 +92,13 @@ fun ListaLugares(
                                 item.lugar.categoria,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
+                            if (item.dentroDelRadio == true) {
+                                Text(
+                                    "Dentro del radio",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.labelSmall
+                                )
+                            }
                         }
                         Spacer(modifier = Modifier.weight(1f))
                         Text(

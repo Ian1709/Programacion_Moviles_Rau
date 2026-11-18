@@ -44,6 +44,7 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
     val categoriaSeleccionada by vm.categoriaSeleccionada.collectAsState()
     val seleccionado by vm.seleccionado.collectAsState()
     val masCercano by vm.masCercano.collectAsState()
+    val radioMetros by vm.radioMetros.collectAsState()
 
     val permisoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -91,6 +92,20 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                         selected = categoriaSeleccionada == categoria,
                         onClick = { vm.filtrarPorCategoria(categoria) },
                         label = { Text(categoria) }
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Radio:", modifier = Modifier.align(Alignment.CenterVertically))
+                listOf(100, 200, 500).forEach { radio ->
+                    FilterChip(
+                        selected = radioMetros == radio,
+                        onClick = { vm.cambiarRadio(radio) },
+                        label = { Text("${radio} m") }
                     )
                 }
             }
@@ -148,6 +163,7 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                 lugares = lugares,
                 seleccionado = seleccionado,
                 masCercanoId = masCercano?.id,
+                radioMetros = radioMetros,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()

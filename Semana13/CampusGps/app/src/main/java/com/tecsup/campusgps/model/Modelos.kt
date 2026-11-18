@@ -15,7 +15,8 @@ data class Lugar(
 
 data class LugarConDistancia(
     val lugar: Lugar,
-    val metros: Float? = null
+    val metros: Float? = null,
+    val dentroDelRadio: Boolean? = null
 )
 
 enum class TipoError {

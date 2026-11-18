@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.tecsup.campusgps.model.LugarConDistancia
@@ -21,6 +23,7 @@ fun MapaUbicacion(
     lugares: List<LugarConDistancia>,
     seleccionado: Int? = null,
     masCercanoId: Int? = null,
+    radioMetros: Int = 100,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState {
@@ -59,6 +62,13 @@ fun MapaUbicacion(
         cameraPositionState = cameraPositionState
     ) {
         if (estado is UbicacionUi.Lista) {
+            Circle(
+                center = LatLng(estado.posicion.latitud, estado.posicion.longitud),
+                radius = radioMetros.toDouble(),
+                fillColor = Color(0x332196F3),
+                strokeColor = Color(0xFF2196F3),
+                strokeWidth = 2f
+            )
             Marker(
                 state = MarkerState(
                     position = LatLng(estado.posicion.latitud, estado.posicion.longitud)
