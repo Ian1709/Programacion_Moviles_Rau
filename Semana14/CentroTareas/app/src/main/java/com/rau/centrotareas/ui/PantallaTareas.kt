@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
@@ -38,6 +39,7 @@ fun PantallaTareas(viewModel: TareasViewModel) {
     val toques by viewModel.toques.collectAsState()
     val mensaje by viewModel.mensaje.collectAsState()
     val progreso by viewModel.progreso.collectAsState()
+    val corriendo by viewModel.corriendo.collectAsState()
     Scaffold(topBar = { SmallTopAppBar(title = { Text("CentroTareas", color = Color.White) }, colors = androidx.compose.material3.TopAppBarDefaults.smallTopAppBarColors(containerColor = Azul)) }, containerColor = Fondo) { padding ->
         Column(Modifier.fillMaxSize().padding(padding).padding(14.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Card(colors = CardDefaults.cardColors(containerColor = Color.White), shape = RoundedCornerShape(12.dp)) {
@@ -46,7 +48,8 @@ fun PantallaTareas(viewModel: TareasViewModel) {
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(onClick = viewModel::tocar) { Text("Tócame: $toques", fontSize = 11.sp) }
-                        Button(onClick = viewModel::tareaLarga) { Text("Iniciar", fontSize = 11.sp) }
+                        Button(onClick = viewModel::tareaLarga, enabled = !corriendo) { Text("Iniciar", fontSize = 11.sp) }
+                        OutlinedButton(onClick = viewModel::cancelar, enabled = corriendo) { Text("Cancelar", fontSize = 11.sp) }
                     }
                     LinearProgressIndicator(progress = { progreso }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                     Text("${(progreso * 100).toInt()} %", fontSize = 12.sp)
