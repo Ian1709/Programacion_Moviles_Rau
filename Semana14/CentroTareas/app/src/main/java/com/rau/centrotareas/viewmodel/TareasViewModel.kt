@@ -49,10 +49,7 @@ class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal
             Log.d("HILO", "antes: ${Thread.currentThread().name}")
             withContext(Dispatchers.Default) {
                 Log.d("HILO", "dentro: ${Thread.currentThread().name}")
-                for (i in 1..100) {
-                    delay(40)
-                    _progreso.value = i / 100f
-                }
+                repo.progresoTarea().collect { _progreso.value = it }
             }
             Log.d("HILO", "después: ${Thread.currentThread().name}")
             _mensaje.value = "Terminó"
