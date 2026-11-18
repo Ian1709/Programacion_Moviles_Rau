@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,23 +60,23 @@ fun PantallaMapa(vm: MapaViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Box(
+            MapaUbicacion(
+                estado = estado,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                when (val actual = estado) {
-                    UbicacionUi.SinBuscar -> Text("Pulsa el botón para obtener tu ubicación.")
-                    UbicacionUi.Buscando -> CircularProgressIndicator()
-                    is UbicacionUi.Lista -> Text(
-                        "Latitud: ${actual.posicion.latitud}\nLongitud: ${actual.posicion.longitud}"
-                    )
-                    is UbicacionUi.Error -> Text(
-                        text = actual.mensaje,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                    .fillMaxWidth()
+            )
+
+            when (val actual = estado) {
+                UbicacionUi.SinBuscar -> Text("Pulsa el botón para obtener tu ubicación.")
+                UbicacionUi.Buscando -> CircularProgressIndicator()
+                is UbicacionUi.Lista -> Text(
+                    "Latitud: ${actual.posicion.latitud}\nLongitud: ${actual.posicion.longitud}"
+                )
+                is UbicacionUi.Error -> Text(
+                    text = actual.mensaje,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
 
             Button(
