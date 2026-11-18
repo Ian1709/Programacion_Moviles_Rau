@@ -71,6 +71,7 @@ fun PantallaTareas(viewModel: TareasViewModel) {
     val primos by viewModel.primos.collectAsState()
     val carga by viewModel.carga.collectAsState()
     val simularError by viewModel.simularError.collectAsState()
+    val historialCargas by viewModel.historialCargas.collectAsState()
     var hasta by rememberSaveable { mutableStateOf("500000") }
 
     Scaffold(
@@ -206,6 +207,19 @@ fun PantallaTareas(viewModel: TareasViewModel) {
                             fontSize = 11.sp
                         )
                         BotonContorno(onClick = viewModel::reintentar) { Text("Reintentar", fontSize = 11.sp, fontWeight = FontWeight.SemiBold) }
+                    }
+                }
+                if (historialCargas.isNotEmpty()) {
+                    Text("Comparación de tiempos", color = Azul, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Modo", fontSize = 11.sp)
+                        Text("Tiempo", fontSize = 11.sp)
+                    }
+                    historialCargas.forEachIndexed { indice, resultado ->
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text("${indice + 1}. ${resultado.modo}", fontSize = 11.sp)
+                            Text("${resultado.milisegundos} ms", fontSize = 11.sp)
+                        }
                     }
                 }
             }

@@ -15,3 +15,5 @@ sealed interface CargaUi {
 }
 
 data class ProgresoPrimos(val cantidad: Int, val progreso: Float)
+
+data class TiempoCarga(val modo: String, val milisegundos: Long)

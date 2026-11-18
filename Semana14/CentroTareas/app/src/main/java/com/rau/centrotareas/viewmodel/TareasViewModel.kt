@@ -7,6 +7,7 @@ import com.rau.centrotareas.data.TareasRepository
 import com.rau.centrotareas.data.TareasRepositoryLocal
 import com.rau.centrotareas.model.PrimosUi
 import com.rau.centrotareas.model.CargaUi
+import com.rau.centrotareas.model.TiempoCarga
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,8 @@ class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal
     val carga: StateFlow<CargaUi> = _carga
     private val _simularError = MutableStateFlow(false)
     val simularError: StateFlow<Boolean> = _simularError
+    private val _historialCargas = MutableStateFlow<List<TiempoCarga>>(emptyList())
+    val historialCargas: StateFlow<List<TiempoCarga>> = _historialCargas
 
     fun tocar() { _toques.value++ }
 
@@ -107,7 +110,10 @@ class TareasViewModel(private val repo: TareasRepository = TareasRepositoryLocal
                     val perfil = repo.cargarPerfil()
                     perfil to repo.cargarPedidos(_simularError.value)
                 }
-                _carga.value = CargaUi.Exito(if (paralelo) "A la vez" else "Una por una", perfil, pedidos.size, System.currentTimeMillis() - inicio)
+                val modo = if (paralelo) "A la vez" else "Una por una"
+                val transcurrido = System.currentTimeMillis() - inicio
+                _carga.value = CargaUi.Exito(modo, perfil, pedidos.size, transcurrido)
+                _historialCargas.value = _historialCargas.value + TiempoCarga(modo, transcurrido)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

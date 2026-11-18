@@ -39,6 +39,7 @@ com.rau.centrotareas/
 - Conteo cancelable de primos en `Dispatchers.Default`.
 - Cargas ficticias del perfil de Ana Torres y los pedidos 101, 102 y 103: secuencial (aprox. 5 s) o paralela (aprox. 3 s).
 - Interruptor de error simulado, mensaje de error y reintento en paralelo.
+- En `mejora_ia`, el Repository emite el progreso como `Flow`, el conteo de primos muestra avance y se acumula una tabla de tiempos de carga.
 - Todos los datos de ejemplo son locales; no se solicitan permisos ni conexión de red.
 
 ## Compilar
@@ -50,6 +51,8 @@ Semana14\CentroTareas\gradlew.bat -p Semana14\CentroTareas assembleDebug
 ```
 
 La compilación `assembleDebug` se completó correctamente durante esta entrega.
+
+La Fase 2 añadió tres mejoras: flujo de progreso emitido desde el Repository, porcentaje del cálculo de primos y comparación histórica de los tiempos secuencial/paralelo. El registro de decisiones de IA está en [`PROMPTS.md`](PROMPTS.md).
 
 ## Observación del Paso 1
 
