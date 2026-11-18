@@ -32,7 +32,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
+fun PantallaMapa(vm: MapaViewModel, temaOscuro: Boolean, onCambiarTema: (Boolean) -> Unit, onAbrirAjustes: () -> Unit) {
     val context = LocalContext.current
     val estado by vm.estado.collectAsState()
     val lugares by vm.lugaresVisibles.collectAsState()
@@ -68,6 +68,16 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                         Text("Tu campus, más cerca", style = MaterialTheme.typography.labelMedium, color = Color.White.copy(alpha = 0.76f))
                     }
                 },
+                actions = {
+                    Row(
+                        modifier = Modifier.padding(end = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("Oscuro", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                        Switch(checked = temaOscuro, onCheckedChange = onCambiarTema)
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = CampusNavy, titleContentColor = Color.White)
             )
         },
@@ -81,7 +91,7 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
             val error = estado as? UbicacionUi.Error
             if (error != null) {
                 Spacer(Modifier.height(8.dp))
-                Text("UBICACIÓN", color = CampusBlue, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+                Text("UBICACIÓN", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
                 Text("Revisa el acceso a tu ubicación", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                 BotonUbicacion(habilitado = true, onClick = solicitarUbicacion)
                 MensajeError(error, onAbrirAjustes, vm::buscar)
@@ -103,10 +113,10 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                 Box(
                     modifier = Modifier.weight(1.2f).fillMaxWidth()
                         .clip(RoundedCornerShape(25.dp))
-                        .border(1.dp, CampusOutline, RoundedCornerShape(25.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(25.dp))
                 ) {
                     MapaUbicacion(
-                        estado = estado, lugares = lugares, seleccionado = seleccionado,
+                        estado = estado, lugares = lugares, seleccionado = seleccionado, temaOscuro = temaOscuro,
                         masCercanoId = masCercano?.id, radioMetros = radioMetros,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -117,7 +127,7 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                         Text(
                             if (estado is UbicacionUi.Lista) "CAMPUS · LIMA" else "MAPA DEL CAMPUS",
                             modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp),
-                            color = CampusInk, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold
+                            color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold
                         )
                     }
                 }
@@ -130,7 +140,7 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Text("Radio", color = CampusMuted, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                        Text("Radio", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                         listOf(100, 200, 500).forEach { radio ->
                             FilterChip(radioMetros == radio, { vm.cambiarRadio(radio) }, label = { Text("${radio} m") }, colors = chipColors())
                         }
@@ -150,8 +160,8 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp),
                             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            Box(Modifier.size(32.dp).clip(CircleShape).background(CampusGreen), contentAlignment = Alignment.Center) {
-                                Text("★", color = Color.White, style = MaterialTheme.typography.labelLarge)
+                            Box(Modifier.size(32.dp).clip(CircleShape).background(MaterialTheme.colorScheme.secondary), contentAlignment = Alignment.Center) {
+                                Text("★", color = MaterialTheme.colorScheme.onSecondary, style = MaterialTheme.typography.labelLarge)
                             }
                             Column(Modifier.weight(1f)) {
                                 Text("MÁS CERCANO", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSecondaryContainer)
@@ -171,9 +181,9 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
                     Row(Modifier.fillMaxWidth().padding(top = 1.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                         Column {
                             Text("Lugares cercanos", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                            Text("${lugares.size} puntos para explorar", style = MaterialTheme.typography.bodySmall, color = CampusMuted)
+                            Text("${lugares.size} puntos para explorar", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                        if (seleccionado != null) Text("Seleccionado", style = MaterialTheme.typography.labelMedium, color = CampusBlue, fontWeight = FontWeight.SemiBold)
+                        if (seleccionado != null) Text("Seleccionado", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.SemiBold)
                     }
                     ListaLugares(
                         lugares = lugares, seleccionado = seleccionado, onClick = vm::seleccionar,
@@ -190,10 +200,10 @@ fun PantallaMapa(vm: MapaViewModel, onAbrirAjustes: () -> Unit) {
 private fun EstadoUbicacion(estado: UbicacionUi) {
     Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(17.dp), color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.75f)) {
         when (estado) {
-            UbicacionUi.SinBuscar -> Text("Pulsa el botón para empezar", Modifier.padding(horizontal = 14.dp, vertical = 9.dp), color = CampusMuted, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
+            UbicacionUi.SinBuscar -> Text("Pulsa el botón para empezar", Modifier.padding(horizontal = 14.dp, vertical = 9.dp), color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall, textAlign = TextAlign.Center)
             UbicacionUi.Buscando -> Row(Modifier.padding(8.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
-                Text("  Buscando tu ubicación…", color = CampusMuted, style = MaterialTheme.typography.bodySmall)
+                Text("  Buscando tu ubicación…", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
             }
             is UbicacionUi.Lista -> Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 7.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
                 Coordenada("LATITUD", "%.4f".format(Locale.US, estado.posicion.latitud))
@@ -207,28 +217,28 @@ private fun EstadoUbicacion(estado: UbicacionUi) {
 @Composable
 private fun Coordenada(label: String, value: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(label, color = CampusMuted, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+        Text(label, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
         Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
     }
 }
 
 @Composable
 private fun chipColors() = FilterChipDefaults.filterChipColors(
-    selectedContainerColor = CampusBlue, selectedLabelColor = Color.White,
-    containerColor = MaterialTheme.colorScheme.surfaceVariant, labelColor = CampusMuted
+    selectedContainerColor = MaterialTheme.colorScheme.primary, selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+    containerColor = MaterialTheme.colorScheme.surfaceVariant, labelColor = MaterialTheme.colorScheme.onSurfaceVariant
 )
 
 @Composable
 private fun BotonUbicacion(habilitado: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick, enabled = habilitado, shape = RoundedCornerShape(17.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = CampusBlue, contentColor = Color.White),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.dp, pressedElevation = 1.dp),
         modifier = Modifier.fillMaxWidth().height(49.dp)
     ) {
         if (habilitado) {
             Row(horizontalArrangement = Arrangement.spacedBy(9.dp), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(9.dp).clip(CircleShape).background(Color.White))
+                Box(Modifier.size(9.dp).clip(CircleShape).background(MaterialTheme.colorScheme.onPrimary))
                 Text("Obtener mi ubicación", fontWeight = FontWeight.Bold)
             }
         } else CircularProgressIndicator(Modifier.size(21.dp), color = Color.White, strokeWidth = 2.dp)

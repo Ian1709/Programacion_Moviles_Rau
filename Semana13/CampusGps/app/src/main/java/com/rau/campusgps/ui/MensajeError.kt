@@ -20,8 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.rau.campusgps.model.TipoError
 import com.rau.campusgps.model.UbicacionUi
-import com.rau.campusgps.ui.theme.CampusBlue
-import com.rau.campusgps.ui.theme.CampusMuted
 
 @Composable
 fun MensajeError(
@@ -41,7 +39,7 @@ fun MensajeError(
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f)) {
-                Text("!", Modifier.padding(horizontal = 15.dp, vertical = 8.dp), color = CampusBlue, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text("!", Modifier.padding(horizontal = 15.dp, vertical = 8.dp), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
             Text(
                 "No se pudo obtener la ubicación",
@@ -61,7 +59,7 @@ fun MensajeError(
                 }
                 TipoError.SIN_PLAY_SERVICES -> Text(
                     "Google Play Services es necesario para continuar.",
-                    color = CampusMuted,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Center
                 )

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +24,7 @@ import com.rau.campusgps.model.UbicacionUi
 @Composable
 fun MapaUbicacion(
     estado: UbicacionUi,
+    temaOscuro: Boolean,
     lugares: List<LugarConDistancia>,
     seleccionado: Int? = null,
     masCercanoId: Int? = null,
@@ -32,7 +32,6 @@ fun MapaUbicacion(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val temaOscuro = isSystemInDarkTheme()
     val estiloOscuro = remember(context) {
         MapStyleOptions.loadRawResourceStyle(context, com.rau.campusgps.R.raw.map_style_dark)
     }

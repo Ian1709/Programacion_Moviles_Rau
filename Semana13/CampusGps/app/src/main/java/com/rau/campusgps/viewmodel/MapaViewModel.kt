@@ -23,6 +23,9 @@ class MapaViewModel(
     private val ubicacionRepository: UbicacionRepository,
     lugaresRepository: LugaresRepository
 ) : ViewModel() {
+    private val _modoOscuro = MutableStateFlow<Boolean?>(null)
+    val modoOscuro = _modoOscuro.asStateFlow()
+
     private val _estado = MutableStateFlow<UbicacionUi>(UbicacionUi.SinBuscar)
     val estado = _estado.asStateFlow()
 
@@ -63,6 +66,10 @@ class MapaViewModel(
             }
             .sortedBy { it.metros }
     }
+    fun cambiarModoOscuro(activado: Boolean) {
+        _modoOscuro.value = activado
+    }
+
     fun seleccionar(id: Int?) {
         _seleccionado.value = id
     }

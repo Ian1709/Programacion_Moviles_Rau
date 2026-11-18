@@ -27,9 +27,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.rau.campusgps.model.LugarConDistancia
-import com.rau.campusgps.ui.theme.CampusBlue
-import com.rau.campusgps.ui.theme.CampusGreen
-import com.rau.campusgps.ui.theme.CampusMuted
 import com.rau.campusgps.util.formatearDistancia
 
 @Composable
@@ -51,7 +48,7 @@ fun ListaLugares(
             Card(
                 onClick = { onClick(item.lugar.id) },
                 modifier = Modifier.fillMaxWidth().then(
-                    if (selected) Modifier.border(1.5.dp, CampusBlue, RoundedCornerShape(18.dp)) else Modifier
+                    if (selected) Modifier.border(1.5.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(18.dp)) else Modifier
                 ),
                 shape = RoundedCornerShape(18.dp),
                 colors = CardDefaults.cardColors(
@@ -64,14 +61,14 @@ fun ListaLugares(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(11.dp)
                 ) {
-                    Box(Modifier.size(11.dp).clip(CircleShape).background(if (nearest) CampusGreen else CampusBlue))
+                    Box(Modifier.size(11.dp).clip(CircleShape).background(if (nearest) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary))
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         Text(item.lugar.nombre, color = MaterialTheme.colorScheme.onSurface, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, maxLines = 1)
-                        Text(item.lugar.categoria, color = CampusMuted, style = MaterialTheme.typography.bodySmall)
+                        Text(item.lugar.categoria, color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                         if (nearest || item.dentroDelRadio == true) {
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                if (nearest) Tag("MÁS CERCANO", CampusGreen)
-                                if (item.dentroDelRadio == true) Tag("EN EL RADIO", CampusBlue)
+                                if (nearest) Tag("MÁS CERCANO", MaterialTheme.colorScheme.secondary)
+                                if (item.dentroDelRadio == true) Tag("EN EL RADIO", MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
