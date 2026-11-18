@@ -32,6 +32,7 @@ import com.tecsup.campusgps.viewmodel.MapaViewModel
 fun PantallaMapa(vm: MapaViewModel) {
     val context = LocalContext.current
     val estado by vm.estado.collectAsState()
+    val lugares by vm.lugares.collectAsState()
 
     val permisoLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -62,7 +63,8 @@ fun PantallaMapa(vm: MapaViewModel) {
         ) {
             MapaUbicacion(
                 estado = estado,
-                modifier = Modifier
+                lugares = lugares,
+                                modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             )
