@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.MuroCampus" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:statusBarColor">#1565C0</item>
+        <item name="android:navigationBarColor">#F4F7FC</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
