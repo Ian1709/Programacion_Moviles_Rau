@@ -1,8 +1,10 @@
 package com.rau.avisoscampus.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.rau.avisoscampus.data.AvisosRepository
 import com.rau.avisoscampus.model.Aviso
+import com.rau.avisoscampus.model.Origen
 import com.rau.avisoscampus.model.PermisoUi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +12,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AvisosViewModel(private val repo: AvisosRepository) : ViewModel() {
     val avisos: StateFlow<List<Aviso>> = repo.avisos
@@ -26,5 +29,16 @@ class AvisosViewModel(private val repo: AvisosRepository) : ViewModel() {
     fun permisoRespondido(concedido: Boolean) {
         _permiso.value = if (concedido) PermisoUi.Concedido else PermisoUi.Denegado
         if (concedido) _mensaje.value = null
+    }
+
+    fun avisarAhora() {
+        viewModelScope.launch {
+            val aviso = repo.registrar(
+                titulo = "Tarea lista",
+                texto = "Tu entrega fue registrada",
+                origen = Origen.BOTON
+            )
+            _eventos.emit(aviso)
+        }
     }
 }

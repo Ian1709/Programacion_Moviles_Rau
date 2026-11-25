@@ -45,6 +45,10 @@ fun PantallaAvisos(vm: AvisosViewModel) {
         if (Notificador.tienePermiso(contexto)) vm.permisoRespondido(true)
     }
 
+    LaunchedEffect(vm) {
+        vm.eventos.collect { aviso -> Notificador.mostrar(contexto, aviso) }
+    }
+
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState()).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -72,7 +76,14 @@ fun PantallaAvisos(vm: AvisosViewModel) {
             }
         }
 
-        TarjetaSeccion("Avisos") { TextoPendiente("Se habilitará en el paso 3.") }
+        TarjetaSeccion("Avisos") {
+            Button(
+                onClick = vm::avisarAhora,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Mostrar aviso")
+            }
+        }
         TarjetaSeccion("Recordatorio") { TextoPendiente("Se habilitará en el paso 5.") }
         TarjetaSeccion("Receptor de anuncios") { TextoPendiente("Se habilitará en el paso 6.") }
         TarjetaSeccion("Historial") { TextoPendiente("Se habilitará en el paso 7.") }
