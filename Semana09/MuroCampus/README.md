@@ -119,3 +119,13 @@ La app mostraría la respuesta del servidor, pero al volver a cargar la lista el
 ## Alcance del servicio
 
 JSONPlaceholder es un servicio de práctica. Sus operaciones POST y DELETE simulan cambios y no persisten el estado. La implementación y sus evidencias se hicieron con asistencia de IA por solicitud del propietario del repositorio; el PDF asigna formalmente la Fase 1 a trabajo sin IA, así que esta copia no debe describirse como trabajo realizado sin IA.
+
+## Fase 2: mejoras asistidas por IA
+
+En `mejora_ia` se añadieron tres mejoras:
+
+1. **Eliminar publicación:** `DELETE posts/{id}` devuelve `Response<Unit>`; el Repository valida `isSuccessful` y devuelve el código HTTP, y la pantalla informa el resultado.
+2. **Buscar por título:** filtra localmente las publicaciones que ya llegaron, sin hacer una petición por cada tecla. El texto de búsqueda se combina con el filtro de usuario activo.
+3. **Encabezado HTTP:** un interceptor de OkHttp agrega `Accept: application/json` a todas las peticiones.
+
+El proceso de prompts y las decisiones está en [`PROMPTS.md`](PROMPTS.md).
