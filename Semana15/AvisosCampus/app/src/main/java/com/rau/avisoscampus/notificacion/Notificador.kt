@@ -2,7 +2,9 @@ package com.rau.avisoscampus.notificacion
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.SuppressLint
@@ -10,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.tecsup.avisoscampus.R
+import com.tecsup.avisoscampus.MainActivity
 import com.tecsup.avisoscampus.model.Aviso
 
 object Notificador {
@@ -44,6 +47,14 @@ object Notificador {
             .setContentTitle(aviso.titulo)
             .setContentText(aviso.texto)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    context,
+                    0,
+                    Intent(context, MainActivity::class.java),
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            )
             .setAutoCancel(true)
             .build()
 
