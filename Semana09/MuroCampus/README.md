@@ -129,3 +129,11 @@ En `mejora_ia` se añadieron tres mejoras:
 3. **Encabezado HTTP:** un interceptor de OkHttp agrega `Accept: application/json` a todas las peticiones.
 
 El proceso de prompts y las decisiones está en [`PROMPTS.md`](PROMPTS.md).
+
+### Evidencias de las mejoras
+
+| Búsqueda local por título | Eliminación simulada, HTTP 200 |
+|---|---|
+| ![Búsqueda local de publicaciones](screenshots/busqueda-ia.png) | ![Respuesta DELETE HTTP 200](screenshots/eliminacion-ia.png) |
+
+En la prueba de búsqueda se escribió `sunt` después de descargar la lista; Logcat no registró un GET adicional. El DELETE de `posts/1` devolvió HTTP 200 y la pantalla informó el código. JSONPlaceholder simula el borrado, así que el recurso puede volver a aparecer al volver a consultar la lista.
