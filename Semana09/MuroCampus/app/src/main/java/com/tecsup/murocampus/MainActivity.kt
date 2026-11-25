@@ -2,6 +2,7 @@ package com.tecsup.murocampus
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,10 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.tecsup.murocampus.data.PostRepositoryRemote
 import com.tecsup.murocampus.data.remote.RetrofitClient
+import com.tecsup.murocampus.ui.PantallaDetalle
 import com.tecsup.murocampus.ui.PantallaLista
 import com.tecsup.murocampus.ui.theme.MuroCampusTheme
 import com.tecsup.murocampus.viewmodel.PostsViewModel
@@ -28,8 +33,21 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MuroCampusTheme {
+                var idSeleccionado by rememberSaveable { mutableStateOf<Int?>(null) }
+                BackHandler(enabled = idSeleccionado != null) { idSeleccionado = null }
                 Scaffold(topBar = { TopAppBar(title = { Text("MuroCampus") }) }) { padding ->
-                    PantallaLista(vm, onAbrir = {}, modifier = Modifier.fillMaxSize().padding(padding))
+                    if (idSeleccionado == null) {
+                        PantallaLista(vm, onAbrir = { id ->
+                            idSeleccionado = id
+                            vm.abrir(id)
+                        }, modifier = Modifier.fillMaxSize().padding(padding))
+                    } else {
+                        PantallaDetalle(
+                            vm = vm,
+                            onReintentar = { vm.abrir(idSeleccionado!!) },
+                            modifier = Modifier.fillMaxSize().padding(padding),
+                        )
+                    }
                 }
             }
         }
