@@ -3,17 +3,17 @@ package com.rau.avisoscampus.notificacion
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.annotation.SuppressLint
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import com.tecsup.avisoscampus.R
-import com.tecsup.avisoscampus.MainActivity
-import com.tecsup.avisoscampus.model.Aviso
+import com.rau.avisoscampus.R
+import com.rau.avisoscampus.MainActivity
+import com.rau.avisoscampus.model.Aviso
 
 object Notificador {
     const val CANAL = "avisos"

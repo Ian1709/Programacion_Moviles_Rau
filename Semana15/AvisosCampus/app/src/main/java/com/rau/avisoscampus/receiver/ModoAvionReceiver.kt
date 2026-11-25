@@ -1,4 +1,4 @@
-package com.tecsup.avisoscampus.receiver
+package com.rau.avisoscampus.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

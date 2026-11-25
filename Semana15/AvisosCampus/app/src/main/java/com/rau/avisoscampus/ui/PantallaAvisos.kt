@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.Switch
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rau.avisoscampus.model.PermisoUi
 import com.rau.avisoscampus.notificacion.Notificador
@@ -38,6 +41,7 @@ import com.rau.avisoscampus.ui.theme.GrisEstado
 import com.rau.avisoscampus.ui.theme.RojoEstado
 import com.rau.avisoscampus.ui.theme.VerdeEstado
 import com.rau.avisoscampus.viewmodel.AvisosViewModel
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun PantallaAvisos(vm: AvisosViewModel) {
@@ -46,6 +50,7 @@ fun PantallaAvisos(vm: AvisosViewModel) {
     val faltan by vm.faltan.collectAsState()
     val escuchandoAvion by vm.escuchandoAvion.collectAsState()
     val avisos by vm.avisos.collectAsState()
+    val mensaje by vm.mensaje.collectAsState()
     val lanzador = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = vm::permisoRespondido
@@ -56,7 +61,9 @@ fun PantallaAvisos(vm: AvisosViewModel) {
     }
 
     LaunchedEffect(vm) {
-        vm.eventos.collect { aviso -> Notificador.mostrar(contexto, aviso) }
+        vm.eventos.collect { aviso ->
+            if (!Notificador.mostrar(contexto, aviso)) vm.noSePudoMostrar()
+        }
     }
 
     DisposableEffect(escuchandoAvion) {
@@ -108,6 +115,31 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text("Mostrar aviso")
+            }
+        }
+        if (mensaje != null) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    color = Color(0xFFFCE4E4)
+                ) {
+                    Text(
+                        text = mensaje.orEmpty(),
+                        modifier = Modifier.padding(12.dp),
+                        color = Color(0xFF9F2D2D),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                OutlinedButton(
+                    onClick = {
+                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, contexto.packageName)
+                        contexto.startActivity(intent)
+                    }
+                ) {
+                    Text("Abrir ajustes")
+                }
             }
         }
         TarjetaSeccion("Recordatorio") {
