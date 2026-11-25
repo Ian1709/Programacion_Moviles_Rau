@@ -85,6 +85,9 @@ Las imágenes se capturaron ejecutando la aplicación de `main` en el emulador A
 | Crear publicación | JSONPlaceholder respondió HTTP 201 con `id = 101`; la publicación no se persiste en el servicio. |
 | Sin conexión | Se mostró el mensaje de error y el botón Reintentar. |
 | Reintentar | Tras restablecer la red, la lista volvió a responder HTTP 200. |
+| Recurso inexistente `posts/9999` | La API respondió HTTP 404 y la pantalla de detalle mostró el error del servidor. La ruta temporal usada para probarlo se retiró. |
+| JSON inesperado | Pruebas temporales pasaron: un campo desconocido se ignoró con `ignoreUnknownKeys`; la falta de un campo obligatorio produjo `SerializationException`. Los archivos de prueba se retiraron antes del commit. |
+| Volver rápidamente del detalle | No apareció `FATAL EXCEPTION` ni una cancelación filtrada a Logcat. |
 | Código del ViewModel | No importa Retrofit, `PostApi` ni `HttpException`. |
 
 ## Para pensar
