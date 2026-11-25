@@ -45,6 +45,7 @@ fun PantallaAvisos(vm: AvisosViewModel) {
     val permiso by vm.permiso.collectAsState()
     val faltan by vm.faltan.collectAsState()
     val escuchandoAvion by vm.escuchandoAvion.collectAsState()
+    val avisos by vm.avisos.collectAsState()
     val lanzador = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = vm::permisoRespondido
@@ -154,7 +155,7 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                 color = GrisEstado
             )
         }
-        TarjetaSeccion("Historial") { TextoPendiente("Se habilitará en el paso 7.") }
+        HistorialAvisos(avisos)
     }
 }
 
