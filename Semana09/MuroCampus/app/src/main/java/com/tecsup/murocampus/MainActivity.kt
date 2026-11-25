@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
                         idSeleccionado != null -> PantallaDetalle(
                             vm = vm,
                             onReintentar = { vm.abrir(idSeleccionado!!) },
+                            onVolver = { idSeleccionado = null },
                             modifier = Modifier.fillMaxSize().padding(innerPadding),
                         )
                         else -> PantallaLista(

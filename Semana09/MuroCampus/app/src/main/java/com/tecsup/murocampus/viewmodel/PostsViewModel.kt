@@ -25,8 +25,14 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     private val _usuarioFiltro = MutableStateFlow<Int?>(null)
     val usuarioFiltro = _usuarioFiltro.asStateFlow()
 
+    private val _busqueda = MutableStateFlow("")
+    val busqueda = _busqueda.asStateFlow()
+
     private val _creacion = MutableStateFlow<UiState<Post>?>(null)
     val creacion = _creacion.asStateFlow()
+
+    private val _eliminacion = MutableStateFlow<UiState<Int>?>(null)
+    val eliminacion = _eliminacion.asStateFlow()
 
     init { cargar() }
 
@@ -45,6 +51,8 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
         _usuarioFiltro.value = userId
         cargar()
     }
+
+    fun buscar(texto: String) { _busqueda.value = texto }
 
     fun abrir(id: Int) {
         viewModelScope.launch {
@@ -73,4 +81,19 @@ class PostsViewModel(private val repo: PostRepository) : ViewModel() {
     }
 
     fun limpiarCreacion() { _creacion.value = null }
+
+    fun eliminar(id: Int) {
+        viewModelScope.launch {
+            _eliminacion.value = UiState.Cargando
+            repo.borrar(id)
+                .onSuccess { codigo ->
+                    val actual = _lista.value
+                    if (actual is UiState.Exito) {
+                        _lista.value = UiState.Exito(actual.datos.filterNot { it.id == id })
+                    }
+                    _eliminacion.value = UiState.Exito(codigo)
+                }
+                .onFailure { _eliminacion.value = UiState.Error(mensajeDe(it)) }
+        }
+    }
 }

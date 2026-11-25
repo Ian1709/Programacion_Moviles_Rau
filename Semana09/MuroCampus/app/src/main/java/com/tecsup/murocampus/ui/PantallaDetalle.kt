@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,8 +25,14 @@ import com.tecsup.murocampus.viewmodel.PostsViewModel
 import com.tecsup.murocampus.viewmodel.UiState
 
 @Composable
-fun PantallaDetalle(vm: PostsViewModel, onReintentar: () -> Unit, modifier: Modifier = Modifier) {
+fun PantallaDetalle(
+    vm: PostsViewModel,
+    onReintentar: () -> Unit,
+    onVolver: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val estado by vm.detalle.collectAsStateWithLifecycle()
+    val eliminacion by vm.eliminacion.collectAsStateWithLifecycle()
     when (val actual = estado) {
         UiState.Cargando -> androidx.compose.foundation.layout.Box(
             modifier.fillMaxSize(), androidx.compose.ui.Alignment.Center,
@@ -44,6 +52,19 @@ fun PantallaDetalle(vm: PostsViewModel, onReintentar: () -> Unit, modifier: Modi
                         Text("Usuario ${detalle.post.userId}", color = MaterialTheme.colorScheme.primary)
                         Text(detalle.post.title, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                         Text(detalle.post.body, style = MaterialTheme.typography.bodyLarge)
+                        when (val borrar = eliminacion) {
+                            null -> Button(onClick = { vm.eliminar(detalle.post.id) }) {
+                                Text("Eliminar publicación")
+                            }
+                            UiState.Cargando -> CircularProgressIndicator()
+                            is UiState.Error -> ErrorConReintento(borrar.mensaje) {
+                                vm.eliminar(detalle.post.id)
+                            }
+                            is UiState.Exito -> Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text("Publicación eliminada (HTTP ${borrar.datos})")
+                                Button(onClick = onVolver) { Text("Volver a publicaciones") }
+                            }
+                        }
                         Text("Comentarios (${detalle.comentarios.size})", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                     }
                 }
