@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,8 +28,16 @@ import com.tecsup.murocampus.viewmodel.UiState
 fun PantallaLista(vm: PostsViewModel, onAbrir: (Int) -> Unit, modifier: Modifier = Modifier) {
     val estado by vm.lista.collectAsStateWithLifecycle()
     val filtro by vm.usuarioFiltro.collectAsStateWithLifecycle()
+    val busqueda by vm.busqueda.collectAsStateWithLifecycle()
 
     Column(modifier.fillMaxSize()) {
+        OutlinedTextField(
+            value = busqueda,
+            onValueChange = vm::buscar,
+            label = { Text("Buscar por título") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+        )
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -57,12 +66,13 @@ fun PantallaLista(vm: PostsViewModel, onAbrir: (Int) -> Unit, modifier: Modifier
                 ErrorConReintento(actual.mensaje, vm::cargar)
             }
             is UiState.Exito -> {
-                if (actual.datos.isEmpty()) {
+                val visibles = actual.datos.filter { it.title.contains(busqueda, ignoreCase = true) }
+                if (visibles.isEmpty()) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("Sin publicaciones", style = MaterialTheme.typography.titleMedium)
                     }
                 } else {
-                    ListaTarjetas(actual.datos, onAbrir)
+                    ListaTarjetas(visibles, onAbrir)
                 }
             }
         }
