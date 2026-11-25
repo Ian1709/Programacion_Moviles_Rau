@@ -59,6 +59,7 @@ private fun FilaAviso(aviso: Aviso) {
         Origen.BOTON -> AzulTarjeta
         Origen.RECORDATORIO -> NaranjaOrigen
         Origen.MODO_AVION -> MoradoOrigen
+        Origen.CARGADOR -> Color(0xFF607D8B)
     }
 
     Surface(

@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.rau.avisoscampus.model.PermisoUi
 import com.rau.avisoscampus.notificacion.Notificador
+import com.rau.avisoscampus.receiver.CargadorReceiver
 import com.rau.avisoscampus.receiver.ModoAvionReceiver
 import com.rau.avisoscampus.ui.theme.GrisEstado
 import com.rau.avisoscampus.ui.theme.RojoEstado
@@ -49,6 +50,7 @@ fun PantallaAvisos(vm: AvisosViewModel) {
     val permiso by vm.permiso.collectAsState()
     val faltan by vm.faltan.collectAsState()
     val escuchandoAvion by vm.escuchandoAvion.collectAsState()
+    val escuchandoCargador by vm.escuchandoCargador.collectAsState()
     val avisos by vm.avisos.collectAsState()
     val mensaje by vm.mensaje.collectAsState()
     val lanzador = rememberLauncherForActivityResult(
@@ -74,6 +76,26 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                 contexto,
                 receptor,
                 IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED),
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
+        }
+        onDispose {
+            receptor?.let(contexto::unregisterReceiver)
+        }
+    }
+
+    DisposableEffect(escuchandoCargador) {
+        var receptor: CargadorReceiver? = null
+        if (escuchandoCargador) {
+            receptor = CargadorReceiver(vm::alCambiarCargador)
+            val filtro = IntentFilter().apply {
+                addAction(Intent.ACTION_POWER_CONNECTED)
+                addAction(Intent.ACTION_POWER_DISCONNECTED)
+            }
+            ContextCompat.registerReceiver(
+                contexto,
+                receptor,
+                filtro,
                 ContextCompat.RECEIVER_NOT_EXPORTED
             )
         }
@@ -183,6 +205,24 @@ fun PantallaAvisos(vm: AvisosViewModel) {
             }
             Text(
                 "Activa o desactiva el modo avión del celular",
+                style = MaterialTheme.typography.bodySmall,
+                color = GrisEstado
+            )
+        }
+        TarjetaSeccion("Receptor del cargador") {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("Escuchar el cargador", style = MaterialTheme.typography.bodyMedium)
+                Switch(
+                    checked = escuchandoCargador,
+                    onCheckedChange = vm::cambiarEscuchaCargador
+                )
+            }
+            Text(
+                "Muestra un aviso al conectar o desconectar el cargador",
                 style = MaterialTheme.typography.bodySmall,
                 color = GrisEstado
             )
