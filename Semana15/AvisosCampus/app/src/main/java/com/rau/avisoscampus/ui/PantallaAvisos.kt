@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +37,7 @@ import com.rau.avisoscampus.viewmodel.AvisosViewModel
 fun PantallaAvisos(vm: AvisosViewModel) {
     val contexto = LocalContext.current
     val permiso by vm.permiso.collectAsState()
+    val faltan by vm.faltan.collectAsState()
     val lanzador = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = vm::permisoRespondido
@@ -84,7 +86,33 @@ fun PantallaAvisos(vm: AvisosViewModel) {
                 Text("Mostrar aviso")
             }
         }
-        TarjetaSeccion("Recordatorio") { TextoPendiente("Se habilitará en el paso 5.") }
+        TarjetaSeccion("Recordatorio") {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { vm.recordarEn() },
+                    enabled = faltan == null
+                ) {
+                    Text("Recordar en 10 s")
+                }
+                OutlinedButton(
+                    onClick = vm::cancelarRecordatorio,
+                    enabled = faltan != null
+                ) {
+                    Text("Cancelar")
+                }
+            }
+            faltan?.let { segundos ->
+                Text(
+                    text = "Faltan $segundos s",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
         TarjetaSeccion("Receptor de anuncios") { TextoPendiente("Se habilitará en el paso 6.") }
         TarjetaSeccion("Historial") { TextoPendiente("Se habilitará en el paso 7.") }
     }
